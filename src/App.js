@@ -4,12 +4,13 @@ import {
   Routes,
   Route,
   Navigate,
-  Link,
+  // Link,
 } from 'react-router-dom';
 
 import './App.css';
 import Basket from './basket/pages/Basket'
 import Alternatives from './alternatives/pages/Alternatives';
+import NavBarBottom from './shared/components/NavBarBottom'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="alternatives/*" element={<Alternatives />} />
         <Route path='*' element={<Navigate to='/' />} />
       </Routes>
+      <NavBarBottom />
     </BrowserRouter>
   );
 }
