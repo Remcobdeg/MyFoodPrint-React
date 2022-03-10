@@ -2,9 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import AltRouteIcon from '@mui/icons-material/AltRoute';
+import SsidChartIcon from '@mui/icons-material/SsidChart';
 import { useNavigate } from 'react-router-dom';
 
 export default function SimpleBottomNavigation() {
@@ -12,7 +12,7 @@ export default function SimpleBottomNavigation() {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ width: 500 }}>
+    <Box sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
       <BottomNavigation
         showLabels
         value={value}
@@ -21,9 +21,9 @@ export default function SimpleBottomNavigation() {
             setValue(newValue);
         }}
       >
-        <BottomNavigationAction label="Recents" value="Basket" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Favorites" value="Alternatives" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Nearby" value="Stats" icon={<LocationOnIcon />} />
+        <BottomNavigationAction label="Purchases" value="Basket" icon={<ShoppingBasketIcon />} />
+        <BottomNavigationAction label="Alternatives" value="Alternatives" icon={<AltRouteIcon />} />
+        <BottomNavigationAction label="Stats" value="Stats" icon={<SsidChartIcon />} />
       </BottomNavigation>
     </Box>
   );
