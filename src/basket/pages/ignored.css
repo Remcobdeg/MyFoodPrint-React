@@ -1,0 +1,314 @@
+/* iPhone 8 - 184 */
+
+position: relative;
+width: 375px;
+height: 667px;
+
+background: #FFFFFF;
+
+
+/* MyFoodPrint */
+
+position: absolute;
+width: 290px;
+height: 68px;
+left: 43px;
+top: 36px;
+
+font-family: Inter;
+font-style: normal;
+font-weight: 800;
+font-size: 36px;
+line-height: 44px;
+text-align: center;
+
+color: #91C788;
+
+
+
+/* Let’s get the data from the receipts that you scanned so far and have a look around. Login to retrieve your results. */
+
+position: absolute;
+width: 325px;
+height: 88px;
+left: 24px;
+top: 97px;
+
+font-family: Inter;
+font-style: normal;
+font-weight: 300;
+font-size: 18px;
+line-height: 22px;
+text-align: justify;
+
+color: #000000;
+
+
+
+/* back */
+
+position: absolute;
+width: 109px;
+height: 21px;
+left: 0px;
+top: 620px;
+
+font-family: Inter;
+font-style: normal;
+font-weight: 300;
+font-size: 18px;
+line-height: 22px;
+text-align: center;
+
+color: #9E9E9E;
+
+
+
+/* Email */
+
+position: absolute;
+width: 335px;
+height: 54px;
+left: 24px;
+top: 209px;
+
+
+
+/* Rectangle 513 */
+
+position: absolute;
+width: 335px;
+height: 54px;
+left: 24px;
+top: 209px;
+
+background: #FFFFFF;
+border-radius: 12px;
+
+
+/* josine.doe@myfoodprint.org */
+
+position: absolute;
+width: 227px;
+height: 21px;
+left: 78px;
+top: 225px;
+
+font-family: Poppins;
+font-style: normal;
+font-weight: normal;
+font-size: 16px;
+line-height: 130%;
+/* identical to box height, or 21px */
+
+color: #6A6A6A;
+
+
+
+/* Message */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 44px;
+top: 224px;
+
+
+
+/* Iconly/Two tone/Message */
+
+position: absolute;
+left: 8.33%;
+right: 11.54%;
+top: 12.5%;
+bottom: 16.18%;
+
+
+
+/* Message */
+
+position: absolute;
+left: 8.33%;
+right: 11.54%;
+top: 12.5%;
+bottom: 16.18%;
+
+
+
+/* Path 445 */
+
+position: absolute;
+left: 24.81%;
+right: 28.05%;
+top: 35.67%;
+bottom: 48.04%;
+
+opacity: 0.4;
+border: 1.5px solid #6A6A6A;
+
+
+/* Rectangle 511 */
+
+position: absolute;
+left: 8.33%;
+right: 11.54%;
+top: 12.5%;
+bottom: 16.18%;
+
+border: 1.5px solid #6A6A6A;
+
+
+/* Password */
+
+position: absolute;
+width: 335px;
+height: 54px;
+left: 24px;
+top: 287px;
+
+
+
+/* Rectangle 514 */
+
+position: absolute;
+width: 335px;
+height: 54px;
+left: 24px;
+top: 287px;
+
+background: #FFFFFF;
+border-radius: 12px;
+
+
+/* Eye-slash */
+
+position: absolute;
+width: 16.37px;
+height: 13px;
+left: 322px;
+top: 308px;
+
+
+
+/* Union */
+
+position: absolute;
+width: 16.37px;
+height: 13px;
+left: 322px;
+top: 308px;
+
+background: #6A6A6A;
+
+
+/* Lock-icon */
+
+position: absolute;
+width: 20px;
+height: 26px;
+left: 44px;
+top: 301px;
+
+
+
+/* Rectangle 80 */
+
+position: absolute;
+width: 20px;
+height: 26px;
+left: 44px;
+top: 301px;
+
+border: 1px solid #6A6A6A;
+border-radius: 4px;
+
+
+/* Ellipse 40 */
+
+position: absolute;
+width: 6.67px;
+height: 6.5px;
+left: 50.67px;
+top: 314.97px;
+
+border: 1.5px solid #C2C2C2;
+
+
+/* ***************** */
+
+position: absolute;
+width: 133px;
+height: 21px;
+left: 78px;
+top: 303px;
+
+font-family: Poppins;
+font-style: normal;
+font-weight: normal;
+font-size: 16px;
+line-height: 130%;
+/* identical to box height, or 21px */
+
+color: #6A6A6A;
+
+
+
+/* BTN */
+
+position: absolute;
+width: 335px;
+height: 54px;
+left: 24px;
+top: 403px;
+
+
+
+/* Rectangle 1 */
+
+position: absolute;
+width: 335px;
+height: 54px;
+left: 24px;
+top: 403px;
+
+background: #91C788;
+border-radius: 12px;
+
+
+/* LOG IN */
+
+position: absolute;
+width: 52px;
+height: 16px;
+left: 166px;
+top: 422px;
+
+font-family: Poppins;
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 16px;
+/* identical to box height, or 100% */
+text-align: center;
+
+color: #FFFFFF;
+
+
+
+/* Forget Password? */
+
+position: absolute;
+width: 106px;
+height: 12px;
+left: 253px;
+top: 351px;
+
+font-family: Poppins;
+font-style: normal;
+font-weight: normal;
+font-size: 12px;
+line-height: 12px;
+/* identical to box height, or 100% */
+
+color: #6A6A6A;
+

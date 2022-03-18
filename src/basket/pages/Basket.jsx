@@ -1,44 +1,23 @@
 import React, {useState} from "react";
+import GraphToggle from "../components/graphToggle";
 import WordCloud from "react-d3-cloud";
-import MuiToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { styled } from "@mui/material/styles";
 
 import {prepVizData, allBaskets, maxValue} from "../../Modules/PrepVizData";
 
 import './Basket.css';
 
-const ToggleButton = styled(MuiToggleButton)({
-  color: '#91C788',
-  backgroundColor: '#F1F1F1',
-  "&.Mui-selected, &.Mui-selected:hover": {
-    color: "#FFFFFF",
-    backgroundColor: '#91C788'
-  }
-});
-
 // to-do import data function that allows props date/week/month, date_format
 
 function Basket() {
-  const [graphState, setGraphState] = React.useState('WORDS');
+  const [graphState, setGraphState] = useState('WORDS');
 
   const handleChange = (event, newGraphState) => {
-    setGraphState(newGraphState);
+    if(newGraphState !== null){setGraphState(newGraphState)}; //don't allow selected button to be unselected, aka enforce value set
   };
 
   return (
     <div>
-      <ToggleButtonGroup
-        className="graphButton"
-        size="small"
-        color="primary"
-        value={graphState}
-        exclusive
-        onChange={handleChange}
-      >
-        <ToggleButton value="WORDS">WORDS</ToggleButton>
-        <ToggleButton value="CHART">CHART</ToggleButton>
-      </ToggleButtonGroup>
+      <GraphToggle handleChange={handleChange} graphState={graphState} /> 
 
       <WordCloud 
         data={prepVizData()}
