@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import GraphToggle from "../components/graphToggle";
 import WordCloud from "react-d3-cloud";
+import BarChart from "../components/BarChart";
 
 import {prepVizData, allBaskets, maxValue} from "../../Modules/PrepVizData";
 
@@ -17,16 +18,27 @@ function Basket() {
 
   return (
     <div>
+    
       <GraphToggle handleChange={handleChange} graphState={graphState} /> 
 
-      <WordCloud 
-        data={prepVizData()}
-        fontSize={(word) => Math.sqrt(word.value/maxValue(prepVizData())) *100}
-        font="Fredoka"
-        fontWeight="bold"
-        fill={data => data.color}
-        // rotate={0}
-      />
+      <div className="graph">
+        
+        {graphState === "WORDS" ? 
+
+          <WordCloud 
+            data={prepVizData()}
+            fontSize={(word) => Math.sqrt(word.value/maxValue(prepVizData())) *100}
+            font="Fredoka"
+            fontWeight="bold"
+            fill={data => data.color}
+            // rotate={0}
+          /> :
+
+          <BarChart data={prepVizData()} />
+        }
+
+      </div>
+
     </div>
   );
 }

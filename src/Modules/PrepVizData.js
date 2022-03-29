@@ -87,6 +87,9 @@ function prepVizData(uidIndex = 7143,format = "gCO2") {
 
         aggregateData.forEach(entry => {if(entry.text === "PREPARED MEALS"){entry.text = "MEALS";}})
 
+        //sort descending for barchart to turn out nicely
+        aggregateData.sort((a,b) => {return b.value - a.value;})
+
         return aggregateData;
     };
 
