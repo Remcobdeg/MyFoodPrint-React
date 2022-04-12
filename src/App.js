@@ -11,7 +11,7 @@ import './App.css';
 import Basket from './basket/pages/Basket';
 import Alternatives from './alternatives/pages/Alternatives';
 import NavBarBottom from './shared/components/NavBarBottom';
-import Login from './auth/pages/Login';
+import Auth from './auth/pages/Auth';
 import {AuthContext} from './shared/context/authContext';
 
 function App() {
@@ -31,13 +31,12 @@ function App() {
     <AuthContext.Provider value={{isLoggedIn: isLoggedIn, login: login, logout: logout}}>
       <BrowserRouter>
         <Routes>
-          {isLoggedIn && <Route path="/" element={<Basket />} />}
-          {!isLoggedIn && <Route path="/" element={<Login />} />}
-          
-          <Route path="alternatives/*" element={<Alternatives />} />
+          <Route path="/" element={isLoggedIn ? <Basket /> : <Auth /> } /> 
+          {isLoggedIn && <Route path="alternatives/*" element={<Alternatives />} /> }
+          <Route path='auth/' element={<Auth />} />
           <Route path='*' element={<Navigate to='/' />} />
         </Routes>
-        <NavBarBottom />
+        {isLoggedIn && <NavBarBottom />}
       </BrowserRouter>
     </AuthContext.Provider>
 
