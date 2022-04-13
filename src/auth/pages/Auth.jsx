@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { AuthContext } from '../../shared/context/authContext';
 
 import './Auth.css'
 
 function Auth(props){
+
+    const auth = useContext(AuthContext);
 
     function handleSubmit(event){
         event.preventDefault();
@@ -14,6 +17,7 @@ function Auth(props){
           email: data.get('email'),
           password: data.get('password'),
         });
+        auth.login();
     }
 
     return(

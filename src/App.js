@@ -10,6 +10,7 @@ import {
 import './App.css';
 import Basket from './basket/pages/Basket';
 import Alternatives from './alternatives/pages/Alternatives';
+import Settings from './Settings/pages/settings';
 import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import {AuthContext} from './shared/context/authContext';
@@ -33,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={isLoggedIn ? <Basket /> : <Auth /> } /> 
           {isLoggedIn && <Route path="alternatives/*" element={<Alternatives />} /> }
+          {isLoggedIn && <Route path="settings/*" element={<Settings />} /> }
           <Route path='auth/' element={<Auth />} />
           <Route path='*' element={<Navigate to='/' />} />
         </Routes>
