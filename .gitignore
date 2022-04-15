@@ -3,17 +3,21 @@
 # dependencies
 /node_modules
 React/node_modules
+backend/node_modules
 /.pnp
 React/.pnp
+backend/.pnp
 .pnp.js
 
 # testing
 /coverage
 React/coverage
+backend/coverage
 
 # production
 /build
 React/build
+backend/coverage
 
 # misc
 .DS_Store
