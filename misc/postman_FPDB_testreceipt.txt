@@ -11,3 +11,23 @@ Post receipt code
     "user": "u1"
 
   }
+
+  {
+    "date": "15/05/2022",
+    "time": "11:52:52",
+    "store": "Morissons",
+    "store_branche": "Byker",
+    "items": [
+      {"group": "protein sources", 
+      "subgroup": "meat & alternatives", 
+      "product": "beef", 
+      "product_detail": "beef", 
+      "footprint_g_100g": 2500, 
+      "weight_g": 300, 
+      "unit_price_gbp": 4.2,
+      "units": 1, 
+      "footprint_sourcenote": "from my mind"}
+    ],
+    "user": "u1"
+
+  }

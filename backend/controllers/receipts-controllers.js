@@ -1,6 +1,8 @@
 const { v4: uuid } = require('uuid');
 const { validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
+const Receipt = require('../models/receipt');
 const HttpError = require('../models/http-error');
 
 let DUMMY_RECEIPTS = [
@@ -29,18 +31,25 @@ let DUMMY_RECEIPTS = [
   }
 ];
 
-const getReceiptById = (req, res, next) => {
+const getReceiptById = async (req, res, next) => {
   const receiptId = req.params.rcptid; 
 
-  const receipt = DUMMY_RECEIPTS.find(r => {
-    return r.id === receiptId;
-  });
+    // send it to Mongo
+    let receipt;
+    try {
+      receipt = await Receipt.findById(receiptId);
+    } catch (err) {
+      if (err){
+        const error = new HttpError("Error retrieving receipt from DB. Does the id exist?",500);
+        return next(error); 
+      }
+    }
 
   if (!receipt) {
-    throw new HttpError('Could not find a receipt for the provided id.', 404);
+    return next( new HttpError('Could not find a receipt for the provided id.', 404));
   }
 
-  res.json({ receipt }); // => { receipt } => { receipt: receipt }
+  res.json({ receipt: receipt.toObject({getters: true}) }); // convert to normal js object, getters: true removes the _ from _id
 };
 
 // alternative ways of writing the function:
@@ -64,6 +73,8 @@ const getReceiptByUserId = (req, res, next) => {
 };
 
 const createReceipt = async (req, res, next) => {
+
+  // process errors if there are any
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -71,23 +82,22 @@ const createReceipt = async (req, res, next) => {
     );
   }
 
-  const { date, time, store, store_branche, items, user} = req.body;
-
-  // const title = req.body.title;
-  const createdReceipt = {
-    id: uuid(),
-    // date,
-    // time,
-    // store, 
-    // store_branche, 
-    // items,
-    // user
+  // populate the receipt
+  const newReceipt = new Receipt({
     ...req.body
-  };
+  });
+  
+  // send it to Mongo
+  try {
+    await newReceipt.save();
+  } catch (err) {
+    if (err){
+      const error = new HttpError("Creating receipt failed. Please try again",500);
+      return next(error); 
+    }
+  }
 
-  DUMMY_RECEIPTS.push(createdReceipt); 
-
-  res.status(201).json({ receipt: createdReceipt });
+  res.status(201).json({ receipt: newReceipt });
 };
 
 const updateReceipt = (req, res, next) => {
