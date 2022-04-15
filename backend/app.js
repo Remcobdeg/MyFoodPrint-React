@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const placesRoutes = require('./routes/places-routes');
+const placesRoutes = require('./routes/receipts-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 
@@ -9,7 +9,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use('/api/places', placesRoutes); // => /api/places...
+app.use('/api/receipts', placesRoutes); // => /api/receipts... and everything after
 app.use('/api/users', usersRoutes);
 
 app.use((req, res, next) => {
@@ -26,3 +26,5 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(5000);
+
+//don't forget: determine dynamically what to patch based on input, rather than forcing input
