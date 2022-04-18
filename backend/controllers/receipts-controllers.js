@@ -56,12 +56,19 @@ const getReceiptById = async (req, res, next) => {
 // function getreceiptById() { ... }
 // const getreceiptById = function() { ... }
 
-const getReceiptByUserId = (req, res, next) => {
+const getReceiptByUserId = async (req, res, next) => {
   const userId = req.params.uid;
 
-  const receipts = DUMMY_RECEIPTS.filter(r => {
-    return r.user === userId;
-  });
+  // send it to Mongo
+  let receipts;
+  try {
+    receipts = await Receipt.find({user: userId });
+  } catch (err) {
+    if (err){
+      const error = new HttpError("Fetching places failed, please try again later",500);
+      return next(error); 
+    }
+  }
 
   if (!receipts || receipts.length === 0) {
     return next(
@@ -69,7 +76,7 @@ const getReceiptByUserId = (req, res, next) => {
     );
   }
 
-  res.json({ receipts });
+  res.json({ receipts: receipts.map(receipt => receipt.toObject({ getters: true })) });
 };
 
 const createReceipt = async (req, res, next) => {
@@ -100,23 +107,23 @@ const createReceipt = async (req, res, next) => {
   res.status(201).json({ receipt: newReceipt });
 };
 
-const updateReceipt = (req, res, next) => {
+const updateReceipt = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError('Invalid inputs passed, please check your data.', 422);
+    return next( new HttpError('Invalid inputs passed, please check your data.', 422));
   }
 
-  const { date, store } = req.body;
   const receiptId = req.params.rcptid;
 
-  const updatedReceipt = { ...DUMMY_RECEIPTS.find(r => r.id === receiptId) };
-  const receiptIndex = DUMMY_RECEIPTS.findIndex(r => r.id === receiptId);
-  updatedReceipt.date = date; // 'date','time','store','store_branche','items','user'
-  updatedReceipt.store = store;
+  let receipt;
+  try {
+    receipt = await Receipt.findByIdAndUpdate(receiptId, {$set: req.body},  { new: true, runValidators: true})
+  } catch (err) {
+    const error = new HttpError("Fetching places failed, please try again later",500);
+    return next(error); 
+  }
 
-  DUMMY_RECEIPTS[receiptIndex] = updatedReceipt;
-
-  res.status(200).json({ receipt: updatedReceipt });
+  res.status(200).json({ receipt: receipt.toObject({getters: true}) });
 };
 
 const deleteReceipt = (req, res, next) => {
