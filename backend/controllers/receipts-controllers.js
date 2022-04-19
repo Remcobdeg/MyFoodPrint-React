@@ -119,19 +119,28 @@ const updateReceipt = async (req, res, next) => {
   try {
     receipt = await Receipt.findByIdAndUpdate(receiptId, {$set: req.body},  { new: true, runValidators: true})
   } catch (err) {
-    const error = new HttpError("Fetching places failed, please try again later",500);
+    const error = new HttpError("Updating receipts failed, please try again later",500);
     return next(error); 
   }
 
   res.status(200).json({ receipt: receipt.toObject({getters: true}) });
 };
 
-const deleteReceipt = (req, res, next) => {
+const deleteReceipt = async (req, res, next) => {
   const receiptId = req.params.rcptid;
-  if (!DUMMY_RECEIPTS.find(r => r.id === receiptId)) {
-    throw new HttpError('Could not find a receipt for that id.', 404);
+
+  let receipt;
+  try {
+    receipt = await Receipt.findByIdAndDelete(receiptId);
+  } catch (err) {
+    return next(new HttpError('Could not find a receipt for that id.', 404));
   }
-  DUMMY_RECEIPTS = DUMMY_RECEIPTS.filter(r => r.id !== receiptId);
+
+  if (!receipt) {
+    const error = new HttpError('Could not find receipt for this id.', 404);
+    return next(error);
+  }
+
   res.status(200).json({ message: 'Deleted receipt.' });
 };
 
