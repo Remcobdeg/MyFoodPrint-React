@@ -63,7 +63,7 @@ const getReceiptByUserId = async (req, res, next) => {
   // send it to Mongo
   let receipts;
   try {
-    receipts = await Receipt.find({user: userId });
+    receipts = await Receipt.find({user: userId }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipt'))
   } catch (err) {
     if (err){
       const error = new HttpError("Fetching places failed, please try again later",500);
@@ -77,7 +77,7 @@ const getReceiptByUserId = async (req, res, next) => {
     );
   }
 
-  res.json({ receipts: receipts.map(receipt => receipt.toObject({ getters: true })) });
+  res.json({ receipts: receipts.map(receipt => receipt.toObject({ getters: true })) }); //aligning with the populate approach above, this would become receipts: userWithReceipts.receipt.map(receipt => 
 };
 
 const createReceipt = async (req, res, next) => {
@@ -150,15 +150,31 @@ const updateReceipt = async (req, res, next) => {
 const deleteReceipt = async (req, res, next) => {
   const receiptId = req.params.rcptid;
 
-  let receipt;
+  let foundReceipt;
   try {
-    receipt = await Receipt.findByIdAndDelete(receiptId);
+    foundReceipt = await Receipt.findById(receiptId).populate('user','-password'); //populate works because we have established the connection to User in the model. user refers to the user element in Receipt
   } catch (err) {
-    return next(new HttpError('Could not find a receipt for that id.', 404));
+    return next(new HttpError('Something went wrong, could not delete receipt', 500));
   }
 
-  if (!receipt) {
+  if (!foundReceipt) {
     const error = new HttpError('Could not find receipt for this id.', 404);
+    return next(error);
+  }
+
+  try {
+    sess = await mongoose.startSession();
+    sess.startTransaction();
+    await foundReceipt.remove({session: sess});
+    foundReceipt.user.receipt.pull(foundReceipt); 
+    await foundReceipt.user.save({session: sess, validateModifiedOnly: true });
+    await sess.commitTransaction();
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'Something went wrong, could not delete receipt.',
+      500
+    );
     return next(error);
   }
 
