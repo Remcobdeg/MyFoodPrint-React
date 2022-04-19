@@ -20,7 +20,7 @@ const receiptSchema = new Schema({
     store: {type: String, required: true}, //be sure to correct for typo's and match using small caps
     store_branche: {type: String, required: false},
     items: {type: [itemSchema], required: true},
-    user: {type: String, required: true}
+    user: {type: mongoose.Types.ObjectId, required: true, ref: 'User'} //makes sure it's a mongoose object id and refers to the User model 
 });
 
 module.exports = mongoose.model("Receipt", receiptSchema);

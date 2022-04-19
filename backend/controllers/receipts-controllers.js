@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 
 const Receipt = require('../models/receipt');
+const User = require('../models/user');
 const HttpError = require('../models/http-error');
 
 let DUMMY_RECEIPTS = [
@@ -93,13 +94,33 @@ const createReceipt = async (req, res, next) => {
   const newReceipt = new Receipt({
     ...req.body
   });
-  
-  // send it to Mongo
+
+  //before we save, test if the user name exists
+
+  let user;
   try {
-    await newReceipt.save();
+    user = await User.findById(req.body.user);
+  } catch (err) {
+    const error = new HttpError('Creating receipt failed, please try again', 500);
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError('Could not find user for provided id', 404);
+    return next(error);
+  }
+  
+  // send it to Mongo -- we have to update two mongoose fields simultaneously, we need sessions to prevent one erroring and the other succeeding and imbalanced data being written
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await newReceipt.save({ session: sess });
+    user.receipt.push(newReceipt); //special mongoose method (not normal push) to establish the relation and add the id of the receipt behind the scene 
+    await user.save({ session: sess, validateModifiedOnly: true  });
+    await sess.commitTransaction();
   } catch (err) {
     if (err){
-      const error = new HttpError("Creating receipt failed. Please try again",500);
+      const error = new HttpError("Creating receipt failed... Please try again",500);
       return next(error); 
     }
   }

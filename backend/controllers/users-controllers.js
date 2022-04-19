@@ -5,15 +5,6 @@ const HttpError = require('../models/http-error');
 const User = require('../models/user');
 const user = require('../models/user');
 
-const DUMMY_USERS = [
-  {
-    id: 'u1',
-    name: 'Remco',
-    email: 'test@test.com',
-    password: 'testers'
-  }
-];
-
 const getUsers = async (req, res, next) => {
 
   let users
@@ -46,7 +37,7 @@ const signup = async (req, res, next) => {
   }
 
   const createdUser = new User(
-    {...req.body}
+    {...req.body, receipt: []} //creating an empty array for receipts to be stored later
   );
 
   try {
