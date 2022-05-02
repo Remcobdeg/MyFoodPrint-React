@@ -28,6 +28,14 @@ Post receipt code
       "units": 1, 
       "footprint_sourcenote": "from my mind"}
     ],
-    "user": "u1"
+    "user": 625ec8627f43178532fe734a
 
   }
+
+
+{
+    "name":"Remco",
+    "email":"remco@rrrrmco.nl",
+    "password":"dummypss"
+}
+

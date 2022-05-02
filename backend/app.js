@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const placesRoutes = require('./routes/receipts-routes');
+const receiptsRoutes = require('./routes/receipts-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 
@@ -11,7 +11,19 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.use('/api/receipts', placesRoutes); // => /api/receipts... and everything after
+// address CORS
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+
+  next();
+});
+
+app.use('/api/receipts', receiptsRoutes); // => /api/receipts... and everything after
 app.use('/api/users', usersRoutes);
 
 app.use((req, res, next) => {

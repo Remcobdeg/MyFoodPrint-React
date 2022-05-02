@@ -37,7 +37,7 @@ const signup = async (req, res, next) => {
   }
 
   const createdUser = new User(
-    {...req.body, receipt: []} //creating an empty array for receipts to be stored later
+    {...req.body, receipts: []} //creating an empty array for receipts to be stored later
   );
 
   try {
@@ -63,7 +63,10 @@ const login = async (req, res, next) => {
     return next(new HttpError('Could not identify user, credentials seem to be wrong.', 401));
   }
 
-  res.json({message: 'Logged in!'});
+  res.json({
+    message: 'Logged in!',
+    user: identifiedUser.toObject({ getters: true })
+  });
 };
 
 exports.getUsers = getUsers;

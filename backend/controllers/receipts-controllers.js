@@ -63,7 +63,7 @@ const getReceiptByUserId = async (req, res, next) => {
   // send it to Mongo
   let receipts;
   try {
-    receipts = await Receipt.find({user: userId }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipt'))
+    receipts = await Receipt.find({user: userId }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipts'))
   } catch (err) {
     if (err){
       const error = new HttpError("Fetching places failed, please try again later",500);
@@ -77,7 +77,7 @@ const getReceiptByUserId = async (req, res, next) => {
     );
   }
 
-  res.json({ receipts: receipts.map(receipt => receipt.toObject({ getters: true })) }); //aligning with the populate approach above, this would become receipts: userWithReceipts.receipt.map(receipt => 
+  res.json({ receipts: receipts.map(receipt => receipt.toObject({ getters: true })) }); //aligning with the populate approach above, this would become receipts: userWithReceipts.receipts.map(receipt => 
 };
 
 const createReceipt = async (req, res, next) => {
@@ -115,7 +115,7 @@ const createReceipt = async (req, res, next) => {
     const sess = await mongoose.startSession();
     sess.startTransaction();
     await newReceipt.save({ session: sess });
-    user.receipt.push(newReceipt); //special mongoose method (not normal push) to establish the relation and add the id of the receipt behind the scene 
+    user.receipts.push(newReceipt); //special mongoose method (not normal push) to establish the relation and add the id of the receipt behind the scene 
     await user.save({ session: sess, validateModifiedOnly: true  });
     await sess.commitTransaction();
   } catch (err) {
@@ -166,7 +166,7 @@ const deleteReceipt = async (req, res, next) => {
     sess = await mongoose.startSession();
     sess.startTransaction();
     await foundReceipt.remove({session: sess});
-    foundReceipt.user.receipt.pull(foundReceipt); 
+    foundReceipt.user.receipts.pull(foundReceipt); 
     await foundReceipt.user.save({session: sess, validateModifiedOnly: true });
     await sess.commitTransaction();
   } catch (err) {
