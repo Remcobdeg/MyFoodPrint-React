@@ -12,30 +12,37 @@ Post receipt code
 
   }
 
+UPDATE
+http://localhost:5000/api/receipts/625ec8cc7f43178532fe734e //update with receipt (item) id
+
+POST
+http://localhost:5000/api/receipts/
+
+
   {
     "date": "15/05/2022",
     "time": "11:52:52",
     "store": "Morissons",
     "store_branche": "Byker",
-    "items": [
-      {"group": "protein sources", 
-      "subgroup": "meat & alternatives", 
-      "product": "beef", 
-      "product_detail": "beef", 
-      "footprint_g_100g": 2500, 
-      "weight_g": 300, 
-      "unit_price_gbp": 4.2,
-      "units": 1, 
-      "footprint_sourcenote": "from my mind"}
-    ],
-    "user": 625ec8627f43178532fe734a
+	"item_group": "protein sources", 
+    "item_subgroup": "meat & alternatives", 
+    "item_product": "beef",
+    "item_product_detail": "beef",
+    "item_footprint_g_100g": 2500,
+    "item_weight_g": 300,
+    "item_unit_price_gbp": 5,
+    "item_units": 1,
+    "item_footprint_sourcenote": "from mind"
+    "user": 626fb12e3b0233d7fe1ac738
 
   }
 
+http://localhost:5000/api/users/signup
 
 {
     "name":"Remco",
-    "email":"remco@rrrrmco.nl",
-    "password":"dummypss"
+    "email":"remco@remco.nl",
+    "password":"dummypass"
 }
 
+626fb12e3b0233d7fe1ac738
