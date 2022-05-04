@@ -21,11 +21,12 @@ function Auth(props){
         event.preventDefault();
         setIsLoading(true);
         const data = new FormData(event.currentTarget);
-        http.post('/api/users/login',{
+        http.post('/users/login',{
           email: data.get('email'),
           password: data.get('password')
         })
         .then(function (response) {
+          setIsLoading(false); //needs to come before login, otherwise it sets a state in the wrong screen!
           auth.login(response.data.user.id);
         })
         .catch(function (error) {

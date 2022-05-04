@@ -17,14 +17,14 @@ import {AuthContext} from './shared/context/authContext';
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(false);
 
 
   const login = useCallback((uid) => {
-    setIsLoggedIn(true);
     setUserId(uid);
-  }, []);
+    setIsLoggedIn(true);
+    }, []);
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
