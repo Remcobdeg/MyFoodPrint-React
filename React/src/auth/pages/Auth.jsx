@@ -43,7 +43,8 @@ function Auth(props){
             password: data.get('password')
           });          
           setIsLoading(false); //needs to come before login, otherwise it sets a state in the wrong screen!
-          auth.login(response.data.user.id);
+          console.log(response.data.token);
+          auth.login(response.data.userId, response.data.token);
         } catch(error) {
           setIsLoading(false);
           if (error.response) {
