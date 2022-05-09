@@ -1,5 +1,6 @@
-const { v4: uuid } = require('uuid');
+// const { v4: uuid } = require('uuid');
 const { validationResult } = require('express-validator');
+const bcrypt = require('bcryptjs');
 
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
@@ -40,6 +41,17 @@ const signup = async (req, res, next) => {
     {...req.body, receipts: []} //creating an empty array for receipts to be stored later
   );
 
+  //hash the password
+  try {
+    createdUser.password = await bcrypt.hash(req.body.password, 12);
+  } catch (err) {
+    const error = new HttpError(
+      'Could not create user, please try again.',
+      500
+    );
+    return next(error);
+  }
+
   try {
     await createdUser.save();
   } catch (err) {
@@ -59,8 +71,23 @@ const login = async (req, res, next) => {
     return next(new HttpError('Could not retrieve user data, try again later',500) );
   }
 
-  if (!identifiedUser || identifiedUser.password !== password) {
-    return next(new HttpError('Could not identify user, credentials seem to be wrong.', 401));
+  let isValidPassword = false;
+  try {
+    isValidPassword = await bcrypt.compare(password, identifiedUser.password);
+  } catch (err) {
+    const error = new HttpError(
+      'Could not log you in, please check your credentials and try again.',
+      500
+    );
+    return next(error);
+  }
+
+  if (!isValidPassword) {
+    const error = new HttpError(
+      'Invalid credentials, could not log you in.',
+      403
+    );
+    return next(error);
   }
 
   res.json({
