@@ -28,7 +28,7 @@ app.use('/api/users', usersRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError('Could not find this route.', 404);
-  throw error;
+  return next(error);
 });
 
 app.use((error, req, res, next) => {

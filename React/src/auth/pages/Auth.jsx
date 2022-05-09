@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react';
 import http from '../../shared/components/http-common'
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
@@ -16,20 +18,33 @@ function Auth(props){
 
     const [loginError, setLoginError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isSignup, setIsSignup] = useState(false);
 
-    function handleSubmit(event){
+    function toSignup(event){
+      event.preventDefault();
+      console.log("signup button clicked")
+      setIsSignup(prevState => !prevState);
+    }
+
+    async function handleSubmit(event){
         event.preventDefault();
         setIsLoading(true);
         const data = new FormData(event.currentTarget);
-        http.post('/users/login',{
-          email: data.get('email'),
-          password: data.get('password')
-        })
-        .then(function (response) {
+        // http.post(`/users/` + isSignup ? "signup" : "login",{
+        //   name: data.get('userName'),
+        //   email: data.get('email'),
+        //   password: data.get('password')
+        // })
+
+        try {
+          const response = await http.post("/users/" + (isSignup ? "signup" : "login"),{
+            name: data.get('userName'),
+            email: data.get('email'),
+            password: data.get('password')
+          });          
           setIsLoading(false); //needs to come before login, otherwise it sets a state in the wrong screen!
           auth.login(response.data.user.id);
-        })
-        .catch(function (error) {
+        } catch(error) {
           setIsLoading(false);
           if (error.response) {
             // Request made and server responded
@@ -46,9 +61,9 @@ function Auth(props){
             console.log('Error', error.message);
             setLoginError(error.message);
           }
-        });
+        };
         
-    }
+    };
 
     return(
       <div>
@@ -64,6 +79,15 @@ function Auth(props){
             <h1>Sign in</h1>
             <p>Sign in to MyFoodPrint to see the footprint of your past purchases</p>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          {isSignup && <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="userName"
+              label="Your name"
+              name="userName"
+              autoFocus
+            />}
             <TextField
               margin="normal"
               required
@@ -92,8 +116,16 @@ function Auth(props){
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              {isSignup ? `Sign Up` : `Sign In`}
             </Button>
+
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link component="button" variant="body2" onClick={toSignup}>
+                  Signup
+                </Link>
+              </Grid>
+            </Grid>
 
           </Box>
         </Box>
