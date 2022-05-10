@@ -4,6 +4,18 @@ const { check } = require('express-validator');
 const receiptsControllers = require('../controllers/receipts-controllers');
 
 const router = express.Router();
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'image-' + Date.now() + '.jpg');
+  }
+})
+
+const imageUpload = multer({ storage: storage });
 
 router.get('/:rcptid', receiptsControllers.getReceiptById);
 
@@ -40,5 +52,21 @@ router.patch(
 );
 
 router.delete('/:rcptid', receiptsControllers.deleteReceipt);
+
+router.post(
+  '/uploadImage', async (req, res) => {
+    var uploadPost = imageUpload.single('imageFile');
+    uploadPost(req, res, function (err) {
+      if (err) {
+        return res.end("error uploading file");
+      }
+      return res.send(req.file.filename);
+    });
+  }
+);
+
+router.get('/fetchImage/:imageName', receiptsControllers.fetchImageByName);
+
+router.delete('/deleteImage/:imageName', receiptsControllers.deleteImageByName);
 
 module.exports = router;

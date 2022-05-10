@@ -2,6 +2,7 @@ const { v4: uuid } = require('uuid');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const async_ = require('async');
+const fs = require('fs');
 
 const Receipt = require('../models/receipt');
 const User = require('../models/user');
@@ -248,9 +249,42 @@ const deleteReceipt = async (req, res, next) => {
   res.status(200).json({ message: 'Deleted receipt.' });
 };
 
+const fetchImageByName = async (req, res, next) => {
+  const imageName = req.params.imageName;
+  var path = require('path');
+  try {
+    await res.status(200).sendFile(path.resolve('images/'+imageName));
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'Something went wrong, could not delete receipt.',
+      500
+    );
+    return next(error);
+  }
+};
+
+const deleteImageByName = async (req, res, next) => {
+  const imageName = req.params.imageName;
+  var path = require('path');
+  try {
+    fs.unlinkSync(path.resolve('images/'+imageName));
+    return res.end("success");
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'Something went wrong, could not delete receipt.',
+      500
+    );
+    return next(error);
+  }
+};
+
 exports.getReceiptById = getReceiptById;
 exports.getReceiptByUserId = getReceiptByUserId;
 exports.createReceipt = createReceipt;
 exports.updateReceipt = updateReceipt;
 exports.deleteReceipt = deleteReceipt;
 exports.createReceiptMany = createReceiptMany;
+exports.fetchImageByName = fetchImageByName;
+exports.deleteImageByName = deleteImageByName;

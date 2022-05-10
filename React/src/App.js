@@ -14,10 +14,12 @@ import Settings from './Settings/pages/settings';
 import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import {AuthContext} from './shared/context/authContext';
+import Camera from './camera/pages/Camera';
+import ImageCamera from './camera/pages/ImageCamera';
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [userId, setUserId] = useState(false);
 
 
@@ -39,6 +41,8 @@ function App() {
           <Route path="/" element={isLoggedIn ? <Basket /> : <Auth /> } /> 
           {isLoggedIn && <Route path="alternatives/*" element={<Alternatives />} /> }
           {isLoggedIn && <Route path="settings/*" element={<Settings />} /> }
+          {isLoggedIn && <Route path="camera/*" element={<Camera />} /> }
+          {isLoggedIn && <Route path="camera/image/*" element={<ImageCamera />} /> }
           <Route path='auth/' element={<Auth />} />
           <Route path='*' element={<Navigate to='/' />} />
         </Routes>
