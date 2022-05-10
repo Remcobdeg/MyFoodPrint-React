@@ -2,9 +2,8 @@ import React, {useState, useContext, useEffect} from "react";
 import GraphToggle from "../components/graphToggle";
 import WordCloud from "react-d3-cloud";
 import BarChart from "../components/BarChart";
-import http from "../../shared/components/http-common"
 import { AuthContext } from '../../shared/context/authContext';
-import axios from 'axios';
+import {useHttpClient} from '../../shared/hooks/http-hook';
  
 import {prepVizData, maxValue} from "../Modules/PrepVizData";
 
@@ -16,9 +15,6 @@ function Basket() {
 
   const auth = useContext(AuthContext);
 
-  const [graphState, setGraphState] = useState('WORDS');
-  const [isLoading, setIsLoading] = useState(true);
-
   const receiptSchema = {
     "_id": "627131d609fa9b1ef5cb5399",
     "date": "2017-02-22",
@@ -26,7 +22,7 @@ function Basket() {
     "store": "Tesco",
     "item_group": "AMBIENT DRY GROCERY",
     "item_subgroup": "PASTA",
-    "item_product": "DRY PASTA",
+    "item_product": "NO DATA YET",
     "item_product_detail": "Tesco Value Lasagne Sheets 250g",
     "item_footprint_g_100g": 240,
     "item_kcal_100g": 360,
@@ -37,31 +33,30 @@ function Basket() {
     "user": "627130cc09fa9b1ef5cb5395",
     "__v": 0,
     "id": "627131d609fa9b1ef5cb5399"
-}
+  }
 
+  const { isLoading, error, sendRequest } = useHttpClient();
+  const [graphState, setGraphState] = useState('WORDS');
   const [receipts, setReceipts] = useState([receiptSchema]);
 
   useEffect(() => {
     const fetchReceipts = async () => {
       try{
-        const responseData = await axios({
-          method: 'get',
-          url: "http://localhost:5000/api" + "/receipts/user/" + auth.userId,
-          data: {},
-          headers: {
+        const responseData = await sendRequest(
+          "/receipts/user/" + auth.userId,
+          'get',
+          {},
+          {
             "Content-type": "application/json",
             Authorization: 'Bearer ' + auth.token
           }
-        });  
+        )
         const response = responseData.data.receipts;
         setReceipts(response);
-        setIsLoading(false);
-      } catch (err) {
-        console.log(err)
-      }
+      } catch (err) {}
     };
     fetchReceipts(); 
-  }, [auth.userId,auth.token])
+  }, [auth.userId,auth.token,sendRequest])
 
 
   const handleChange = (event, newGraphState) => {
