@@ -4,7 +4,7 @@ import WordCloud from "react-d3-cloud";
 import BarChart from "../components/BarChart";
 import http from "../../shared/components/http-common"
 import { AuthContext } from '../../shared/context/authContext';
-import { useParams } from 'react-router-dom';
+import axios from 'axios';
  
 import {prepVizData, maxValue} from "../Modules/PrepVizData";
 
@@ -44,7 +44,15 @@ function Basket() {
   useEffect(() => {
     const fetchReceipts = async () => {
       try{
-        const responseData = await http.get(`/receipts/user/${auth.userId}`);
+        const responseData = await axios({
+          method: 'get',
+          url: "http://localhost:5000/api" + "/receipts/user/" + auth.userId,
+          data: {},
+          headers: {
+            "Content-type": "application/json",
+            Authorization: 'Bearer ' + auth.token
+          }
+        });  
         const response = responseData.data.receipts;
         setReceipts(response);
         setIsLoading(false);
@@ -53,7 +61,7 @@ function Basket() {
       }
     };
     fetchReceipts(); 
-  }, [auth.userId])
+  }, [auth.userId,auth.token])
 
 
   const handleChange = (event, newGraphState) => {

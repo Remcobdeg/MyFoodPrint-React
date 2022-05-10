@@ -9,6 +9,7 @@ import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { AuthContext } from '../../shared/context/authContext';
+import axios from 'axios';
 
 import './Auth.css'
 
@@ -37,10 +38,17 @@ function Auth(props){
         // })
 
         try {
-          const response = await http.post("/users/" + (isSignup ? "signup" : "login"),{
-            name: data.get('userName'),
-            email: data.get('email'),
-            password: data.get('password')
+          const response = await axios({
+            method: 'post',
+            url: "http://localhost:5000/api" + "/users/" + (isSignup ? "signup" : "login"),
+            data: {
+              name: data.get('userName'),
+              email: data.get('email'),
+              password: data.get('password')
+            },
+            headers: {
+              "Content-type": "application/json"
+            }
           });          
           setIsLoading(false); //needs to come before login, otherwise it sets a state in the wrong screen!
           console.log(response.data.token);

@@ -1,11 +1,14 @@
 const express = require('express');
 const { check } = require('express-validator');
+const checkAuth = require('../middleware/check-auth');
 
 const receiptsControllers = require('../controllers/receipts-controllers');
 
 const router = express.Router();
 
 router.get('/:rcptid', receiptsControllers.getReceiptById);
+
+router.use(checkAuth); //checks if there's a token and adds userId to req from decomposed token
 
 router.get('/user/:uid', receiptsControllers.getReceiptByUserId);
 

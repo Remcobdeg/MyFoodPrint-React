@@ -60,7 +60,9 @@ const getReceiptById = async (req, res, next) => {
 // const getreceiptById = function() { ... }
 
 const getReceiptByUserId = async (req, res, next) => {
-  const userId = req.params.uid;
+  const userId = req.userData.userId;//req.params.uid;
+
+  console.log(req.headers);
 
   // send it to Mongo
   let receipts;
@@ -101,7 +103,7 @@ const createReceipt = async (req, res, next) => {
 
   let user;
   try {
-    user = await User.findById(req.body.user);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     const error = new HttpError('Creating receipt failed, please try again', 500);
     return next(error);
@@ -133,6 +135,8 @@ const createReceipt = async (req, res, next) => {
 
 const createReceiptMany = async (req, res, next) => {
 
+  // TO DO: define users that are allowed to perform this operation and check these I'd against the provided token -- route currently disabled
+
   // process errors if there are any
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -156,13 +160,19 @@ const createReceiptMany = async (req, res, next) => {
   }
 
   // check if all the users were found and, if not, notify which weren't found
-  if (foundUsers.length !== users.length) {
+  if (foundUsers.length !== users.length || !foundUsers) {
     const foundID = foundUsers.map(user => user.toObject({getters: true}).id);
     const missingID = users.filter(user => !foundID.includes(user));
     const error = new HttpError('Could not find user for provided id(s): '+missingID, 404);
     return next(error);
   }
-  
+
+  //check if the user is either a super user of the user adding their own receipts
+  if (req.userData.userId !== "superuserID" && req.userData.userId !== foundUsers[0].id){
+    const error = new HttpError('Not authorized. Logged in user does not match user on receipt', 403);
+    return next(error);
+  }
+
   //send it to Mongo -- we have to update two mongoose fields simultaneously, we need sessions to prevent one erroring and the other succeeding and imbalanced data being written
   try {
     const sess = await mongoose.startSession();
@@ -201,6 +211,10 @@ const updateReceipt = async (req, res, next) => {
     return next( new HttpError('Invalid inputs passed, please check your data.', 422));
   }
 
+  if (!req.body.user === req.userData.userId){
+    return next( new HttpError('Could not update receitp. User ID on receipt does not match logged in user.', 422));
+  }
+
   const receiptId = req.params.rcptid;
 
   let receipt;
@@ -226,6 +240,11 @@ const deleteReceipt = async (req, res, next) => {
 
   if (!foundReceipt) {
     const error = new HttpError('Could not find receipt for this id.', 404);
+    return next(error);
+  }
+
+  if (!foundReceipt.user.id === req.userData.userId) {
+    const error = new HttpError('Deletion not authorized. User ID on receipt does not match logged in user.', 403);
     return next(error);
   }
 
