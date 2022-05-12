@@ -146,7 +146,8 @@ const createReceiptMany = async (req, res, next) => {
   }
 
   // populate the receipt
-  const newReceiptMany = req.body.map(receipt => new Receipt({...receipt}));
+  const dateRecorded = new Date();
+  const newReceiptMany = req.body.map(receipt => new Receipt({...receipt, date_recorded: dateRecorded}));
 
   //before we save, test if the user name exists
 
