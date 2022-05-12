@@ -10,21 +10,48 @@ const HttpError = require('../models/http-error');
 const getAlternativesByProduct = async (req, res, next) => {
   const productName = req.params.product; 
 
-    let alternatives;
-    try {
-      alternatives = await Alternative.find({product: productName });
-    } catch (err) {
-      if (err){
-        const error = new HttpError("Error retrieving alternatives from DB.",500);
-        return next(error); 
-      }
+  //find the product in the database to determine the group and subgroup it belongs to
+  let alternative;
+  try {
+    alternative = await Alternative.findOne({product: productName });
+  } catch (err) {
+    if (err){
+      const error = new HttpError("Error retrieving alternatives from DB.",500);
+      return next(error); 
     }
-
-  if (alternatives.length === 0) {
-    return next( new HttpError('Could not find alternatives for the provided id.', 404));
   }
 
-  res.json({ alternatives: alternatives.map(alternative => alternative.toObject({getters: true})) }); // convert to normal js object, getters: true removes the _ from _id
+  if (!alternative) {
+    return next( new HttpError('Could not find the product.', 404));
+  }
+
+  //find alternatives in the same group
+  let groupAlternatives;
+  try {
+    groupAlternatives = await Alternative.find({group: alternative.group });
+  } catch (err) {
+    if (err){
+      const error = new HttpError("Error retrieving alternatives from DB.",500);
+      return next(error); 
+    }
+  }
+
+  if (groupAlternatives.length === 0) {
+    return next( new HttpError('Could not find alternatives for the product.', 404));
+  }
+
+  const subGroupAlternatives = groupAlternatives.filter(groupAlternative => groupAlternative.subgroup === alternative.subgroup);
+  groupAlternatives = groupAlternatives.filter(groupAlternative => groupAlternative.subgroup !== alternative.subgroup);
+
+
+  // alternatives.group 
+
+  // res.json({ alternative: alternative.toObject({getters: true}) }); // convert to normal js object, getters: true removes the _ from _id
+
+  res.json({ 
+    groupAlternatives: groupAlternatives.map(alternative => alternative.toObject({getters: true})),
+    subGroupAlternatives: subGroupAlternatives.map(alternative => alternative.toObject({getters: true}))
+  }); // convert to normal js object, getters: true removes the _ from _id
 };
 
 
