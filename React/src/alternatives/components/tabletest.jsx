@@ -18,11 +18,6 @@ export default function AlternativesTable(props) {
         else{return(null)}
     }
 
-    const colorRow = (item) => {
-        if(item === props.product){return("#bdc5c8")}
-        else{return(null)}
-    }
-
     const boldRow = (item) => {
         if(item === props.product){return(500)}
         else{return(null)}

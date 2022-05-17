@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import ListSubheader from '@mui/material/ListSubheader';
@@ -9,6 +9,7 @@ import CardHeader from '@mui/material/CardHeader';
 import { AuthContext } from '../../shared/context/authContext';
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import AlternativesTable from '../components/tabletest';
+import { useLocation } from 'react-router-dom';
 
 import './Alternatives.css';
 
@@ -17,14 +18,22 @@ function Alternatives() {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest } = useHttpClient();
 
+  const { state } = useLocation();
+  console.log(!!state);
+
   const [product, setProduct] = useState('');
+  const [productName, setProductName] = useState(!!state ? state : '');
   const [productHierarchy, setProductHierarchy] = useState();
   const [alternatives, setAlternatives] = useState([{}]);
   const [subgroupAlternatives, setSubgroupAlternatives] = useState();
 
-  const stuctureData = (alternatives, product) => {
+  console.log("product: "+productName);
+
+  const stuctureData = useCallback((alternatives, product) => {
     //find one item with the same product name to learn the retrieve the subgroup the product belongs to
     const selectedProduct = alternatives.find(alternative => alternative.product === product);
+    console.log(alternatives,product)
+    if(!!state){console.log(selectedProduct)}
     //get all items in that subgroup
     let subGroup = alternatives.filter(alternative => alternative.subgroup === selectedProduct.subgroup);
     let group = alternatives.filter(alternative => alternative.group === selectedProduct.group).filter(alternative => !subGroup.includes(alternative));
@@ -34,7 +43,7 @@ function Alternatives() {
 
     return({subgroupAlternatives: subGroup, groupAlternatives: group});
 
-  }
+  },[state])
 
   const stuctureData2 = (alternatives,selectedProduct) => {
 
@@ -66,11 +75,11 @@ function Alternatives() {
 
   const handleChange = (event) => {
     setProduct(alternatives.find(alternative => alternative.product === event.target.value));
+    setProductName(event.target.value);
     setSubgroupAlternatives(() => {
       const answer = stuctureData(alternatives,event.target.value)
       return(answer)
     });  
-    console.log(subgroupAlternatives);
   };
 
   // get products
@@ -87,6 +96,7 @@ function Alternatives() {
           }
         )
         let response = responseData.data.alternatives;
+        response.forEach(alternative => alternative.product = alternative.product.toLowerCase());
         response = (response.sort((a,b) => {if(b.product > a.product){return(-1)}else{return(1)};}));
         const productList = [...new Set(response.map(alternative => alternative.product))].sort();
         const subgroupList = [...new Set(response.map(alternative => alternative.subgroup))].sort();
@@ -95,12 +105,30 @@ function Alternatives() {
         setProductHierarchy(productHierarchy);
         // console.log([...new Set(response.map(alternative => alternative.product))].sort());
         setAlternatives(response);
+
+        // if(!!state){
+        //   console.log(state === "beef");
+        //   setProduct(alternatives.find(alternative => alternative.product === state));
+        //   console.log(product);
+        //   setProductName(state);
+        // }
       } catch (err) {}
     };
     fetchProducts(); 
-  }, [auth.token,sendRequest])
+  }, [auth.token,sendRequest,state])
 
-  
+  useEffect(() => {
+    if(!!state){
+      setProduct(alternatives.find(alternative => alternative.product === state));
+      setProductName(state);
+      if(Object.keys(alternatives[0]).length !== 0){
+      setSubgroupAlternatives(() => {
+        console.log(alternatives.length)
+        const answer = stuctureData(alternatives,state)
+        return(answer)
+      }); }
+    }
+  },[state,alternatives,stuctureData])
 
   return (
     <div>
@@ -109,7 +137,7 @@ function Alternatives() {
         <Select
           labelId="demo-simple-select-standard-label"
           id="demo-simple-select-standard"
-          value={product.product}
+          value={productName}
           onChange={handleChange}
           label="Product"
         >

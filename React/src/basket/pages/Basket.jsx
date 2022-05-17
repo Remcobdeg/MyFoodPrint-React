@@ -4,6 +4,7 @@ import WordCloud from "react-d3-cloud";
 import BarChart from "../components/BarChart";
 import { AuthContext } from '../../shared/context/authContext';
 import {useHttpClient} from '../../shared/hooks/http-hook';
+import { useNavigate } from 'react-router-dom';
  
 import {prepVizData, maxValue} from "../Modules/PrepVizData";
 
@@ -39,6 +40,8 @@ function Basket() {
   const [graphState, setGraphState] = useState('WORDS');
   const [receipts, setReceipts] = useState([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchReceipts = async () => {
       try{
@@ -63,6 +66,10 @@ function Basket() {
     if(newGraphState !== null){setGraphState(newGraphState)}; //don't allow selected button to be unselected, aka enforce value set
   };
 
+  const handeProductClick = (event, d) => {
+    navigate('/Alternatives', {state: d.text})
+  };
+
   return (
     <div>
     
@@ -79,9 +86,10 @@ function Basket() {
             fontWeight="bold"
             fill={data => data.color}
             // rotate={0}
+            onWordClick={handeProductClick}
           /> :
 
-          <BarChart data={prepVizData(receipts)} />
+          <BarChart data={prepVizData(receipts)} handeProductClick={handeProductClick} />
         }
 
       </div>}
