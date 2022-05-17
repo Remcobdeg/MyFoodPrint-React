@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.use(checkAuth); //checks if there's a token and adds userId to req from decomposed token
 
+router.get('/', alternativesControllers.getAlternatives);
+
 router.get('/:product', alternativesControllers.getAlternativesByProduct);
 
 router.post(

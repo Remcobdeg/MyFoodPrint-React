@@ -54,7 +54,25 @@ const getAlternativesByProduct = async (req, res, next) => {
   }); // convert to normal js object, getters: true removes the _ from _id
 };
 
+const getAlternatives = async (req, res, next) => {
+  let alternatives;
+  try {
+    alternatives = await Alternative.find({});
+  } catch (err) {
+    if (err){
+      const error = new HttpError("Error retrieving alternatives from DB.",500);
+      return next(error); 
+    }
+  }
 
+  if (alternatives.length === 0) {
+    return next( new HttpError('Could not find alternatives.', 404));
+  }
+
+  res.json({ 
+    alternatives: alternatives.map(alternative => alternative.toObject({getters: true})),
+  }); 
+};
 
 const createAlternative = async (req, res, next) => {
 
@@ -141,6 +159,7 @@ const deleteAlternative = async (req, res, next) => {
 };
 
 exports.getAlternativesByProduct = getAlternativesByProduct;
+exports.getAlternatives = getAlternatives;
 exports.createAlternative = createAlternative;
 exports.updateAlternative = updateAlternative;
 exports.deleteAlternative = deleteAlternative;

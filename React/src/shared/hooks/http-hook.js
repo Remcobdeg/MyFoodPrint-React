@@ -12,7 +12,7 @@ export const useHttpClient = () => {
       try {
         const response = await axios({
           method: method,
-          url: "http://localhost:5000/api" + url,
+          url: "http://localhost:5000/api" + url, //http://192.168.100.1:5000/api
           data: data,
           headers: headers
         });          

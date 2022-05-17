@@ -15,29 +15,29 @@ function Basket() {
 
   const auth = useContext(AuthContext);
 
-  const receiptSchema = {
-    "_id": "627131d609fa9b1ef5cb5399",
-    "date": "2017-02-22",
-    "time": "22:49:09",
-    "store": "Tesco",
-    "item_group": "AMBIENT DRY GROCERY",
-    "item_subgroup": "PASTA",
-    "item_product": "NO DATA YET",
-    "item_product_detail": "Tesco Value Lasagne Sheets 250g",
-    "item_footprint_g_100g": 240,
-    "item_kcal_100g": 360,
-    "item_weight_g": 250,
-    "item_unit_price_gbp": 0.29,
-    "item_units": 1,
-    "item_footprint_sourcenote": "NULL",
-    "user": "627130cc09fa9b1ef5cb5395",
-    "__v": 0,
-    "id": "627131d609fa9b1ef5cb5399"
-  }
+  // const receiptSchema = {
+  //   "_id": "627131d609fa9b1ef5cb5399",
+  //   "date": "2017-02-22",
+  //   "time": "22:49:09",
+  //   "store": "Tesco",
+  //   "item_group": "AMBIENT DRY GROCERY",
+  //   "item_subgroup": "PASTA",
+  //   "item_product": "NO DATA YET",
+  //   "item_product_detail": "Tesco Value Lasagne Sheets 250g",
+  //   "item_footprint_g_100g": 240,
+  //   "item_kcal_100g": 360,
+  //   "item_weight_g": 250,
+  //   "item_unit_price_gbp": 0.29,
+  //   "item_units": 1,
+  //   "item_footprint_sourcenote": "NULL",
+  //   "user": "627130cc09fa9b1ef5cb5395",
+  //   "__v": 0,
+  //   "id": "627131d609fa9b1ef5cb5399"
+  // }
 
   const { isLoading, error, sendRequest } = useHttpClient();
   const [graphState, setGraphState] = useState('WORDS');
-  const [receipts, setReceipts] = useState([receiptSchema]);
+  const [receipts, setReceipts] = useState([]);
 
   useEffect(() => {
     const fetchReceipts = async () => {
