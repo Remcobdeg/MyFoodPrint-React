@@ -67,7 +67,7 @@ function Basket() {
   };
 
   const handeProductClick = (event, d) => {
-    navigate('/Alternatives', {state: d.text})
+    navigate('/Alternatives', {state: d.text.toLowerCase()})
   };
 
   return (

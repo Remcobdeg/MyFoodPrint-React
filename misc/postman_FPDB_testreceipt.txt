@@ -19,9 +19,9 @@ POST
 http://localhost:5000/api/receipts/
 
 SET HEADER!
-authorization : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjcxMzBjYzA5ZmE5YjFlZjVjYjUzOTUiLCJlbWFpbCI6InJlbWNvQHJlbWNvLm5sIiwiaWF0IjoxNjUyMTgxODY1LCJleHAiOjE2NTI3NTc4NjV9.E98hWMaf6vAiuPgnnHpJSRjlRZDOEnliUTHgjFnHjjk
+authorization : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mjc4ZGM3M2M5NzI0MjhjMWViYmJlOTEiLCJlbWFpbCI6InJlbWNvMkByZW1jby5ubCIsImlhdCI6MTY1MjE4OTAxOCwiZXhwIjoxNjUyNzY1MDE4fQ.sHtt7FRO-QL08U0cX-kfaMKcxBjtCQzAg5berCyS1Lc
 
- {
+ [{
         "date": "15/05/2022",
         "time": "11:52:52",
         "store": "Morissons",
@@ -35,8 +35,24 @@ authorization : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mjcx
         "item_unit_price_gbp": 5,
         "item_units": 1,
         "item_footprint_sourcenote": "from mind",
-        "user": "627130cc09fa9b1ef5cb5395",
-    }
+        "user": "6278dc73c972428c1ebbbe91",
+    },
+ {
+        "date": "15/05/2022",
+        "time": "11:52:52",
+        "store": "Morissons",
+        "store_branche": "Byker",
+        "item_group": "protein sources",
+        "item_subgroup": "meat & alternatives",
+        "item_product": "beef",
+        "item_product_detail": "beef",
+        "item_footprint_g_100g": 2500,
+        "item_weight_g": 200,
+        "item_unit_price_gbp": 3,
+        "item_units": 1,
+        "item_footprint_sourcenote": "from mind",
+        "user": "6278dc73c972428c1ebbbe91",
+    }]
 
 http://localhost:5000/api/users/signup
 
@@ -47,3 +63,5 @@ http://localhost:5000/api/users/signup
 }
 
 626fb12e3b0233d7fe1ac738
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Mjc5MDE4YWIyYmRhYTdjNDVmNDliYTYiLCJlbWFpbCI6InJlbWNvM0ByZW1jby5ubCIsImlhdCI6MTY1MjI4NDYyNiwiZXhwIjoxNjUyODYwNjI2fQ.FucMxE81W0ZqdOJLJpHNvxSYFXYiScAj7aGfx-XDBEU

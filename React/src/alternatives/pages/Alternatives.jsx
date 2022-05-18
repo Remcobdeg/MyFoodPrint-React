@@ -118,15 +118,15 @@ function Alternatives() {
   }, [auth.token,sendRequest,state])
 
   useEffect(() => {
-    if(!!state){
+    if(!!state && Object.keys(alternatives[0]).length !== 0){
+      console.log(alternatives);
       setProduct(alternatives.find(alternative => alternative.product === state));
       setProductName(state);
-      if(Object.keys(alternatives[0]).length !== 0){
       setSubgroupAlternatives(() => {
         console.log(alternatives.length)
         const answer = stuctureData(alternatives,state)
         return(answer)
-      }); }
+      }); 
     }
   },[state,alternatives,stuctureData])
 
