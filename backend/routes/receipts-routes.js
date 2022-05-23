@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
     cb(null, 'images');
   },
   filename: (req, file, cb) => {
-    cb(null, 'image-' + Date.now() + '.jpg');
+    cb(null, 'image-' + req.params.userId + "-" + Date.now() + '.jpg');
   }
 })
 
@@ -24,7 +24,7 @@ router.get('/user/:uid', receiptsControllers.getReceiptByUserId);
 router.post(
   '/',
   [
-    check(['date','store','item_group', 'item_subgroup', 'item_product','item_product_detail','item_footprint_g_100g','item_weight_g','item_unit_price_gbp','item_units','item_footprint_sourcenote']) 
+    check(['date', 'store', 'item_group', 'item_subgroup', 'item_product', 'item_product_detail', 'item_footprint_g_100g', 'item_weight_g', 'item_unit_price_gbp', 'item_units', 'item_footprint_sourcenote'])
       .not()
       .isEmpty()
   ],
@@ -34,7 +34,7 @@ router.post(
 router.post(
   '/many',
   [
-    check(['.*.date','.*.store','.*.item_group']) 
+    check(['.*.date', '.*.store', '.*.item_group'])
       .not()
       .isEmpty()
   ],
@@ -44,7 +44,7 @@ router.post(
 router.patch(
   '/:rcptid',
   [
-    check(['date','store'])
+    check(['date', 'store'])
       .not()
       .isEmpty()
   ],
@@ -54,7 +54,7 @@ router.patch(
 router.delete('/:rcptid', receiptsControllers.deleteReceipt);
 
 router.post(
-  '/uploadImage', async (req, res) => {
+  '/uploadImage/:userId', async (req, res) => {
     var uploadPost = imageUpload.single('imageFile');
     uploadPost(req, res, function (err) {
       if (err) {
@@ -66,6 +66,8 @@ router.post(
 );
 
 router.get('/fetchImage/:imageName', receiptsControllers.fetchImageByName);
+
+router.get('/fetch/ImageList', receiptsControllers.fetchImageList);
 
 router.delete('/deleteImage/:imageName', receiptsControllers.deleteImageByName);
 

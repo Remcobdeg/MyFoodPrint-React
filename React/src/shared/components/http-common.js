@@ -6,3 +6,5 @@ export default axios.create({
     "Content-type": "application/json"
   }
 });
+
+export const baseURL="http://localhost:5000/api";

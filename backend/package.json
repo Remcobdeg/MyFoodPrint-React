@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^3.2.3",
+    "aws-sdk": "^2.1140.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "dotenv": "^16.0.0",

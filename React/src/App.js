@@ -16,20 +16,24 @@ import Auth from './auth/pages/Auth';
 import {AuthContext} from './shared/context/authContext';
 import Camera from './camera/pages/Camera';
 import ImageCamera from './camera/pages/ImageCamera';
+import ImageList from './admin/pages/ImageList';
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [userId, setUserId] = useState(false);
 
 
-  const login = useCallback((uid) => {
+  const login = useCallback((uid,isAdmin) => {
     setUserId(uid);
+    setIsAdmin(isAdmin);
     setIsLoggedIn(true);
     }, []);
 
   const logout = useCallback(() => {
     setIsLoggedIn(false);
+    setIsAdmin(false);
     setUserId(null);
   }, []);
 
@@ -38,15 +42,15 @@ function App() {
     <AuthContext.Provider value={{isLoggedIn: isLoggedIn, userId:userId, login: login, logout: logout}}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={isLoggedIn ? <Basket /> : <Auth /> } /> 
+          <Route path="/" element={isLoggedIn ? (isAdmin ?  <ImageList/>: <Basket />) : <Auth /> } /> 
           {isLoggedIn && <Route path="alternatives/*" element={<Alternatives />} /> }
           {isLoggedIn && <Route path="settings/*" element={<Settings />} /> }
-          {isLoggedIn && <Route path="camera/*" element={<Camera />} /> }
-          {isLoggedIn && <Route path="camera/image/*" element={<ImageCamera />} /> }
+          {isLoggedIn && <Route path="camera/*" element={<Camera userId={userId} />} /> }
+          {isLoggedIn && <Route path="camera/image/*" element={<ImageCamera userId={userId} />} /> }
           <Route path='auth/' element={<Auth />} />
           <Route path='*' element={<Navigate to='/' />} />
         </Routes>
-        {isLoggedIn && <NavBarBottom />}
+        {isLoggedIn && !isAdmin && <NavBarBottom />}
       </BrowserRouter>
     </AuthContext.Provider>
 

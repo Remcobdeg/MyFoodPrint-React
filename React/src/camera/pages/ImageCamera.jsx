@@ -3,7 +3,8 @@ import './Camera.css';
 import { useLocation,useNavigate,Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Modal, Box, Typography } from '@mui/material';
-import axios from 'axios';
+import commonHttp from '../../shared/components/http-common';
+import {baseURL} from '../../shared/components/http-common';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -17,17 +18,20 @@ const style = {
     textAlign: 'center'
 };
 
-function ImageCamera() {
+function ImageCamera(props) {
     const [imgFile, setImageFile] = useState(null);
     const [saveOpen, setSaveOpen] = React.useState(true);
     const { state } = useLocation();
     const navigate = useNavigate();
     useEffect(() => {
         const fetchImage = async () => {
-            const res = await fetch('http://192.168.210.95:5000/api/receipts/fetchImage/' + state);
+            const res = await fetch(baseURL+'/receipts/fetchImage/' + state);
             const imageBlob = await res.blob();
             const imageObjectURL = URL.createObjectURL(imageBlob);
             setImageFile(imageObjectURL);
+            //const imageBlob = await state.blob();
+            // const imageObjectURL = URL.createObjectURL(state);
+            // setImageFile(imageObjectURL);
         }
         setTimeout(() => {
             setSaveOpen(false);
@@ -37,19 +41,40 @@ function ImageCamera() {
     }, []);
 
     const removePhoto = () => {
-        axios.delete('http://192.168.210.95:5000/api/receipts/deleteImage/' + state).then((response) => {
+        // alert(sessionStorage.getItem("imgArray"))
+        // let imgArray = JSON.parse(sessionStorage.getItem("imgArray"));
+        // imgArray.pop();
+        // sessionStorage.setItem("imgArray", imgArray);
+        commonHttp.delete('/receipts/deleteImage/' + state).then((response) => {
             if(response.data === 'success') {
                 navigate('/camera');
             }
         });
     }
 
+    const saveAndExit = () => {
+        // let imgArray = sessionStorage.getItem("imgArray");
+        // let fd = new FormData();
+        // for (const image of imgArray) {
+        //     fd.append("images", image);
+        // }
+        // commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // }).then((response) => {
+        //     navigate('/');
+        // });
+        navigate('/');
+    }
+
     return (
-        <div className='video-container'>
+        <div className='img-container'>
             <img src={imgFile} id="img" alt="/image.png"></img>
             <div className="camera-button">
-                <Button onClick={removePhoto} sx={{width:'80vw', marginBottom:'5vh'}} color="error" variant="contained">Retry</Button>
-                <Link to="/"><Button sx={{width:'80vw'}} color="success" variant="contained">Ok</Button></Link>
+                <Button onClick={removePhoto} sx={{width:'80vw', marginBottom:'1vh'}} color="error" variant="contained">Retry</Button>
+                <Link to="/camera"><Button sx={{width:'80vw', marginBottom:'1vh'}} color="primary" variant="contained">Next</Button></Link>
+                <Button onClick={saveAndExit} sx={{width:'80vw'}} color="success" variant="contained">Save & Exit</Button>
             </div>
             <Modal
                 open={saveOpen}

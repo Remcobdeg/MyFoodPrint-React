@@ -40,10 +40,11 @@ function Auth(props){
           const response = await http.post("/users/" + (isSignup ? "signup" : "login"),{
             name: data.get('userName'),
             email: data.get('email'),
-            password: data.get('password')
-          });          
+            password: data.get('password'),
+            is_admin: false
+          });      
           setIsLoading(false); //needs to come before login, otherwise it sets a state in the wrong screen!
-          auth.login(response.data.user.id);
+          auth.login(response.data.user.id,response.data.user.is_admin);
         } catch(error) {
           setIsLoading(false);
           if (error.response) {

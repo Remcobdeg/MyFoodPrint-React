@@ -8,8 +8,9 @@ import { useTorchLight } from '@blackbox-vision/use-torch-light';
 import { Modal, IconButton, Box, Typography } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import axios from 'axios';
+import commonHttp from '../../shared/components/http-common';
 import { useNavigate, Link } from "react-router-dom";
+import DeviceOrientation from 'react-device-orientation';
 
 const style = {
     position: 'absolute',
@@ -44,7 +45,7 @@ function dataURItoFile(dataURI) {
     return new Blob([ia], { type: mimeString });
 }
 
-function Camera() {
+function Camera(props) {
     const videoRef = useRef(null);
     const photoRef = useRef(null);
     const streamRef = useRef(null);
@@ -57,7 +58,7 @@ function Camera() {
     const getVideo = () => {
         navigator.mediaDevices
             .getUserMedia({
-                video: { width: 960, height: 540, facingMode: { exact: "environment" } }
+                video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: { exact: "environment" } }
             })
             .then(stream => {
                 let video = videoRef.current;
@@ -69,8 +70,8 @@ function Camera() {
 
     const takePhoto = () => {
         setBackdropOpen(true);
-        const width = 600;
-        const height = 800;
+        const width = 1080;
+        const height = 1920;
         let video = videoRef.current;
         let photo = photoRef.current;
         photo.width = width;
@@ -79,9 +80,18 @@ function Camera() {
         ctx.drawImage(video, 0, 0, width, height);
         let dataURL = photoRef.current.toDataURL('image/jpeg');
         let imageFile = dataURItoFile(dataURL);
+        // let imgArray = new Array();
+        // if(sessionStorage.getItem("imgArray").length !== 0) {
+        //     imgArray = JSON.parse(sessionStorage.getItem("imgArray"));
+        // }
+        // imgArray.push(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
+        // alert(JSON.stringify(imgArray));
+        // sessionStorage.setItem("imgArray", JSON.stringify(imgArray));
+        // setBackdropOpen(false);
+        // navigate('/camera/image', { state: imageFile });
         let fd = new FormData();
         fd.append("imageFile", imageFile);
-        axios.post('http://192.168.210.95:5000/api/receipts/uploadImage', fd, {
+        commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -99,42 +109,46 @@ function Camera() {
     }, [videoRef, streamRef]);
 
     return (
-        <div className='video-container'>
-            <video ref={videoRef}></video>
-            <IconButton onClick={takePhoto} className='camera-button'>
-                <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
-            </IconButton>
-            <IconButton onClick={toggle} className='flash-button'>
-                {
-                    on ? <FlashOffIcon sx={{ fontSize: "15vmin" }} color="primary" />
-                        : <FlashOnIcon sx={{ fontSize: "15vmin" }} color="primary" />
-                }
-            </IconButton>
-            <IconButton className='gallery-button'>
-                <Link to="/"><CloseIcon sx={{ fontSize: "15vmin" }} color="primary" className='' /></Link>
-            </IconButton>
-            <canvas ref={photoRef}></canvas>
-            <Modal
-                open={open}
-                onClose={handleClose}
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        With the WHOLE receipt in view, <br />
-                        Press the <br />
-                        <CameraIcon sx={{ fontSize: "13vmin" }} color="primary" /> <br />
-                        button below
-                    </Typography>
-                </Box>
-            </Modal>
-            <Backdrop
-                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={backdropOpen}
-                onClick={handleBackdropClose}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-        </div>
+        <DeviceOrientation>
+            {({ absolute, alpha, beta, gamma }) => (
+                <div className='video-container'>
+                    <video ref={videoRef}></video>
+                    {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) &&<IconButton onClick={takePhoto} className='camera-button'>
+                        <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
+                    </IconButton>}
+                    <IconButton onClick={toggle} className='flash-button'>
+                        {
+                            on ? <FlashOffIcon sx={{ fontSize: "15vmin" }} color="primary" />
+                                : <FlashOnIcon sx={{ fontSize: "15vmin" }} color="primary" />
+                        }
+                    </IconButton>
+                    <IconButton className='gallery-button'>
+                        <Link to="/"><CloseIcon sx={{ fontSize: "15vmin" }} color="primary" className='' /></Link>
+                    </IconButton>
+                    <canvas ref={photoRef}></canvas>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                    >
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                With the WHOLE receipt in view, <br />
+                                Press the <br />
+                                <CameraIcon sx={{ fontSize: "13vmin" }} color="primary" /> <br />
+                                button below
+                            </Typography>
+                        </Box>
+                    </Modal>
+                    <Backdrop
+                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                        open={backdropOpen}
+                        onClick={handleBackdropClose}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
+                </div>
+            )}
+        </DeviceOrientation>
     );
 }
 

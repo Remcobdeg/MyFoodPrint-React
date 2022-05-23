@@ -8,6 +8,7 @@ const Receipt = require('../models/receipt');
 const User = require('../models/user');
 const HttpError = require('../models/http-error');
 const receipt = require('../models/receipt');
+const textractOCR = require('../aws/textractOCR');
 
 let DUMMY_RECEIPTS = [
   {
@@ -280,6 +281,28 @@ const deleteImageByName = async (req, res, next) => {
   }
 };
 
+const fetchImageList = async (req, res, next) => {
+  const testFolder = './images';
+  var path = require('path');
+  try {
+    // fs.readdir(testFolder, (err, files) => {
+    //   files.forEach(file => {
+    //     console.log(file);
+    //   });
+    // });
+    const resultOcr = textractOCR.requestAnalyze;
+    console.log(resultOcr);
+    return res.end("success");
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'Something went wrong, could not delete receipt.',
+      500
+    );
+    return next(error);
+  }
+};
+
 exports.getReceiptById = getReceiptById;
 exports.getReceiptByUserId = getReceiptByUserId;
 exports.createReceipt = createReceipt;
@@ -288,3 +311,4 @@ exports.deleteReceipt = deleteReceipt;
 exports.createReceiptMany = createReceiptMany;
 exports.fetchImageByName = fetchImageByName;
 exports.deleteImageByName = deleteImageByName;
+exports.fetchImageList = fetchImageList;
