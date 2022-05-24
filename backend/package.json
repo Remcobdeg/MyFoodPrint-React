@@ -14,7 +14,7 @@
     "aws-sdk": "^2.1140.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.1",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "jsonwebtoken": "^8.5.1",

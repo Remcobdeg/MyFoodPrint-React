@@ -15,7 +15,7 @@ export const useHttpClient = () => {
           url: "http://localhost:5000/api" + url, //http://192.168.100.1:5000/api
           data: data,
           headers: headers
-        });          
+        });        
         setIsLoading(false); //needs to come before login, otherwise it sets a state in the wrong screen!
         return response;
       } catch(error) {

@@ -24,22 +24,23 @@ import { useAuth } from './shared/hooks/authHook'
 
 
 function App() {
-  const { token, login, logout, userId, isAdmin } = useAuth();
+  const { token, login, logout, userId } = useAuth();
 
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={!!token ? (isAdmin ? <ImageList /> : <Basket />) : <Auth />} />
+          <Route path="/" element={!!token ? <Basket /> : <Auth />} />
           {!!token && <Route path="alternatives/*" element={<Alternatives />} />}
           {!!token && <Route path="stats/*" element={<Stats />} />}
           {!!token && <Route path="settings/*" element={<Settings />} />}
           {!!token && <Route path="camera/*" element={<Camera userId={userId} />} />}
           {!!token && <Route path="camera/image/*" element={<ImageCamera userId={userId} />} />}
+          {!!token && <Route path="imageList/*" element={<ImageList />} />}
           <Route path='auth/' element={<Auth />} />
           <Route path='*' element={<Navigate to='/' />} />
         </Routes>
-        {!!token && !isAdmin && <NavBarBottom />}
+        {!!token && <NavBarBottom />}
       </BrowserRouter>
     </AuthContext.Provider>
 
