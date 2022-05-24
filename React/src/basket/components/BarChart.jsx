@@ -66,7 +66,8 @@ const BarChart = function(props){
             .attr('width', d => (xScale(d.value)))
             .attr('height', d => yScale.bandwidth()-3)
             .style('fill', (d, i) => d.color)
-            .on('click', (d,i) => {console.log(i)} );
+            .on('click', props.handeProductClick );
+            // .on('click', (d,i) => {console.log(i)} );
             
 
         chart.selectAll('.bar-label')
@@ -79,7 +80,8 @@ const BarChart = function(props){
             .attr("text-anchor", d => {if(d.value>5000){return("end")}else{return("start")}})
             .attr('y', d => yScale(d.text) + yScale.bandwidth()/2)
             // .attr('dy', 0)
-            .text( function(d){return ((d.value<1000) ? Number(d.value.toPrecision(2)) : Number(d.value.toPrecision(2))/1000 + "k") ; } );
+            .text( function(d){return ((d.value<1000) ? Number(d.value.toPrecision(2)) : Number(d.value.toPrecision(2))/1000 + "k") ; } )
+            .on('click', props.handeProductClick );
 
         chart.selectAll(".xAxis>.tick>text")
 		    .style("font-size","20px");

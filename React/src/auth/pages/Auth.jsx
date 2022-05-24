@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import http from '../../shared/components/http-common'
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -9,15 +8,14 @@ import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { AuthContext } from '../../shared/context/authContext';
+import {useHttpClient} from '../../shared/hooks/http-hook';
 
 import './Auth.css'
 
 function Auth(props){
 
     const auth = useContext(AuthContext);
-
-    const [loginError, setLoginError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const { isLoading, error, sendRequest } = useHttpClient();
     const [isSignup, setIsSignup] = useState(false);
 
     function toSignup(event){
@@ -28,42 +26,23 @@ function Auth(props){
 
     async function handleSubmit(event){
         event.preventDefault();
-        setIsLoading(true);
         const data = new FormData(event.currentTarget);
-        // http.post(`/users/` + isSignup ? "signup" : "login",{
-        //   name: data.get('userName'),
-        //   email: data.get('email'),
-        //   password: data.get('password')
-        // })
 
-        try {
-          const response = await http.post("/users/" + (isSignup ? "signup" : "login"),{
-            name: data.get('userName'),
-            email: data.get('email'),
-            password: data.get('password'),
-            is_admin: false
-          });      
-          setIsLoading(false); //needs to come before login, otherwise it sets a state in the wrong screen!
-          auth.login(response.data.user.id,response.data.user.is_admin);
-        } catch(error) {
-          setIsLoading(false);
-          if (error.response) {
-            // Request made and server responded
-            console.log(error.response.data);
-            setLoginError(error.response.data.message);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-            setLoginError(error.request);
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-            setLoginError(error.message);
-          }
-        };
-        
+        try{
+          const response = await sendRequest(
+            "/users/" + (isSignup ? "signup" : "login"),
+            'post',
+            {
+              name: data.get('userName'),
+              email: data.get('email'),
+              password: data.get('password')
+            },
+            {
+              "Content-type": "application/json"
+            }
+          )
+          auth.login(response.data.userId, response.data.token, response.data.user.is_admin);
+        } catch(err){}        
     };
 
     return(
@@ -109,7 +88,7 @@ function Auth(props){
               id="password"
               autoComplete="current-password"
             />
-            {loginError && <Alert severity="error">{`${loginError}`}</Alert>}
+            {error && <Alert severity="error">{`${error}`}</Alert>}
 
             <Button
               type="submit"
@@ -133,7 +112,7 @@ function Auth(props){
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={isLoading}
-          onClick={() => setIsLoading(false)}
+          // onClick={() => setIsLoading(false)}
         >
           <CircularProgress color="inherit" />
         </Backdrop>

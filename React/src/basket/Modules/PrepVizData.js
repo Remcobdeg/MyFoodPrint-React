@@ -79,7 +79,7 @@ function prepVizData(purchases, periodStart = "01012022",periodEnd = "31123022",
         //sort descending for barchart to turn out nicely
         aggregateData.sort((a,b) => {return b.value - a.value;})
 
-        aggregateData.forEach(entry => {if(entry.text === "PREPARED MEALS"){entry.text = "MEALS";}})
+        // aggregateData.forEach(entry => {if(entry.text === "PREPARED MEALS"){entry.text = "MEALS";}})
 
         return aggregateData;
     };

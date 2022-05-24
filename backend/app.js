@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const receiptsRoutes = require('./routes/receipts-routes');
+const alternativesRoutes = require('./routes/alternatives-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/receipts', receiptsRoutes); // => /api/receipts... and everything after
+app.use('/api/alternatives', alternativesRoutes); 
 app.use('/api/users', usersRoutes);
 
 app.use((req, res, next) => {

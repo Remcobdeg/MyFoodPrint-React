@@ -17,6 +17,7 @@ const receiptSchema = new Schema({
     item_unit_price_gbp: {type: Number, required: true},
     item_units: {type: Number, default: 1},
     item_footprint_sourcenote: {type: String, required: true},
+    date_recorded: {type: Date, required: true},
     user: {type: mongoose.Types.ObjectId, required: true, ref: 'User'} //makes sure it's a mongoose object id and refers to the User model 
 });
 
