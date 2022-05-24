@@ -10,6 +10,7 @@ import {
 import './App.css';
 import Basket from './basket/pages/Basket';
 import Alternatives from './alternatives/pages/Alternatives';
+import Stats from './stats/pages/stats';
 import Settings from './Settings/pages/settings';
 import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
@@ -30,6 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={!!token ? <Basket /> : <Auth /> } /> 
           {!!token && <Route path="alternatives/*" element={<Alternatives />} /> }
+          {!!token && <Route path="stats/*" element={<Stats />} /> }
           {!!token && <Route path="settings/*" element={<Settings />} /> }
           <Route path='auth/' element={<Auth />} />
           <Route path='*' element={<Navigate to='/' />} />

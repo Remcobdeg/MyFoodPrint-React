@@ -59,7 +59,7 @@ function Basket() {
       } catch (err) {}
     };
     fetchReceipts(); 
-  }, [auth.userId,auth.token,sendRequest])
+  }, [auth,sendRequest])
 
 
   const handleChange = (event, newGraphState) => {

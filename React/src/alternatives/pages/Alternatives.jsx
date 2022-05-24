@@ -8,7 +8,7 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import { AuthContext } from '../../shared/context/authContext';
 import {useHttpClient} from '../../shared/hooks/http-hook';
-import AlternativesTable from '../components/tabletest';
+import AlternativesTable from '../components/AltTable';
 import { useLocation } from 'react-router-dom';
 
 import './Alternatives.css';
@@ -19,7 +19,6 @@ function Alternatives() {
   const { isLoading, error, sendRequest } = useHttpClient();
 
   const { state } = useLocation();
-  console.log(!!state);
 
   const [product, setProduct] = useState('');
   const [productName, setProductName] = useState(!!state ? state : '');
@@ -27,13 +26,9 @@ function Alternatives() {
   const [alternatives, setAlternatives] = useState([{}]);
   const [subgroupAlternatives, setSubgroupAlternatives] = useState();
 
-  console.log("product: "+productName);
-
   const stuctureData = useCallback((alternatives, product) => {
     //find one item with the same product name to learn the retrieve the subgroup the product belongs to
     const selectedProduct = alternatives.find(alternative => alternative.product === product);
-    console.log(alternatives,product)
-    if(!!state){console.log(selectedProduct)}
     //get all items in that subgroup
     let subGroup = alternatives.filter(alternative => alternative.subgroup === selectedProduct.subgroup);
     let group = alternatives.filter(alternative => alternative.group === selectedProduct.group).filter(alternative => !subGroup.includes(alternative));
@@ -53,7 +48,6 @@ function Alternatives() {
 
     alternatives.forEach(d => {
       if (d.footprint_g_100g < 300) {
-        console.log("green")
           return(d.color = "#B2EA70")
       } else if (d.footprint_g_100g < 600) {
           return(d.color = "#FBD148")
@@ -119,11 +113,9 @@ function Alternatives() {
 
   useEffect(() => {
     if(!!state && Object.keys(alternatives[0]).length !== 0){
-      console.log(alternatives);
       setProduct(alternatives.find(alternative => alternative.product === state));
       setProductName(state);
       setSubgroupAlternatives(() => {
-        console.log(alternatives.length)
         const answer = stuctureData(alternatives,state)
         return(answer)
       }); 
