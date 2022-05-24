@@ -123,7 +123,7 @@ const login = async (req, res, next) => {
 
   res.json({
     message: 'Logged in!',
-    userId: identifiedUser.id, email: identifiedUser.email, token: token
+    userId: identifiedUser.id, isAdmin: identifiedUser.is_admin, email: identifiedUser.email, token: token
   });
 };
 

@@ -41,7 +41,7 @@ function Auth(props){
               "Content-type": "application/json"
             }
           )
-          auth.login(response.data.userId, response.data.token, response.data.user.is_admin);
+          auth.login(response.data.userId, response.data.token, response.data.isAdmin);
         } catch(err){}        
     };
 

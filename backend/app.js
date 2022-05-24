@@ -45,20 +45,20 @@ app.use((error, req, res, next) => {
 const mongoUser = process.env.MONGO_USER;
 const mongoPswd = process.env.MONGO_PASSWORD;
 
-// mongoose.connect("mongodb+srv://"+mongoUser+":"+mongoPswd+"@cluster0.orklo.mongodb.net/MyFoodPrintTest2?retryWrites=true&w=majority")
-// .then(() => {
-//   console.log('Connected to database!');
-//   app.listen(5000);
-// }).catch(() => {
-//   console.log('Connection failed!')
-// });
-
-mongoose.connect("mongodb+srv://JoelGeorgePanicker:"+"0k0O9OPgcKI3SZRs"+"@cluster0.7ladl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://"+mongoUser+":"+mongoPswd+"@cluster0.orklo.mongodb.net/MyFoodPrintTest2?retryWrites=true&w=majority")
 .then(() => {
   console.log('Connected to database!');
   app.listen(5000);
 }).catch(() => {
   console.log('Connection failed!')
 });
+
+// mongoose.connect("mongodb+srv://JoelGeorgePanicker:"+"0k0O9OPgcKI3SZRs"+"@cluster0.7ladl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+// .then(() => {
+//   console.log('Connected to database!');
+//   app.listen(5000);
+// }).catch(() => {
+//   console.log('Connection failed!')
+// });
 
 //don't forget: determine dynamically what to patch based on input, rather than forcing input

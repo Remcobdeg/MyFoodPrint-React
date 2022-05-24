@@ -24,9 +24,7 @@ import { useAuth } from './shared/hooks/authHook'
 
 
 function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const { token, login, logout, userId } = useAuth();
-
+  const { token, login, logout, userId, isAdmin } = useAuth();
 
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
