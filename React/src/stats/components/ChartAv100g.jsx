@@ -8,32 +8,30 @@ import * as d3 from 'd3';
 export default function Chart (props) {
 
   
-    const plot = function(data, chart, width, height){
+    const plot = function(data, chart, width, height, margin){
 
-        console.log(data.length);
-
-        var minDate = new Date(data[0].date);
-        var maxDate = new Date(data[data.length-1].date);
+        var minDate = props.period.minDate; //new Date(data[0].date);
+        var maxDate = props.period.maxDate; //new Date(data[data.length-1].date);
         
         console.log("min: " +minDate);
         console.log("max: " +maxDate);
 
         //scales
-        var xScale = d3.scaleTime()
+        var xScale = d3.scaleUtc()
                     .domain([minDate, maxDate])                
-                    .range([5, width]);
+                    .range([10, width-10]);
 
         const xAxis = d3.axisBottom()
-            .scale(xScale).ticks(3);
+            .scale(xScale).ticks(7);
             
         chart.append('g')
             .classed('xAxis', true)
-            .attr('transform', `translate(0,${height})`)
+            .attr('transform', `translate(0,${height+5})`)
             .call(xAxis);
 
         //Y-axis
         const yScale = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.footprint)])
+        .domain([0, d3.max(data, d => d.footprint)+15])
         .range([height, 0])
 
         const yAxis = d3.axisLeft()
@@ -42,11 +40,23 @@ export default function Chart (props) {
 
         chart.append('g')
             .classed('yAxis', true)
-            .attr('transform', 'translate(20,0)')
+            .attr('transform', 'translate(-5,0)')
             .call(yAxis);
 
-            // Add the line
-        chart.append("path")
+        // Add a clipPath: everything out of this area won't be drawn.
+        var clip = chart.append("defs").append("SVG:clipPath")
+        .attr("id", "clip")
+        .append("SVG:rect")
+        .attr("width", width )
+        .attr("height", height )
+        .attr("x", 0)
+        .attr("y", 0);
+
+        var frame = chart.append('g')
+        .attr("clip-path", "url(#clip)")
+
+        // Add the line
+        frame.append("path")
         .datum(data)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
@@ -56,88 +66,26 @@ export default function Chart (props) {
         .y(function(d) { return yScale(d.footprint) })
         )
 
-        // let lineFun = d3.svg.line()
-        //     .x(function (d) {return xScale(d.date); } )
-        //     .y(function (d) {return yScale(d.footprint); })
-        //     .interpolate("linear");
+        // Add circles
+        frame
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+            .attr("cx", function (d) { return xScale(new Date(d.date)); } )
+            .attr("cy", function (d) { return yScale(d.footprint); } )
+            .attr("r", 8)
+            .style("fill", "#61a3a9")
+            .style("opacity", 0.5)
 
-        // chart.append("path")
-        //     .attr({
-        //         d: lineFun(data),
-        //         "stroke" : "purple",
-        //         "stroke-width": 2,
-        //         "fill" : "none"
-        //     });
-
-
-        // chart.selectAll('.bar')
-        //     .data(props.data)
-        //     .enter()
-        //     .append('rect')
-        //     .classed('bar', true)
-        //     .attr('x', xScale(0))
-        //     .attr('y', d => yScale(d.text))
-        //     .attr('width', d => (xScale(d.value)))
-        //     .attr('height', d => yScale.bandwidth()-3)
-        //     .style('fill', (d, i) => d.color)
-        //     .on('click', props.handeProductClick );
-        //     // .on('click', (d,i) => {console.log(i)} );
-            
-
-        // chart.selectAll('.bar-label')
-        //     .data(props.data)
-        //     .enter()
-        //     .append('text')
-        //     .classed('bar-label', true)
-        //     .attr('x', d => xScale(d.value))
-        //     // .attr('dx', -6)
-        //     .attr("text-anchor", d => {if(d.value>5000){return("end")}else{return("start")}})
-        //     .attr('y', d => yScale(d.text) + yScale.bandwidth()/2)
-        //     // .attr('dy', 0)
-        //     .text( function(d){return ((d.value<1000) ? Number(d.value.toPrecision(2)) : Number(d.value.toPrecision(2))/1000 + "k") ; } )
-        //     .on('click', props.handeProductClick );
-
-        // chart.selectAll(".xAxis>.tick>text")
-		//     .style("font-size","20px");
-        // chart.selectAll(".yAxis>.tick>text")
-		//     .style("font-size","20px");
-
-        // chart.select('.xAxis')
-        //     .append('text')
-        //     .attr('x',  width/2)
-        //     .attr('y', 60)
-        //     .attr('fill', '#000')
-        //     .style('font-size', '20px')
-        //     .style('text-anchor', 'middle')
-        //     .text('gCO2e');    
-            
-        // chart.select('.y.axis')
-        //     .append('text')
-        //     .attr('x', 0)
-        //     .attr('y', 0)
-        //     .attr('transform', `translate(-50, ${height/2}) rotate(-90)`)
-        //     .attr('fill', '#000')
-        //     .style('font-size', '20px')
-        //     .style('text-anchor', 'middle')
-        //     .text('Government Expenditure in Billion Dollars');   
-            
-        // const yGridlines = d3.axisLeft()
-        //     .scale(yScale)
-        //     .ticks(5)
-        //     .tickSize(-width,0,0)
-        //     .tickFormat('')
-
-        // chart.append('g')
-        //     .call(yGridlines)
-        //     .classed('gridline', true);
 
     }
     
     const drawChart = function(data){
         const margin = {
             top: 20,
-            bottom: 100,
-            left: 10,
+            bottom: 40,
+            left: 40,
             right: 10
         };
 
@@ -156,7 +104,7 @@ export default function Chart (props) {
 
         const chartWidth = width - margin.left - margin.right;
         const chartHeight = height - margin.top - margin.bottom
-        plot(data, chart, chartWidth, chartHeight);
+        plot(data, chart, chartWidth, chartHeight, margin);
 
         return el.toReact();
     } 

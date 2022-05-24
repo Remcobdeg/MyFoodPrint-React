@@ -4,6 +4,9 @@ import { AuthContext } from '../../shared/context/authContext';
 import DateExt from '../../shared/models/dateExt';
 import ChartAv100g from '../components/ChartAv100g';
 import D3ZoomTest from '../components/D3ZoomTest';
+import IconButton from '@mui/material/IconButton';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 export default function Stats (props){
 
@@ -12,6 +15,7 @@ export default function Stats (props){
     const { isLoading, error, sendRequest } = useHttpClient();
     const [graphState, setGraphState] = useState('WORDS');
     const [receipts, setReceipts] = useState([{}]);
+    const [period, setPeriod] = useState({minDate: new Date(), maxDate: new Date()});
   
     useEffect(() => {
       const fetchReceipts = async () => {
@@ -26,8 +30,15 @@ export default function Stats (props){
             }
           )
           const response = responseData.data.receipts;
+
           setReceipts(response);
-          aggregateForStats(response);
+
+          setPeriod(()=>{
+                const dates = response.map(receipt => new Date(receipt.date));
+                const maxDate = new Date(Math.max.apply(null,dates));
+                const minDate = new Date( new Date(maxDate).setDate(maxDate.getDate()-6))
+              return {minDate:minDate,maxDate:maxDate}
+          })
         } catch (err) {}
       };
       fetchReceipts(); 
@@ -128,15 +139,52 @@ export default function Stats (props){
 
     // Source: https://weeknumber.net/how-to/javascript
 
+    function backDate(){
+        setPeriod(prevState => {
+            let newMinDate = new Date(prevState.minDate);
+            newMinDate.setDate(prevState.minDate.getDate()-2);
+            newMinDate = new Date(newMinDate);
+            console.log(newMinDate);
 
+            let newMaxDate = new Date(prevState.maxDate);
+            newMaxDate.setDate(prevState.maxDate.getDate()-2);
+            newMaxDate = new Date(newMaxDate);
+            console.log(newMaxDate);
+            
+            return {minDate: newMinDate, maxDate: newMaxDate}
+        })
+    }
+
+    function forwardDate(){
+        setPeriod(prevState => {
+            let newMinDate = new Date(prevState.minDate);
+            newMinDate.setDate(prevState.minDate.getDate()+2);
+            newMinDate = new Date(newMinDate);
+            console.log(newMinDate);
+
+            let newMaxDate = new Date(prevState.maxDate);
+            newMaxDate.setDate(prevState.maxDate.getDate()+2);
+            newMaxDate = new Date(newMaxDate);
+            console.log(newMaxDate);
+            
+            return {minDate: newMinDate, maxDate: newMaxDate}
+        })
+    }
 
 
 
     return(
         <React.Fragment>
             <h1>Hello Stats</h1>
-            {Object.keys(receipts[0]).length !== 0 && <ChartAv100g data={aggregateForStats(receipts)} />}
+            {Object.keys(receipts[0]).length !== 0 && <ChartAv100g data={aggregateForStats(receipts)} period={period}/>}
             {/* <D3ZoomTest /> */}
+            {console.log(period)}
+            <IconButton aria-label="back" onClick={backDate}>
+                <ArrowLeftIcon />
+            </IconButton>
+            <IconButton aria-label="forward" onClick={forwardDate}>
+                <ArrowRightIcon />
+            </IconButton>
         </React.Fragment>
     )
 
