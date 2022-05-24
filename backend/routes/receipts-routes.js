@@ -67,8 +67,8 @@ router.post(
 
 router.get('/fetchImage/:imageName', receiptsControllers.fetchImageByName);
 
-router.get('/fetch/ImageList', receiptsControllers.fetchImageList);
-
 router.delete('/deleteImage/:imageName', receiptsControllers.deleteImageByName);
+
+router.get('/fetch/ImageList', receiptsControllers.fetchImageList);
 
 module.exports = router;

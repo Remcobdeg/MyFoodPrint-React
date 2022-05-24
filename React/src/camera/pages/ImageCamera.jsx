@@ -29,9 +29,6 @@ function ImageCamera(props) {
             const imageBlob = await res.blob();
             const imageObjectURL = URL.createObjectURL(imageBlob);
             setImageFile(imageObjectURL);
-            //const imageBlob = await state.blob();
-            // const imageObjectURL = URL.createObjectURL(state);
-            // setImageFile(imageObjectURL);
         }
         setTimeout(() => {
             setSaveOpen(false);
@@ -41,10 +38,6 @@ function ImageCamera(props) {
     }, []);
 
     const removePhoto = () => {
-        // alert(sessionStorage.getItem("imgArray"))
-        // let imgArray = JSON.parse(sessionStorage.getItem("imgArray"));
-        // imgArray.pop();
-        // sessionStorage.setItem("imgArray", imgArray);
         commonHttp.delete('/receipts/deleteImage/' + state).then((response) => {
             if(response.data === 'success') {
                 navigate('/camera');
@@ -53,18 +46,7 @@ function ImageCamera(props) {
     }
 
     const saveAndExit = () => {
-        // let imgArray = sessionStorage.getItem("imgArray");
-        // let fd = new FormData();
-        // for (const image of imgArray) {
-        //     fd.append("images", image);
-        // }
-        // commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data'
-        //     }
-        // }).then((response) => {
-        //     navigate('/');
-        // });
+        
         navigate('/');
     }
 
@@ -73,7 +55,7 @@ function ImageCamera(props) {
             <img src={imgFile} id="img" alt="/image.png"></img>
             <div className="camera-button">
                 <Button onClick={removePhoto} sx={{width:'80vw', marginBottom:'1vh'}} color="error" variant="contained">Retry</Button>
-                <Link to="/camera"><Button sx={{width:'80vw', marginBottom:'1vh'}} color="primary" variant="contained">Next</Button></Link>
+                {/* <Link to="/camera"><Button sx={{width:'80vw', marginBottom:'1vh'}} color="primary" variant="contained">Next</Button></Link> */}
                 <Button onClick={saveAndExit} sx={{width:'80vw'}} color="success" variant="contained">Save & Exit</Button>
             </div>
             <Modal

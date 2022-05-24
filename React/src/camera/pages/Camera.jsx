@@ -80,15 +80,6 @@ function Camera(props) {
         ctx.drawImage(video, 0, 0, width, height);
         let dataURL = photoRef.current.toDataURL('image/jpeg');
         let imageFile = dataURItoFile(dataURL);
-        // let imgArray = new Array();
-        // if(sessionStorage.getItem("imgArray").length !== 0) {
-        //     imgArray = JSON.parse(sessionStorage.getItem("imgArray"));
-        // }
-        // imgArray.push(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
-        // alert(JSON.stringify(imgArray));
-        // sessionStorage.setItem("imgArray", JSON.stringify(imgArray));
-        // setBackdropOpen(false);
-        // navigate('/camera/image', { state: imageFile });
         let fd = new FormData();
         fd.append("imageFile", imageFile);
         commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {

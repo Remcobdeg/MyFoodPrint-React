@@ -39,18 +39,18 @@ var detectParams = {
 //     requestAnalyze;
 // };
 
-const requestAnalyze = textract.analyzeExpense(detectParam, (err, data) => {
-    if (err) {
-        console.log(err);
-        return err;
-    }
-    else {
-        createResult(data.ExpenseDocuments[0]);
-        var result = resultOCR;
-        return result;
-    }
-});
-
+const requestAnalyze = (req, res, next) => {
+    request = textract.analyzeExpense(detectParam, (err, data) => {
+        if (err) {
+            console.log(err);
+            return err;
+        }
+        else {
+            createResult(data.ExpenseDocuments[0]);
+            console.log(resultOCR);
+        }
+    });
+}
 
 function createResult(objList) {
     filterObj(objList.SummaryFields, "VENDOR_NAME");
@@ -117,5 +117,6 @@ function isGoodDate(dt) {
 const isDate = (date) => {
     return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 }
+
 
 exports.requestAnalyze = requestAnalyze;

@@ -290,8 +290,8 @@ const fetchImageList = async (req, res, next) => {
     //     console.log(file);
     //   });
     // });
-    const resultOcr = textractOCR.requestAnalyze;
-    console.log(resultOcr);
+    textractOCR.requestAnalyze;
+    //console.log(resultOcr);
     return res.end("success");
   } catch (err) {
     console.log(err);
