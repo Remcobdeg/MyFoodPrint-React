@@ -1,21 +1,42 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useRef, useCallback} from 'react';
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/authContext';
-import DateExt from '../../shared/models/dateExt';
+// import DateExt from '../../shared/models/dateExt';
 import ChartAv100g from '../components/ChartAv100g';
-import D3ZoomTest from '../components/D3ZoomTest';
+// import D3ZoomTest from '../components/D3ZoomTest';
 import IconButton from '@mui/material/IconButton';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import HelpIcon from '@mui/icons-material/Help';
+import Help from '../components/Help'
+
+import './stats.css';
+
+
+
+
 
 export default function Stats (props){
 
     const auth = useContext(AuthContext);
   
     const { isLoading, error, sendRequest } = useHttpClient();
-    const [graphState, setGraphState] = useState('WORDS');
     const [receipts, setReceipts] = useState([{}]);
-    const [period, setPeriod] = useState({minDate: new Date(), maxDate: new Date()});
+    const [period, setPeriod] = useState({minDate: new Date(), maxDate: new Date(), firstDate: new Date(), lastDate: new Date()});
+    const [graphWidth, setGraphWidth] = useState(null);
+
+    const graphPaper = node => {
+        if (node !== null) {
+          setGraphWidth(node.getBoundingClientRect().width);
+        }
+      };
+
   
     useEffect(() => {
       const fetchReceipts = async () => {
@@ -35,9 +56,11 @@ export default function Stats (props){
 
           setPeriod(()=>{
                 const dates = response.map(receipt => new Date(receipt.date));
-                const maxDate = new Date(Math.max.apply(null,dates));
-                const minDate = new Date( new Date(maxDate).setDate(maxDate.getDate()-6))
-              return {minDate:minDate,maxDate:maxDate}
+                const lastDate = new Date(Math.max.apply(null,dates));
+                const firstDate = new Date(Math.min.apply(null,dates));
+                const maxDate = lastDate;
+                const minDate = new Date( new Date(maxDate).setDate(maxDate.getDate()-6));
+              return {minDate:minDate,maxDate:maxDate,firstDate:firstDate,lastDate:lastDate}
           })
         } catch (err) {}
       };
@@ -63,8 +86,19 @@ export default function Stats (props){
                 const datePurchases = purchases.filter(purchase => purchase.date === day);
                 const totalWeight = datePurchases.reduce((total, item) => total + item.item_weight_g * item.item_units,0);
                 const meanFoodprint = datePurchases.reduce((total, item) => total + item.item_footprint_g_100g * item.item_weight_g/100 * item.item_units,0)/totalWeight*100;
-                return({date:day, footprint: Math.round(meanFoodprint)});                
-                })
+                let color;
+                if (meanFoodprint < 300) {
+                    (color = "#B2EA70")
+                } else if (meanFoodprint < 600) {
+                    (color = "#FBD148")
+                } else if (meanFoodprint < 1000) {
+                    (color = "#F9975D")
+                } else {
+                    (color = "#C85C5C")
+                }
+                return({date:day, footprint: Math.round(meanFoodprint), color:color});
+            })                
+                
 
             // console.log("weight: "+purchases.map(purchase => purchase.item_weight_g*purchase.item_units))
             // console.log("footprint: "+purchases.map(purchase => purchase.item_footprint_g_100g))
@@ -144,14 +178,12 @@ export default function Stats (props){
             let newMinDate = new Date(prevState.minDate);
             newMinDate.setDate(prevState.minDate.getDate()-2);
             newMinDate = new Date(newMinDate);
-            console.log(newMinDate);
 
             let newMaxDate = new Date(prevState.maxDate);
             newMaxDate.setDate(prevState.maxDate.getDate()-2);
             newMaxDate = new Date(newMaxDate);
-            console.log(newMaxDate);
             
-            return {minDate: newMinDate, maxDate: newMaxDate}
+            return {minDate: newMinDate, maxDate: newMaxDate, firstDate:prevState.firstDate,lastDate:prevState.lastDate}
         })
     }
 
@@ -160,14 +192,12 @@ export default function Stats (props){
             let newMinDate = new Date(prevState.minDate);
             newMinDate.setDate(prevState.minDate.getDate()+2);
             newMinDate = new Date(newMinDate);
-            console.log(newMinDate);
 
             let newMaxDate = new Date(prevState.maxDate);
             newMaxDate.setDate(prevState.maxDate.getDate()+2);
             newMaxDate = new Date(newMaxDate);
-            console.log(newMaxDate);
             
-            return {minDate: newMinDate, maxDate: newMaxDate}
+            return {minDate: newMinDate, maxDate: newMaxDate, firstDate:prevState.firstDate,lastDate:prevState.lastDate}
         })
     }
 
@@ -175,16 +205,55 @@ export default function Stats (props){
 
     return(
         <React.Fragment>
-            <h1>Hello Stats</h1>
-            {Object.keys(receipts[0]).length !== 0 && <ChartAv100g data={aggregateForStats(receipts)} period={period}/>}
-            {/* <D3ZoomTest /> */}
-            {console.log(period)}
-            <IconButton aria-label="back" onClick={backDate}>
-                <ArrowLeftIcon />
-            </IconButton>
-            <IconButton aria-label="forward" onClick={forwardDate}>
-                <ArrowRightIcon />
-            </IconButton>
+            <Paper sx={{mx:1, mt:2}} ref={graphPaper}>
+                <Container sx={{m:0}}>
+                    <Typography variant="h4" align="justify">Average Foodprint</Typography> 
+                    <Typography variant="h6" align="justify">gCO<sub>2</sub>e per 100g</Typography>
+                </Container>
+                {Object.keys(receipts[0]).length !== 0 && graphWidth !== "null" &&
+                    
+                        <ChartAv100g data={aggregateForStats(receipts)} period={period} width={graphWidth}/>
+                    
+
+                }
+                {/* <D3ZoomTest /> */}
+                <Container>
+                    <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" >
+                        <IconButton aria-label="back" onClick={backDate} disabled={period.firstDate >= period.minDate}>
+                            <ArrowLeftIcon />
+                        </IconButton>
+                        {/* <span className='dateRange'>{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</span> */}
+                        {/* <Paper textAlign = "center">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Paper> */}
+                        <Typography variant="body2" align="justify">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Typography>
+                        <IconButton aria-label="forward" onClick={forwardDate} disabled={period.lastDate <= period.maxDate}>
+                            <ArrowRightIcon />
+                        </IconButton>
+                    </Stack>
+
+                    {/* <Grid container spacing={1} justifyContent="center" alignItems="center" >
+                        <Grid item xs={1} justifyContent="center">
+                            <IconButton aria-label="back" onClick={backDate}>
+                                <ArrowLeftIcon />
+                            </IconButton>
+                        </Grid>
+
+                        <Grid item xs={10} justifyContent="center">
+                            <Typography variant="body2" align="justify">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Typography>
+                        </Grid>
+                        <Grid item xs={1} justifyContent="center">
+                            <Box justifyContent="center" alignItems="center">
+                                <IconButton aria-label="forward" onClick={forwardDate}>
+                                    <ArrowRightIcon />
+                                </IconButton>
+                            </Box>
+
+                        </Grid>
+                    </Grid> */}
+                </Container>
+            </Paper>
+            <Help/>
+
+            
         </React.Fragment>
     )
 

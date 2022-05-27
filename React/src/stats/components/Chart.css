@@ -1,0 +1,7 @@
+.chart-label {
+    font-size: small;
+}
+
+.axis-grid line {
+    stroke: #E5E5E5;
+  }

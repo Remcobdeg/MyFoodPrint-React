@@ -91,6 +91,7 @@ function Basket() {
 
           <BarChart data={prepVizData(receipts)} handeProductClick={handeProductClick} />
         }
+        {console.log(receipts[0])}
 
       </div>}
 
