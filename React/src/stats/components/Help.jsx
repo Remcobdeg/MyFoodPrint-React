@@ -26,8 +26,9 @@ export default function Help(props){
                 <DialogContent>
                     <DialogContentText>
                         <span className='help'>g = grams</span>
-                        <span className='help'>CO2 = carbon dioxide</span>
+                        <span className='help'>gCO<sub>2</sub> = carbon dioxide</span>
                         <span className='help'>e = equivalents</span>
+                        
                         Besides CO2, there are other greenhouse gasses that contribute to global warming and have to be accounted for. To harmonise their effect into a single measure, gCO2 equivalents is used.
                     </DialogContentText>
                 </DialogContent>
