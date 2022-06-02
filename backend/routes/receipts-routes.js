@@ -27,7 +27,7 @@ router.get('/user/:uid', receiptsControllers.getReceiptByUserId);
 router.post(
   '/',
   [
-    check(['date', 'store', 'item_group', 'item_subgroup', 'item_product', 'item_product_detail', 'item_footprint_g_100g', 'item_weight_g', 'item_unit_price_gbp', 'item_units', 'item_footprint_sourcenote'])
+    check(['date', 'store', 'item_group', 'item_subgroup', 'item_product', 'item_footprint_g_100g', 'item_weight_g', 'item_unit_price_gbp', 'item_units', 'item_footprint_sourcenote'])
       .not()
       .isEmpty()
   ],

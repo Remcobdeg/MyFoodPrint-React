@@ -153,12 +153,17 @@ const createReceiptMany = async (req, res, next) => {
 
   //before we save, test if the user name exists
 
-  const users = Array.from(new Set(req.body.map(receipt => receipt.user)));
+  let users = Array.from(new Set(req.body.map(receipt => receipt.user)));
+
+  console.log(req.userData.userId)
+
+  if(!!users){users = [req.userData.userId]};
 
   try {
     foundUsers = await User.find({_id: {$in: users}},'-password');
   } catch (err) {
-    const error = new HttpError('Creating receipt failed, please try again', 500);
+    console.log(err);
+    const error = new HttpError('Bollucks, Creating receipt failed, please try again', 500);
     return next(error);
   }
 

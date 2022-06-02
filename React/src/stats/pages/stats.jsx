@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import HelpIcon from '@mui/icons-material/Help';
+//import HelpIcon from '@mui/icons-material/Help';
 import Help from '../components/Help'
 
 import './stats.css';
