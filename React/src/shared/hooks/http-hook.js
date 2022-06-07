@@ -8,7 +8,6 @@ export const useHttpClient = () => {
   const sendRequest = useCallback(
     async (url, method = 'get', data = null, headers = {"Content-type": "application/json"}) => {
       setIsLoading(true);
-
       try {
         const response = await axios({
           method: method,

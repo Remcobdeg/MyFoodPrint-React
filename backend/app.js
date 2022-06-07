@@ -2,10 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const receiptsRoutes = require('./routes/receipts-routes');
 const alternativesRoutes = require('./routes/alternatives-routes');
 const usersRoutes = require('./routes/users-routes');
+const ocrRoutes = require('./routes/ocr-routes');
 const HttpError = require('./models/http-error');
 
 const app = express();
@@ -20,13 +22,14 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
-
   next();
 });
+  
 
 app.use('/api/receipts', receiptsRoutes); // => /api/receipts... and everything after
 app.use('/api/alternatives', alternativesRoutes); 
 app.use('/api/users', usersRoutes);
+app.use('/api/ocr', ocrRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError('Could not find this route.', 404);
