@@ -1,0 +1,37 @@
+.bg {
+    /* background-image: url('../img/growth-wolfgang-hasselmann.jpg'); */
+    background-image: url('../img/MyFoodPrint.png');
+
+
+    /* Full height */
+    height: 50vh;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.logoText {
+    width: 60%;
+    margin: auto;
+    text-align: center;
+    text-justify: center;
+}
+
+.logoImg {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 10vh auto 0 auto;
+    padding: auto auto 0 auto;
+    
+
+}
+
+img.logo {
+    /* display: block; */
+    /* margin-left: auto;
+    margin-right: auto; */
+}
+

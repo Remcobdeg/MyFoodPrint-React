@@ -56,7 +56,7 @@ export default function ImageList() {
             .catch(console.error);
     }, []);
     return (
-        <div>
+        <div className='admin'>
             <img className="photo" src="/admin_logo.png" alt=""></img>
             <TableContainer component={Paper} sx={{width:'98%', marginLeft:'1%'}}>
                 <Table>
