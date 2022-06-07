@@ -20,6 +20,18 @@ const imageUpload = multer({ storage: storage });
 
 router.get('/:rcptid', receiptsControllers.getReceiptById);
 
+router.post(
+  '/uploadImage/:userId', async (req, res) => {
+    var uploadPost = imageUpload.single('imageFile');
+    uploadPost(req, res, function (err) {
+      if (err) {
+        return res.end("error uploading file");
+      }
+      return res.send(req.file.filename);
+    });
+  }
+);
+
 router.use(checkAuth); //checks if there's a token and adds userId to req from decomposed token
 
 router.get('/user/:uid', receiptsControllers.getReceiptByUserId);
@@ -56,22 +68,12 @@ router.patch(
 
 router.delete('/:rcptid', receiptsControllers.deleteReceipt);
 
-router.post(
-  '/uploadImage/:userId', async (req, res) => {
-    var uploadPost = imageUpload.single('imageFile');
-    uploadPost(req, res, function (err) {
-      if (err) {
-        return res.end("error uploading file");
-      }
-      return res.send(req.file.filename);
-    });
-  }
-);
-
 router.get('/fetchImage/:imageName', receiptsControllers.fetchImageByName);
 
 router.delete('/deleteImage/:imageName', receiptsControllers.deleteImageByName);
 
 router.get('/fetch/ImageList', receiptsControllers.fetchImageList);
+
+router.get('/fetchDetailsByImage/:imageName', receiptsControllers.fetchDetailsByImage);
 
 module.exports = router;

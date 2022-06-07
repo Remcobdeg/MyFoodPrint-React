@@ -1,61 +1,13 @@
-const AWS = require("aws-sdk")
-const fs = require("fs");
-const config = require("./config");
+const moment = require('moment');
 
 var resultOCR = {};
 var items = [];
-AWS.config.update({
-    accessKeyId: config.awsAccesskeyID,
-    secretAccessKey: config.awsSecretAccessKey,
-    region: config.awsRegion
-});
-
-const textract = new AWS.Textract();
-const path = require("path");
-var datafs = fs.readFileSync(path.resolve(__dirname, "../images/image-627e26e1e6be8b18dfce4003-1653164427540.jpg"));
-var detectParam = {
-    Document: {
-        Bytes: Buffer.from(datafs),
-    }
-}
-var detectParams = {
-    Document: {
-        Bytes: Buffer.from(datafs),
-    },
-    FeatureTypes: ["FORMS"]
-}
-
-// requests = textract.analyzeDocument(detectParams, (err, data) => {
-//     if(err){
-//         console.log(err);
-//         return err;
-//     }
-//     else{
-//         getResult_Old(data);
-//         console.log(data, null, 2);
-//     }
-// });
-// const requestAnalyzeData = () => {
-//     requestAnalyze;
-// };
-
-const requestAnalyze = (req, res, next) => {
-    request = textract.analyzeExpense(detectParam, (err, data) => {
-        if (err) {
-            console.log(err);
-            return err;
-        }
-        else {
-            createResult(data.ExpenseDocuments[0]);
-            console.log(resultOCR);
-        }
-    });
-}
 
 function createResult(objList) {
     filterObj(objList.SummaryFields, "VENDOR_NAME");
     getResult(objList.LineItemGroups[0]);
     add(resultOCR, "ITEMS", items);
+    return resultOCR;
 }
 
 function getResult(objList) {
@@ -87,15 +39,30 @@ function getResult(objList) {
     });
 }
 
-function getResult_Old(objList) {
-    var key, value;
-    return objList.Blocks.filter(function (obj) {
-
+async function getDate(objList) {
+    let value = "NA", time = "";
+    await objList.Blocks.filter(function (obj) {
         if (obj.BlockType == "LINE") {
-            if (isGoodDate(obj.Text))
-                add(resultOCR, "DATE", obj.Text);
+            let words = [];
+            words = obj.Text.split(" ");
+            for (let word of words) {
+                const regex = /([0-9]{2}\w\w\w[0-9]{4})/g;
+                if(word.match(regex)) {
+                    word = (word.slice(0, 2)+' '+word.slice(2, 5).replace('0', 'O')+' '+word.slice(5, 9));
+                }
+                if (isGoodDate(word)) {
+                    value = word;
+                }
+                if (isGoodTime(word)) {
+                    time = word;
+                }
+            }
         }
     });
+    if (time === "")
+        return value;
+    else
+        return value + " && " + time;
 }
 
 function filterObj(objList, filterName) {
@@ -110,13 +77,21 @@ function add(itemList, key, value) {
 }
 
 function isGoodDate(dt) {
-    var reGoodDate = /^(?:(0[1-9]|1[012])[\/.](0[1-9]|[12][0-9]|3[01])[\/.](19|20)[0-9]{2})$/;
-    return reGoodDate.test(dt);
+    var allowedDateFormats = ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'MM-DD-YYYY',
+        'DD-MM-YYYY', 'YYYY-MM-DD', 'YYYY-DD-MM',
+        'MM/DD/YY', 'DD/MM/YY', 'YY/MM/DD', 'MM-DD-YY', 'DD-MM-YY', 'YY-MM-DD', 'YY-DD-MM',
+        'D/MM/YYYY', 'D/M/YYYY', 'DD.MM.YYYY', 'D.M.YYYY',
+        'MMM-DD-YY', 'DD-MMM-YY', 'YY-MMM-DD', 'YY-DD-MMM',
+        'MMM/DD/YYYY', 'DD/MMM/YYYY', 'YYYY/MMM/DD', 'MMM-DD-YYYY', 'DD-MMM-YYYY', 'YYYY-MMM-DD', 'YYYY-DD-MMM',
+        'MMMM Do, YYYY', 'MMMM D, YYYY', 'D MMM YYYY', 'DD MMM YYYY',
+        'DDMMMYYYY'];
+
+    return moment(dt.trim(), allowedDateFormats, true).isValid();
 }
 
-const isDate = (date) => {
-    return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
+function isGoodTime(dt) {
+    var allowedTimeFormats = ['HH:mm', 'hh:mm a', 'HH:mm:ss', 'hh:mm:ss a'];
+    return moment(dt.trim(), allowedTimeFormats, true).isValid();
 }
 
-
-exports.requestAnalyze = requestAnalyze;
+module.exports = { createResult, getDate };

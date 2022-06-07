@@ -18,6 +18,7 @@ import { AuthContext } from './shared/context/authContext';
 import Camera from './camera/pages/Camera';
 import ImageCamera from './camera/pages/ImageCamera';
 import ImageList from './admin/pages/ImageList';
+import ImageDetails from './admin/pages/ImageDetails';
 import { useAuth } from './shared/hooks/authHook'
 
 
@@ -36,7 +37,8 @@ function App() {
           {!!token && <Route path="settings/*" element={<Settings />} />}
           {!!token && <Route path="camera/*" element={<Camera userId={userId} />} />}
           {!!token && <Route path="camera/image/*" element={<ImageCamera userId={userId} />} />}
-          {!!token && <Route path="imageList/*" element={<ImageList />} />}
+          {<Route path="admin/*" element={<ImageList />} />}
+          {<Route path="admin/imageDetails/*" element={<ImageDetails />} />}
           <Route path='auth/' element={<Auth />} />
           <Route path='*' element={<Navigate to='/' />} />
         </Routes>

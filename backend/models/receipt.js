@@ -10,6 +10,7 @@ const receiptSchema = new Schema({
     item_receipt_desc: {type: String, required: true}, 
     item_group: {type: String, required: true}, 
     item_subgroup: {type: String, required: true}, 
+    item_receipt_desc: {type: String, required: true},
     item_product: {type: String, required: true},
     item_product_detail: {type: String, required: false},
     item_footprint_g_100g: {type: Number, required: true},
