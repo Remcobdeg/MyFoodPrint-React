@@ -1,4 +1,36 @@
-img.admin {
-    width:30%; height:30%;
+.photo {
+    width: 75%;
+    height: 75%;
     object-fit: contain;
+}
+
+.headerTypo {
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+    font-weight: 900 !important;
+}
+
+.selectChecked {
+    width: 80%;
+    margin-top: 3% !important;
+}
+
+.grid-container {
+    height: 10vh !important;
+}
+
+.image-container {
+    width: 50%;
+    height: 80vh;
+}
+
+.image-container img {
+    margin-bottom: 2vh;
+    margin-top: 2vh;
+    width:100%; height:100%;
+    object-fit: contain;
+}
+
+.table-border {
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important;
 }

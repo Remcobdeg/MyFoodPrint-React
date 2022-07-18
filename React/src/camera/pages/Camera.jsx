@@ -1,5 +1,5 @@
 import './Camera.css';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import CameraIcon from '@mui/icons-material/Camera';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import FlashOffIcon from '@mui/icons-material/FlashOff';
@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import commonHttp from '../../shared/components/http-common';
 import { useNavigate, Link } from "react-router-dom";
 import DeviceOrientation from 'react-device-orientation';
+import { AuthContext } from '../../shared/context/authContext';
 
 const style = {
     position: 'absolute',
@@ -52,6 +53,8 @@ function Camera(props) {
     const [on, toggle] = useTorchLight(streamRef.current);
     const [open, setOpen] = React.useState(true);
     const [backdropOpen, setBackdropOpen] = React.useState(false);
+    // const [cameraDirection, setCameraDirection]
+    const auth = useContext(AuthContext);
     const handleClose = () => setOpen(false);
     const handleBackdropClose = () => setBackdropOpen(false);
     const navigate = useNavigate();
@@ -82,14 +85,19 @@ function Camera(props) {
         let imageFile = dataURItoFile(dataURL);
         let fd = new FormData();
         fd.append("imageFile", imageFile);
-        commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then((response) => {
-            setBackdropOpen(false);
-            navigate('/camera/image', { state: response.data });
-        });
+        try {
+            commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: 'Bearer ' + auth.token
+                } //responds the name of the data
+            }).then((response) => {
+                setBackdropOpen(false);
+                navigate('/camera/image', { state: response.data }); //later retrieved by using useLocation()
+            });
+        } catch (err) {
+            alert(err)
+        }
     }
 
     useEffect(() => {
@@ -104,7 +112,7 @@ function Camera(props) {
             {({ absolute, alpha, beta, gamma }) => (
                 <div className='video-container'>
                     <video ref={videoRef}></video>
-                    {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) &&<IconButton onClick={takePhoto} className='camera-button'>
+                    {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) && <IconButton onClick={takePhoto} className='camera-button'>
                         <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
                     </IconButton>}
                     <IconButton onClick={toggle} className='flash-button'>

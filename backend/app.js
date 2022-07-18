@@ -2,11 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const receiptsRoutes = require('./routes/receipts-routes');
 const alternativesRoutes = require('./routes/alternatives-routes');
 const usersRoutes = require('./routes/users-routes');
 const dictRoutes = require('./routes/dict-routes');
+const ocrRoutes = require('./routes/ocr-routes');
+const invitationRoutes = require('./routes/invitation-routes');
 const HttpError = require('./models/http-error');
 
 const app = express();
@@ -21,14 +24,16 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
-
   next();
 });
+  
 
 app.use('/api/receipts', receiptsRoutes); // => /api/receipts... and everything after
 app.use('/api/alternatives', alternativesRoutes); 
 app.use('/api/dictitems', dictRoutes); 
 app.use('/api/users', usersRoutes);
+app.use('/api/invitation', invitationRoutes);
+app.use('/api/ocr', ocrRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError('Could not find this route.', 404);
@@ -50,6 +55,7 @@ const database = process.env.DATABASE_NAME;
 const clusterName = process.env.CLUSTER_NAME;
 
 mongoose.connect("mongodb+srv://"+mongoUser+":"+mongoPswd+"@cluster0."+clusterName+".mongodb.net/"+database+"?retryWrites=true&w=majority")
+// mongoose.connect('mongodb://localhost:27017/'+clusterName, {useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
   console.log('Connected to database!');
   app.listen(5000);

@@ -78,7 +78,6 @@ const createAlternative = async (req, res, next) => {
 
   const dateRecorded = new Date();
   const newAlternatives = req.body.map(alternative => {
-    console.log(alternative);
     return new Alternative({...alternative, added_date: dateRecorded, added_user: req.userData.userId});
   });
 
@@ -113,7 +112,6 @@ const updateAlternative = async (req, res, next) => {
     return next( new HttpError('Editing this product not authorized.', 422));
   }
 
-  console.log(req.body);
   let product;
   try {
     await foundProduct.updateOne({$set: req.body});

@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
-const user = require('../models/user');
+const InvitedUser = require('../models/invitedUser');
+// const acceptedUsers = require('../util/acceptedUsers');
+// const user = require('../models/user');
 
 const getUsers = async (req, res, next) => {
 
@@ -36,6 +38,18 @@ const signup = async (req, res, next) => {
 
   if(user){
     return next(new HttpError('Email already exists, please login instead',500))
+  }
+
+  let invitedUsers;
+  try {
+    invitedUsers = await InvitedUser.find({email: req.body.email}) //left of here, find email, check if it returns somthing. delete next bit. don't forget to return to mongoaltas and session use (receipts)
+  } catch (err) {
+    return next(new HttpError('Could not retrieve users, try again later',500));
+  }
+
+  //error if sign-up email is not in the list of invited users
+  if(!invitedUsers || invitedUsers.length < 1){
+    return next(new HttpError('Not an invited user. Contact admin (Remco) if access should be granted.',500))
   }
 
   const createdUser = new User(
@@ -127,6 +141,39 @@ const login = async (req, res, next) => {
   });
 };
 
+const getInvitedUsers = async (req, res, next) => {
+
+  let invitedUsers;
+  try {
+    invitedUsers = await InvitedUser.find({})
+  } catch (err) {
+    return next(new HttpError('Could not retrieve users, try again later',500));
+  }
+
+  res.json( invitedUsers.map(u => u.toObject({getters: true})));
+};
+
+const createInvitedUsers = async (req, res, next) => {
+
+  let newInvitedUsers;
+  if(Array.isArray(req.body)){
+    newInvitedUsers = req.body;
+  } else {
+    newInvitedUsers = [req.body];
+  }
+
+  try{
+    await InvitedUser.insertMany(newInvitedUsers);
+  } catch (err){
+    console.log(err);
+    return next(new HttpError('Error saving invited users. Try again.',500));
+  }
+
+  res.json("added invited user(s): "+newInvitedUsers.map(user => user.email));
+};
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
+exports.getInvitedUsers = getInvitedUsers;
+exports.createInvitedUsers = createInvitedUsers;

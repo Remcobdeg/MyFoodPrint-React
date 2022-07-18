@@ -7,8 +7,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Grid from '@mui/material/Grid';
 import './Admin.css';
-import {baseURL} from '../../shared/components/http-common';
+import commonHttp from '../../shared/components/http-common';
+import { Typography } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -30,51 +37,89 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
 export default function ImageList() {
     const [imageList, setImageList] = React.useState(null);
+    const [arrayList, setArrayList] = React.useState([]);
+    const [sortBy, setSortBy] = React.useState(1);
+    const navigate = useNavigate();
+    const handleSortByChange = (event) => {
+        setSortBy(event.target.value);
+        filterImageList(event.target.value);
+    };
+    const filterImageList = (sortBy) => {
+        if (sortBy === 1)
+            setArrayList(imageList);
+        else if (sortBy === 2)
+            setArrayList(imageList.filter(({ isChecked }) => isChecked === true));
+        else if (sortBy === 3)
+            setArrayList(imageList.filter(({ isChecked }) => isChecked === false));
+    };
+    const goToDetails = (fileName) => {
+        navigate('/admin/imageDetails', { state: fileName });
+    };
     React.useEffect(() => {
+        let userData = JSON.parse(localStorage.getItem('userData'));
         const fetchImage = async () => {
-            const res = await fetch(baseURL+'/receipts/fetchImage');
-            const imageBlob = await res.blob();
-            const imageObjectURL = URL.createObjectURL(imageBlob);
-            setImageList(imageObjectURL);
+            commonHttp.get('/receipts/fetch/ImageList', {
+                headers: {
+                    Authorization: 'Bearer ' + userData.token
+                }
+            }).then((response) => {
+                setImageList(response.data);
+                setArrayList(response.data);
+            });
         }
-        
+
         fetchImage()
             .catch(console.error);
     }, []);
     return (
-        <div className='admin'>
-            <img className="photo" src="/admin_logo.png" alt=""></img>
-            <TableContainer component={Paper} sx={{width:'98%', marginLeft:'1%'}}>
+        <div>
+            <Grid container className="grid-container">
+                <Grid item xs={1} >
+                    <img className="photo" src="/android-chrome-512x512.png" alt=""></img>
+                </Grid>
+                <Grid item xs={7} >
+                    <Typography className='headerTypo' variant='h2'>MyFoodPrint</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <FormControl className='selectChecked'>
+                        <InputLabel id="sortBy">Sort By</InputLabel>
+                        <Select
+                            labelId="sortBy"
+                            id="sortBy"
+                            value={sortBy}
+                            label="Sort By"
+                            onChange={handleSortByChange}
+                        >
+                            <MenuItem value={1}>All</MenuItem>
+                            <MenuItem value={2}>Checked Images</MenuItem>
+                            <MenuItem value={3}>Unchecked Images</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
+            <TableContainer component={Paper} sx={{ width: '98%', marginLeft: '1%', marginTop: '1%' }}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell sx={{width:'70%'}}>Image Name</StyledTableCell>
-                            <StyledTableCell sx={{width:'15%'}} align="center">Date Uploaded</StyledTableCell>
-                            <StyledTableCell sx={{width:'15%'}} align="center">Uploaded By</StyledTableCell>
+                            <StyledTableCell sx={{ width: '70%' }}>Image Name</StyledTableCell>
+                            <StyledTableCell sx={{ width: '15%' }} align="center">Date Uploaded</StyledTableCell>
+                            <StyledTableCell sx={{ width: '15%' }} align="center">Uploaded By</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <StyledTableRow key={row.name}>
-                                <StyledTableCell component="th" scope="row">
-                                    {row.name}
+                        {arrayList !== null && arrayList.map((image) => (
+                            <StyledTableRow key={image.fileName} style={image.isChecked ? { backgroundColor: 'lightgreen' } : { backgroundColor: 'lightpink' }}>
+                                <StyledTableCell style={{color:'blue', cursor:'pointer'}} onClick={() => { goToDetails(image.fileName) }} component="th" scope="row">
+                                    {image.fileName}
                                 </StyledTableCell>
-                                <StyledTableCell align="center">{row.calories}</StyledTableCell>
-                                <StyledTableCell align="center">{row.fat}</StyledTableCell>
+                                <StyledTableCell align="center">
+                                    {image.date}
+                                </StyledTableCell>
+                                <StyledTableCell align="center">
+                                    {image.userName}
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
