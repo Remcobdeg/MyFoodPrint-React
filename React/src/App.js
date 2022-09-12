@@ -13,6 +13,7 @@ import Alternatives from './alternatives/pages/Alternatives';
 import Stats from './stats/pages/stats';
 import Settings from './Settings/pages/settings';
 import Welcome from './welcome/Welcome';
+import Intro from './welcome/Intro';
 import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import { AuthContext } from './shared/context/authContext';
@@ -34,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={!!token ? <Basket /> : <Auth />} />
           <Route path="welcome/" element={<Welcome />} />
+          <Route path="gettingstarted/" element={<Intro />} />
           {!!token && <Route path="alternatives/*" element={<Alternatives />} />}
           {!!token && <Route path="stats/*" element={<Stats />} />}
           {!!token && <Route path="settings/*" element={<Settings />} />}

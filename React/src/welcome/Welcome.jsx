@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -30,7 +31,7 @@ export default function Welcome (props){
 
             <Container maxWidth="sm" >
                 {/* <CssBaseline/> */}
-                <Grid container spacing = {0}>
+                <Grid container spacing = {1}>
                     <Grid item xs={12}>
                         <Box sx={{height: "40vh", display: "flex", alignItems: "justify-end"}}>
                             <img className='logoImg' src={logo} alt="My Food Print Logo" />
@@ -55,7 +56,10 @@ export default function Welcome (props){
                     </Grid>
                     <Grid item xs={12}>
                         <Box   display="flex"  justifyContent="center"  alignItems="center" >
-                            <Button variant="text">SKIP TO LOGIN</Button>
+                            <Link href="#" underline="always">
+                                {'Already registered? Skip to login'}
+                            </Link>
+                            {/* <Button variant="text">SKIP TO LOGIN</Button> */}
                         </Box>
                     </Grid>
                 </Grid>
