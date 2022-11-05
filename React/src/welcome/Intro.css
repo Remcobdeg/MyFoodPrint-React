@@ -1,6 +1,17 @@
+/* the colored 'MyFoodPrint' at the top of the screen */
+
 .appName {
     color: #91C788;
     display: flex;
     justify-content: center;
 }
 
+/* the images used to explain the working of the app */
+
+.exampleIcon {
+    max-width: 40%; 
+}
+
+.exampleImage {
+    max-width: 80%; 
+}
