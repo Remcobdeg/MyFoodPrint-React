@@ -58,7 +58,7 @@ mongoose.connect("mongodb+srv://"+mongoUser+":"+mongoPswd+"@cluster0."+clusterNa
 // mongoose.connect('mongodb://localhost:27017/'+clusterName, {useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
   console.log('Connected to database!');
-  app.listen(5000);
+  app.listen(5050);
 }).catch(() => {
   console.log('Connection failed!')
 });

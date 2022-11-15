@@ -6,27 +6,30 @@ import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider  } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+// import { createTheme, ThemeProvider  } from '@mui/material/styles';
 
 import './welcome.css'
 import logo from '../img/MyFoodPrint.png'
 
 export default function Welcome (props){
 
-    const theme = createTheme({
-        palette: {
-          primary: {
-            main: "#91C788",
-            contrastText: '#fff',
-          },
-          secondary: {
-            main: '#CCD2E3',
-          },
-        },
-      });
+    // const theme = createTheme({
+    //     palette: {
+    //       primary: {
+    //         main: "#91C788",
+    //         contrastText: '#fff',
+    //       },
+    //       secondary: {
+    //         main: '#CCD2E3',
+    //       },
+    //     },
+    //   });
+
+    const navigate = useNavigate();
 
     return(
-        <ThemeProvider theme={theme}>
+        // <ThemeProvider theme={theme}>
 
 
             <Container maxWidth="sm" >
@@ -51,12 +54,12 @@ export default function Welcome (props){
                     </Grid>
                     <Grid item xs={12}>
                         <Box   display="flex"  justifyContent="center"  alignItems="center" >
-                            <Button variant="contained">GET STARTED</Button>
+                            <Button variant="contained" onClick={() => navigate('/gettingstarted')}>GET STARTED</Button>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>
                         <Box   display="flex"  justifyContent="center"  alignItems="center" >
-                            <Link href="#" underline="always">
+                            <Link href="/auth" underline="always">
                                 {'Already registered? Skip to login'}
                             </Link>
                             {/* <Button variant="text">SKIP TO LOGIN</Button> */}
@@ -69,7 +72,7 @@ export default function Welcome (props){
 
                 
             </Container>
-        </ThemeProvider>
+        // </ThemeProvider>
 
     )
 
