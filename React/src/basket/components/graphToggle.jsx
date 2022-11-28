@@ -1,5 +1,6 @@
 import React from 'react';
 import MuiToggleButton from '@mui/material/ToggleButton';
+// import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {styled} from "@mui/material/styles";
 import './graphToggle.css';
@@ -11,7 +12,7 @@ const ToggleButton = styled(MuiToggleButton)({
     height: '2em',
     width: '8em',
     color: '#91C788',
-    backgroundColor: '#F1F1F1',
+    backgroundColor: '#FFFFFF',
     "&.Mui-selected, &.Mui-selected:hover": {
       color: "#FFFFFF",
       backgroundColor: '#91C788'
@@ -21,15 +22,14 @@ const ToggleButton = styled(MuiToggleButton)({
 function GraphToggle (props) {
     return(
         <div>
-            <FixedContainer></FixedContainer>
             <ToggleButtonGroup
                 className="graphButton"
-                size="large"
+                size="medium"
                 // color="primary"
                 value={props.graphState}
                 exclusive
                 onChange={props.handleChange}
-                style={{position: 'fixed'}}
+                // style={{position: 'fixed'}}
                 
             >
                 <ToggleButton value="WORDS">WORDS</ToggleButton>
