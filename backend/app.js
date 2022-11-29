@@ -53,12 +53,13 @@ const mongoUser = process.env.MONGO_USER;
 const mongoPswd = process.env.MONGO_PASSWORD;
 const database = process.env.DATABASE_NAME;
 const clusterName = process.env.CLUSTER_NAME;
+const port = process.env.PORT;
 
 mongoose.connect("mongodb+srv://"+mongoUser+":"+mongoPswd+"@cluster0."+clusterName+".mongodb.net/"+database+"?retryWrites=true&w=majority")
 // mongoose.connect('mongodb://localhost:27017/'+clusterName, {useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
-  console.log('Connected to database!');
-  app.listen(5050);
+  console.log('Connected to database at '+port);
+  app.listen(port);
 }).catch(() => {
   console.log('Connection failed!')
 });
