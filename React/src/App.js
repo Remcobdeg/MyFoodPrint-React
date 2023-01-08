@@ -6,6 +6,7 @@ import {
   Navigate,
   // Link,
 } from 'react-router-dom';
+import { Container } from '@mui/material';
 
 import './App.css';
 import Basket from './basket/pages/Basket';
@@ -74,10 +75,12 @@ if (!!token){
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
       <ThemeProvider theme={theme}>
+      <Container maxWidth="sm" >
         <BrowserRouter>
           <main>{routes}</main>
           {!!token && <NavBarBottom />}
         </BrowserRouter>
+      </Container>
       </ThemeProvider>
 
     </AuthContext.Provider>
