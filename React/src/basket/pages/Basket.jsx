@@ -3,7 +3,9 @@ import GraphToggle from "../components/graphToggle";
 import WordCloud from "react-d3-cloud";
 import BarChart from "../components/BarChart";
 import Container from '@mui/material/Container';
-import { Typography } from "@mui/material";
+import Fab from '@mui/material/Fab';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import { Button, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box'
 import { AuthContext } from '../../shared/context/authContext';
@@ -98,16 +100,16 @@ function Basket() {
             
             {graphState === "WORDS" ? 
 
-              <Box sx={{bgcolor: 'primary.main', height: "50vh"}}>
+              <Box sx={{height: "50vh"}}>
                 {/* <Wordcloud/> */}
                 <WordCloud 
                 data={prepVizData(receipts)}
-                height={window.innerHeight * 0.5}
-                fontSize={(word) => Math.sqrt(word.value/maxValue(prepVizData(receipts))) *10}
+                // height={window.innerHeight * 0.7} //the component uses a square layout, setting this value does not seem to change anything
+                fontSize={(word) => Math.sqrt(word.value/maxValue(prepVizData(receipts))) *100}
                 font="Fredoka"
                 fontWeight="bold"
                 fill={data => data.color}
-                // rotate={0}
+                rotate={function() { return ~~(Math.random() * 2) * 90; }}
                 onWordClick={handeProductClick}
               />
               </Box>
@@ -115,22 +117,38 @@ function Basket() {
 
               <BarChart data={prepVizData(receipts)} handeProductClick={handeProductClick} />
             }
-            {console.log(receipts[0])}
 
           </div>}
         </Grid>
 
-        <Grid item>
-          {/* Legend */}
+        {/* <Grid item> 
           <Box sx={{border: 1, borderColor: 'secondary.main', borderRadius: 2}}>
             <p>temp</p>
           </Box>
-        </Grid>
+        </Grid> */}
         
       </Grid>
+
+      <Fab color="primary" aria-label="help" 
+        style={{
+          margin: 0,
+          top: 'auto',
+          right: 20,
+          bottom: '10vh',
+          left: 'auto',
+          position: 'fixed'
+        }}
+        > 
+        <QuestionMarkIcon />
+      </Fab>
+
+
+
 
     </Container>
   );
 }
+
+
 
 export default Basket;
