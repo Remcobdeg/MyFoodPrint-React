@@ -15,6 +15,7 @@ import Stats from './stats/pages/stats';
 import Settings from './Settings/pages/settings';
 import Welcome from './welcome/Welcome';
 import Intro from './welcome/Intro';
+import Help from './Help/pages/help';
 import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import { AuthContext } from './shared/context/authContext';
@@ -55,6 +56,7 @@ if (!!token){
             <Route path="alternatives/*" element={<Alternatives />} />
             <Route path="stats/*" element={<Stats />} />
             <Route path="settings/*" element={<Settings />} />
+            <Route path="help/*" element={<Help />} />
             <Route path="camera/*" element={<Camera userId={userId} />} />
             <Route path="camera/image/*" element={<ImageCamera userId={userId} />} />
             {<Route path="admin/*" element={<ImageList />} />}
@@ -66,6 +68,7 @@ if (!!token){
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="gettingstarted/" element={<Intro />} />
+        <Route path="help/*" element={<Help />} />
         <Route path='auth/' element={<Auth />} />
         <Route path='*' element={<Navigate to='/' />} />
     </Routes>
