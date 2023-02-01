@@ -8,7 +8,7 @@ import HelpCardContent from "./HelpCardContent";
 
 import "./HelpCard.css";
 
-export default function HelpCard(props) {
+export const HelpCard = React.forwardRef((props, ref) => {
     const [expanded, setExpanded] = useState(false);
 
     const handleExpandClick = () => {
@@ -21,6 +21,7 @@ export default function HelpCard(props) {
       className="help-card"
       variant="outlined"
       style={{ backgroundColor: props.color }}
+      ref={ref}
     >
         {/* add an icon in front of text */}
         {/* <div className="help-card-header">
@@ -44,7 +45,7 @@ export default function HelpCard(props) {
             <Grid item xs={2}>
             </Grid>
             <Grid item xs={10}>
-                {expanded && props.content.map((item) => {return <HelpCardContent topic={item.topic} text={item.text}/>})}
+                {expanded && props.content.map((item, index) => {return <HelpCardContent key={index} topic={item.topic} text={item.text}/>})}
             </Grid>
         </Grid>
         {/* {expanded && <Typography variant="body1">{props.text}</Typography>} */}
@@ -52,4 +53,4 @@ export default function HelpCard(props) {
 
     </Paper>
   );
-}
+})

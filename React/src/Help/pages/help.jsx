@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useRef, useEffect} from "react";
 import { StyledHeader } from "../../shared/MuiStyledComponents/MuiStyledComponents";
-import HelpCard from "../components/HelpCard";
+import { HelpCard } from "../components/HelpCard";
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -55,16 +55,31 @@ const HelpPageContent =
 
 
 export default function Help() {
+    const elementsRef = useRef(Object.keys(HelpPageContent).map(() => React.createRef()));
   return (
     <div>
         <StyledHeader variant="h2">Help</StyledHeader>
-        {Object.keys(HelpPageContent).map((page) => {
+        {Object.keys(HelpPageContent).map((page, index) => {
             return <HelpCard 
+                ref = {elementsRef.current[index]}
+                key = {index}
                 page={page} 
                 icon={HelpPageContent[page].icon} 
                 title={HelpPageContent[page].title} 
                 content={HelpPageContent[page].content} />
         })}
+        <button style={{position: 'fixed', bottom: "10vh", left: "10vh"}} onClick={() => elementsRef.current[1].current.scrollIntoView()}>
+            Scroll
+      </button>
+      {console.log(elementsRef.current[1].current)}
+      <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+
     </div>
   );
 }

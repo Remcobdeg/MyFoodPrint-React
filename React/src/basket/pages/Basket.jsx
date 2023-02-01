@@ -3,14 +3,13 @@ import GraphToggle from "../components/graphToggle";
 import WordCloud from "react-d3-cloud";
 import BarChart from "../components/BarChart";
 import Container from '@mui/material/Container';
-import Fab from '@mui/material/Fab';
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box'
 import { AuthContext } from '../../shared/context/authContext';
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import { useNavigate } from 'react-router-dom';
+import HelpButton from "../../shared/components/HelpButton";
  
 import {prepVizData, maxValue} from "../Modules/PrepVizData";
 
@@ -129,19 +128,7 @@ function Basket() {
         
       </Grid>
 
-      <Fab color="primary" aria-label="help" 
-        style={{
-          margin: 0,
-          top: 'auto',
-          right: 20,
-          bottom: '10vh',
-          left: 'auto',
-          position: 'fixed'
-        }}
-        > 
-        <QuestionMarkIcon />
-      </Fab>
-
+      <HelpButton fromPage = "Basket"/>
 
 
 

@@ -19,6 +19,7 @@ import Help from './Help/pages/help';
 import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import { AuthContext } from './shared/context/authContext';
+import { navContext } from './shared/context/navContext';
 import Camera from './camera/pages/Camera';
 import ImageCamera from './camera/pages/ImageCamera';
 import ImageList from './admin/pages/ImageList';
@@ -77,6 +78,7 @@ if (!!token){
 
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
+      <navContext.Provider value={{ currentPage: null }}>
       <ThemeProvider theme={theme}>
       <Container maxWidth="sm" >
         <BrowserRouter>
@@ -85,7 +87,7 @@ if (!!token){
         </BrowserRouter>
       </Container>
       </ThemeProvider>
-
+      </navContext.Provider>
     </AuthContext.Provider>
 
   );
