@@ -7,6 +7,7 @@ import { Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box'
 import { AuthContext } from '../../shared/context/authContext';
+import { navContext } from "../../shared/context/navContext";
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import { useNavigate } from 'react-router-dom';
 import HelpButton from "../../shared/components/HelpButton";
@@ -20,6 +21,7 @@ import './Basket.css';
 function Basket() {
 
   const auth = useContext(AuthContext);
+  const nav = useContext(navContext);
 
   // const receiptSchema = {
   //   "_id": "627131d609fa9b1ef5cb5399",
@@ -73,6 +75,7 @@ function Basket() {
 
   const handeProductClick = (event, d) => {
     navigate('/Alternatives', {state: d.text.toLowerCase()})
+    nav.setPage("Alternatives");
   };
 
   return (

@@ -35,6 +35,9 @@ import { createTheme, ThemeProvider  } from '@mui/material/styles';
 function App() {
   const { token, login, logout, userId } = useAuth();
 
+  const [currentPage, setPage] = React.useState("Basket");
+
+
   // change color scheme for whole application with theme and theme provider
   const theme = createTheme({
     palette: {
@@ -78,7 +81,7 @@ if (!!token){
 
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
-      <navContext.Provider value={{ currentPage: null }}>
+      <navContext.Provider value={{ currentPage: currentPage, setPage: setPage }}>
       <ThemeProvider theme={theme}>
       <Container maxWidth="sm" >
         <BrowserRouter>
