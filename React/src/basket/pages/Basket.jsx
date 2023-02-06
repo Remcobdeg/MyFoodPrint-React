@@ -10,8 +10,7 @@ import { AuthContext } from '../../shared/context/authContext';
 import { navContext } from "../../shared/context/navContext";
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import { useNavigate } from 'react-router-dom';
-import HelpButton from "../../shared/components/HelpButton";
- 
+import HelpPages from "../../shared/components/HelpPages"; 
 import {prepVizData, maxValue} from "../Modules/PrepVizData";
 
 import './Basket.css';
@@ -74,8 +73,8 @@ function Basket() {
   };
 
   const handeProductClick = (event, d) => {
-    navigate('/Alternatives', {state: d.text.toLowerCase()})
     nav.setPage("Alternatives");
+    navigate('/Alternatives', {state: d.text.toLowerCase()})
   };
 
   return (
@@ -131,7 +130,8 @@ function Basket() {
         
       </Grid>
 
-      <HelpButton fromPage = "Basket"/>
+      {/* <HelpButton fromPage = "Basket"/> */}
+      <HelpPages fromPage={0}/>
 
 
 
