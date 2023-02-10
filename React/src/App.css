@@ -1,7 +1,14 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500&display=swap');
 /* @import url("https://d3js.org/d3.v6.js"); */
+@import url("https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js");
+
+/* import inter font */
+:root { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  :root { font-family: 'Inter var', sans-serif; }
+}
 
 html {
-  font-family: 'Roboto';
+  font-family: 'Inter';
 }

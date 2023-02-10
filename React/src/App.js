@@ -6,6 +6,7 @@ import {
   Navigate,
   // Link,
 } from 'react-router-dom';
+import { Container } from '@mui/material';
 
 import './App.css';
 import Basket from './basket/pages/Basket';
@@ -17,6 +18,7 @@ import Intro from './welcome/Intro';
 import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import { AuthContext } from './shared/context/authContext';
+import { navContext } from './shared/context/navContext';
 import Camera from './camera/pages/Camera';
 import ImageCamera from './camera/pages/ImageCamera';
 import ImageList from './admin/pages/ImageList';
@@ -31,6 +33,9 @@ import { createTheme, ThemeProvider  } from '@mui/material/styles';
 
 function App() {
   const { token, login, logout, userId } = useAuth();
+
+  const [currentPage, setPage] = React.useState("Basket");
+
 
   // change color scheme for whole application with theme and theme provider
   const theme = createTheme({
@@ -73,13 +78,16 @@ if (!!token){
 
   return (
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
+      <navContext.Provider value={{ currentPage: currentPage, setPage: setPage }}>
       <ThemeProvider theme={theme}>
+      <Container maxWidth="sm" >
         <BrowserRouter>
           <main>{routes}</main>
           {!!token && <NavBarBottom />}
         </BrowserRouter>
+      </Container>
       </ThemeProvider>
-
+      </navContext.Provider>
     </AuthContext.Provider>
 
   );

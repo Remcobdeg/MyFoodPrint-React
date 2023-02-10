@@ -1,0 +1,11 @@
+.help-card {
+    margin-top: .5rem;
+}
+
+.help-card-header {
+    color: #91C788;
+}
+
+.help-card-header .material-icons {
+    margin: .5em;
+}

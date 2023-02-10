@@ -6,10 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-import Tooltip from '@mui/material/Tooltip';
-
 import receiptIcon from '../img/receipt-icon.png'
 import searchIcon from '../img/search-db-icon.png'
 import wordcloudImage from '../img/wordcloud-example3.png'

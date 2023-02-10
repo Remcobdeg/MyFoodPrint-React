@@ -2,10 +2,15 @@ import React, {useState, useContext, useEffect} from "react";
 import GraphToggle from "../components/graphToggle";
 import WordCloud from "react-d3-cloud";
 import BarChart from "../components/BarChart";
+import Container from '@mui/material/Container';
+import { Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box'
 import { AuthContext } from '../../shared/context/authContext';
+import { navContext } from "../../shared/context/navContext";
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import { useNavigate } from 'react-router-dom';
- 
+import HelpPages from "../../shared/components/HelpPages"; 
 import {prepVizData, maxValue} from "../Modules/PrepVizData";
 
 import './Basket.css';
@@ -15,6 +20,7 @@ import './Basket.css';
 function Basket() {
 
   const auth = useContext(AuthContext);
+  const nav = useContext(navContext);
 
   // const receiptSchema = {
   //   "_id": "627131d609fa9b1ef5cb5399",
@@ -67,36 +73,72 @@ function Basket() {
   };
 
   const handeProductClick = (event, d) => {
+    nav.setPage("Alternatives");
     navigate('/Alternatives', {state: d.text.toLowerCase()})
   };
 
   return (
-    <div>
-    
-      <GraphToggle handleChange={handleChange} graphState={graphState} /> 
-
-      {!isLoading && <div className="graph">
+    <Container sx={{pb:7}}>
+      <Grid 
+        container
+        direction="column"
+        // justifyContent="center"
+        // alignItems="center"
+        >
         
-        {graphState === "WORDS" ? 
+        <Grid item textAlign="center" justifyContent="center" display="flex" xs={12}>
+          {/* <Box justifyContent="center" display="flex"> */}
+            <GraphToggle handleChange={handleChange} graphState={graphState} /> 
+          {/* </Box> */}
+        </Grid>
 
-          <WordCloud 
-            data={prepVizData(receipts)}
-            fontSize={(word) => Math.sqrt(word.value/maxValue(prepVizData(receipts))) *100}
-            font="Fredoka"
-            fontWeight="bold"
-            fill={data => data.color}
-            // rotate={0}
-            onWordClick={handeProductClick}
-          /> :
+        <Grid item textAlign="center" justifyContent="center">
+          <Typography variant="overline">Where does your foodprint come from?</Typography>
+        </Grid>
 
-          <BarChart data={prepVizData(receipts)} handeProductClick={handeProductClick} />
-        }
-        {console.log(receipts[0])}
+        <Grid item>
+          {!isLoading && <div className="graph">
+            
+            {graphState === "WORDS" ? 
 
-      </div>}
+              <Box sx={{height: "50vh"}}>
+                {/* <Wordcloud/> */}
+                <WordCloud 
+                data={prepVizData(receipts)}
+                // height={window.innerHeight * 0.7} //the component uses a square layout, setting this value does not seem to change anything
+                fontSize={(word) => Math.sqrt(word.value/maxValue(prepVizData(receipts))) *100}
+                font="Fredoka"
+                fontWeight="bold"
+                fill={data => data.color}
+                rotate={function() { return ~~(Math.random() * 2) * 90; }}
+                onWordClick={handeProductClick}
+              />
+              </Box>
+               :
 
-    </div>
+              <BarChart data={prepVizData(receipts)} handeProductClick={handeProductClick} />
+            }
+
+          </div>}
+        </Grid>
+
+        {/* <Grid item> 
+          <Box sx={{border: 1, borderColor: 'secondary.main', borderRadius: 2}}>
+            <p>temp</p>
+          </Box>
+        </Grid> */}
+        
+      </Grid>
+
+      {/* <HelpButton fromPage = "Basket"/> */}
+      <HelpPages fromPage={0}/>
+
+
+
+    </Container>
   );
 }
+
+
 
 export default Basket;
