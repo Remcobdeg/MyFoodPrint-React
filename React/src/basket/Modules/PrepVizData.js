@@ -1,12 +1,14 @@
 
 
-function prepVizData(purchases, periodStart = "01012022",periodEnd = "31123022", groupingLevel = "item_product", format = "gCO2") {
+function prepVizData(purchases, periodStart = "01012022",periodEnd = "31123022", groupingLevel = "item_product", format = "gCO2", periodState = 'month', periodIndex = 0) {
     
     // filter by period
     //LATER
 
     const aggregateProducts = function(purchases){
         //the function creates one object for each article
+
+        
 
         //find unique articles
         const uniqueTypes = Array.from(new Set(purchases.map(purchase => purchase[groupingLevel])));

@@ -5,8 +5,6 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {styled} from "@mui/material/styles";
 import './graphToggle.css';
 
-import FixedContainer from './FixedContainer';
-
 // define customized button
 const ToggleButton = styled(MuiToggleButton)({
     height: '2em',
@@ -19,21 +17,24 @@ const ToggleButton = styled(MuiToggleButton)({
     }
   });
 
-function GraphToggle (props) {
+function PeriodToggle (props) {
     return(
         <div>
             <ToggleButtonGroup
                 className="graphButton"
                 size="medium"
                 // color="primary"
-                value={props.graphState}
+                value={props.periodState}
                 exclusive
-                onChange={props.handleChange}
+                onChange={props.handlePeriodChange}
                 // style={{position: 'fixed'}}
                 
             >
-                <ToggleButton value="WORDS">WORDS</ToggleButton>
-                <ToggleButton value="CHART">CHART</ToggleButton>
+                <ToggleButton value="day">DAY</ToggleButton>
+                {/* <ToggleButton value="week">WEEK</ToggleButton> */}
+                <ToggleButton value="month">MONTH</ToggleButton>
+                <ToggleButton value="year">YEAR</ToggleButton>
+
             </ToggleButtonGroup>  
             
         </div>
@@ -41,4 +42,4 @@ function GraphToggle (props) {
     )
 }
 
-export default GraphToggle;
+export default PeriodToggle;
