@@ -21,7 +21,7 @@ var roundToIndex = function(x, index) {
 
 const BarChart = function(props){
 
-    console.log(props.data.length);
+    console.log("data = "+ props.data);
 
     //product names better in small caps
     props.data.map(d => d.text = _.toLower(d.text)); 

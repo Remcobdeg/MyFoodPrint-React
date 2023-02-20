@@ -11,9 +11,10 @@ import { navContext } from "../../shared/context/navContext";
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import { useNavigate } from 'react-router-dom';
 import HelpPages from "../../shared/components/HelpPages"; 
-import {prepVizData, maxValue} from "../Modules/PrepVizData";
+import {aggregateProducts, maxValue} from "../Modules/PrepVizData";
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 import Legend from "../../img/Legend.svg";
+import DateSlider from "../../shared/components/DateSlider";
 
 import './Basket.css';
 
@@ -49,33 +50,35 @@ function Basket() {
   const [graphState, setGraphState] = useState('WORDS');
   const [periodState, setPeriodState] = useState('month');
   const [dateArray, setDateArray] = useState([]);
+  const [dateIndex, setDateIndex] = useState(0);
   const [receipts, setReceipts] = useState([]);
+  const [viewDate, setViewDate] = useState(new Date().toDateString());
+  // const [vizData, setVizData] = useState([]);
 
   const navigate = useNavigate();
 
-  const updateDateArray = () => {
+  const updateDateArray = (receiptsLocal = receipts, periodStateLocal = periodState) => {
     
-      switch(periodState){
-        case "day":
-          let dates = receipts.map(receipt => {receipt.date = new Date(receipt.date.getFullYear(), receipt.date.getMonth(), receipt.date.getDate() ).toDateString()});
-          dates = [...new Set(dates.map(date => date.date))];
-          dates = dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-          setDateArray(dates);
-          break;
+      let dates;
 
+      switch(periodStateLocal){
+        case "day":
+          dates = receiptsLocal.map(receipt => new Date(receipt.date.getFullYear(), receipt.date.getMonth(), receipt.date.getDate() ).toDateString());
+          break;
         case "year":
-          let years = receipts.map(receipt => {receipt.date = new Date(receipt.date.getFullYear(), 0, 1 ).toDateString()});
-          years = [...new Set(years.map(year => year.date))];
-          years = years.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-          setDateArray(years);
+          dates = receiptsLocal.map(receipt => new Date(receipt.date.getFullYear(), 0, 1 ).toDateString());
           break;
         default:
-          let months = receipts.map(receipt => {receipt.date = new Date(receipt.date.getFullYear(), receipt.date.getMonth(), 1 ).toDateString()});
-          months = [...new Set(months.map(month => month.date))];
-          months = months.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-          setDateArray(months);
+          dates = receiptsLocal.map(receipt => new Date(receipt.date.getFullYear(), receipt.date.getMonth(), 1 ).toDateString());
           break;
       }
+
+      dates = [...new Set(dates)];
+      // sort dates from most recent to oldest, because we want to display the most recent date by default
+      dates = dates.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+      setDateArray(dates);
+      setDateIndex(0);
+      setViewDate(dates[0])
     
   }
 
@@ -93,15 +96,22 @@ function Basket() {
           }
         )
         const response = responseData.data.receipts;
+
+        //assure .date is in date format
+        response.forEach(receipt => {receipt.date = new Date(receipt.date)}); 
+
         setReceipts(response);
 
-        updateDateArray();
-        console.log(dateArray);
+        updateDateArray(response);
+
+        // setVizData(aggregateProducts(response, viewDate, periodState));
 
       } catch (err) {}
     };
     fetchReceipts(); 
   }, [auth,sendRequest])
+
+  // useEffect(() => {
 
 
   const handleChange = (event, newGraphState) => {
@@ -110,6 +120,7 @@ function Basket() {
 
   const handlePeriodChange = (event, newPeriodState) => {
     if(newPeriodState !== null){setPeriodState(newPeriodState)}; //don't allow selected button to be unselected, aka enforce value set
+    updateDateArray(receipts, newPeriodState);
   };
 
   const handeProductClick = (event, d) => {
@@ -130,25 +141,37 @@ function Basket() {
           <Typography variant="overline">Where does your foodprint come from?</Typography>
         </Grid>
 
+        {/* now the toggle buttons */}
         <Grid item textAlign="center" justifyContent="space-between" display="flex" xs={12} sx={{pb: '1em'}}>
           {/* <Box justifyContent="center" display="flex"> */}
             <GraphToggle handleChange={handleChange} graphState={graphState} /> 
-            <PeriodToggle handlePeriodChange={handlePeriodChange} periodState={periodState} />
+            <PeriodToggle handlePeriodChange={handlePeriodChange} periodState={periodState}/>
 
           {/* </Box> */}
         </Grid>
 
+        <Grid item>
+          {/* <Typography variant="overline">{styleDisplayDate()}</Typography> */}
+          <DateSlider 
+            dateArray={dateArray} 
+            dateIndex={dateIndex} 
+            setDateIndex={setDateIndex} 
+            viewDate={viewDate} 
+            setViewDate={setViewDate} 
+            periodState={periodState}/>
+        </Grid>
+
         <Grid item className={(graphState === "WORDS")?"wordCloudBox":""}>
-          {!isLoading && <div className="graph">
+          {!isLoading && viewDate !== null && <div className="graph">
             
             {graphState === "WORDS" ? 
 
               <Box >
                 {/* <Wordcloud/> */}
                 <WordCloud 
-                data={prepVizData(receipts)}
+                data={aggregateProducts(receipts, periodState, viewDate)}
                 // height={window.innerHeight * 0.7} //the component uses a square layout, setting this value does not seem to change anything
-                fontSize={(word) => Math.sqrt(word.value/maxValue(prepVizData(receipts))) *100}
+                fontSize={(word) => Math.sqrt(word.value/maxValue(aggregateProducts(receipts, periodState, viewDate))) *100}
                 font="Fredoka"
                 fontWeight="bold"
                 fill={data => data.color}
@@ -158,7 +181,7 @@ function Basket() {
               </Box>
                :
 
-              <BarChart data={prepVizData(receipts)} handeProductClick={handeProductClick} />
+              <BarChart data={aggregateProducts(receipts, periodState, viewDate)} handeProductClick={handeProductClick} />
             }
 
           </div>}
@@ -175,6 +198,7 @@ function Basket() {
 
       {/* <HelpButton fromPage = "Basket"/> */}
       <HelpPages fromPage={0}/>
+
 
 
 
