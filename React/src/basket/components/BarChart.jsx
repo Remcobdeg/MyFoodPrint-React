@@ -21,7 +21,7 @@ var roundToIndex = function(x, index) {
 
 const BarChart = function(props){
 
-    console.log(props.data.length);
+    console.log("data = "+ props.data);
 
     //product names better in small caps
     props.data.map(d => d.text = _.toLower(d.text)); 
@@ -34,7 +34,8 @@ const BarChart = function(props){
         .range([0, width ]);
 
         const xAxis = d3.axisBottom()
-            .scale(xScale);
+            .scale(xScale)
+            .ticks(2);
             
         chart.append('g')
             .classed('xAxis', true)
@@ -77,23 +78,24 @@ const BarChart = function(props){
             .classed('bar-label', true)
             .attr('x', d => xScale(d.value))
             // .attr('dx', -6)
-            .attr("text-anchor", d => {if(d.value>5000){return("end")}else{return("start")}})
+            .attr("text-anchor", d => {if(d.value>d3.max(props.data, d => d.value)/2){return("end")}else{return("start")}})
             .attr('y', d => yScale(d.text) + yScale.bandwidth()/2)
             // .attr('dy', 0)
             .text( function(d){return ((d.value<1000) ? Number(d.value.toPrecision(2)) : Number(d.value.toPrecision(2))/1000 + "k") ; } )
+            .style("font-size","14px")
             .on('click', props.handeProductClick );
 
         chart.selectAll(".xAxis>.tick>text")
-		    .style("font-size","20px");
+		    .style("font-size","14px");
         chart.selectAll(".yAxis>.tick>text")
-		    .style("font-size","20px");
+		    .style("font-size","14px");
 
         chart.select('.xAxis')
             .append('text')
             .attr('x',  width/2)
-            .attr('y', 60)
+            .attr('y', 40)
             .attr('fill', '#000')
-            .style('font-size', '20px')
+            .style('font-size', '14px')
             .style('text-anchor', 'middle')
             .text('gCO2e');    
             
@@ -127,7 +129,8 @@ const BarChart = function(props){
             right: 10
         };
 
-        const width = window.innerWidth;
+        let width = window.innerWidth;
+        (window.innerWidth>600)?width = 600-48:width = window.innerWidth-48;
         const height = props.data.length*40 + margin.top + margin.bottom;
         const el = new Element('div');
         const svg = d3.select(el)
