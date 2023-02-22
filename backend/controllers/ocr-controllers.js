@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { v4: uuid } = require('uuid');
 const { validationResult, Result } = require('express-validator');
 const mongoose = require('mongoose');
@@ -10,9 +11,9 @@ const config = require("../aws/config");
 const path = require("path");
 const Receipt = require('../models/receipt');
 AWS.config.update({
-    accessKeyId: config.awsAccesskeyID,
-    secretAccessKey: config.awsSecretAccessKey,
-    region: config.awsRegion
+    accessKeyId: process.env.AWSACCESSKEYID,
+    secretAccessKey: process.env.AWSSECRETACCESSKEY,
+    region: process.env.AWSREGION
 });
 const textract = new AWS.Textract();
 

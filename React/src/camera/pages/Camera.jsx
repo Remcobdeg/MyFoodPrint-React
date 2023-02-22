@@ -61,7 +61,7 @@ function Camera(props) {
     const getVideo = () => {
         navigator.mediaDevices
             .getUserMedia({
-                video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: { exact: "environment" } } //change to user on laptop, environment on phone
+                video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: {ideal: 'environment'}} //change to user on laptop, environment on phone
             })
             .then(stream => {
                 let video = videoRef.current;
@@ -104,7 +104,7 @@ function Camera(props) {
         getVideo();
         setTimeout(() => {
             handleClose();
-        }, 5000);
+        }, 2000);
     }, [videoRef, streamRef]);
 
     return (
