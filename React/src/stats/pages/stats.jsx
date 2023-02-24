@@ -15,6 +15,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 //import HelpIcon from '@mui/icons-material/Help';
 import Help from '../components/Help'
+import HelpPages from '../../shared/components/HelpPages';
+
 
 import './stats.css';
 
@@ -50,16 +52,18 @@ export default function Stats (props){
               Authorization: 'Bearer ' + auth.token
             }
           )
-          const response = responseData.data.receipts;
+          const response = responseData.data.receipts.filter(receipt => isNaN(new Date(receipt.date)) === false); //only keep actual dates
 
           setReceipts(response);
 
           setPeriod(()=>{
+                console.log("responsedates",response.map(receipt => (receipt.date)));
                 const dates = response.map(receipt => new Date(receipt.date));
                 const lastDate = new Date(Math.max.apply(null,dates));
                 const firstDate = new Date(Math.min.apply(null,dates));
                 const maxDate = lastDate;
                 const minDate = new Date( new Date(maxDate).setDate(maxDate.getDate()-6));
+                console.log("dates",dates,"minDate",minDate,"maxDate",maxDate,"firstDate",firstDate,"lastDate",lastDate)
               return {minDate:minDate,maxDate:maxDate,firstDate:firstDate,lastDate:lastDate}
           })
         } catch (err) {}
@@ -252,6 +256,7 @@ export default function Stats (props){
                 </Container>
             </Paper>
             <Help/>
+            <HelpPages fromPage={2}/>
 
             
         </React.Fragment>

@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { AuthContext } from '../../shared/context/authContext';
+import HelpPages from '../../shared/components/HelpPages';
 
 function Settings(props){
 
@@ -12,6 +13,7 @@ function Settings(props){
     }
 
     return(
+      <React.Fragment>
         <Box
           sx={{
             margin: 3,
@@ -29,6 +31,8 @@ function Settings(props){
               Logout
             </Button>
         </Box>
+        <HelpPages fromPage={1}/>
+      </React.Fragment>
     )
 }
 

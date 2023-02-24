@@ -10,6 +10,7 @@ import { AuthContext } from '../../shared/context/authContext';
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import AlternativesTable from '../components/AltTable';
 import { useLocation } from 'react-router-dom';
+import HelpPages from '../../shared/components/HelpPages';
 
 import './Alternatives.css';
 
@@ -173,6 +174,7 @@ function Alternatives() {
         />  
         <AlternativesTable data={subgroupAlternatives.groupAlternatives} product={product}/>
       </Card>}
+      <HelpPages fromPage={1}/>
     </div>
   );
 }
