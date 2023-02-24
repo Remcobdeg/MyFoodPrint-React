@@ -70,7 +70,12 @@ const getReceiptByUserId = async (req, res, next) => {
   // send it to Mongo
   let receipts;
   try {
-    receipts = await Receipt.find({ user: userId }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipts'))
+    receipts = await Receipt.find({ 
+      $or: [
+        { user: userId },
+        { is_checked_off: true}
+      ]
+    }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipts'))
   } catch (err) {
     if (err) {
       const error = new HttpError("Fetching places failed, please try again later", 500);
