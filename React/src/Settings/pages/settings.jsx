@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { AuthContext } from '../../shared/context/authContext';
 import HelpPages from '../../shared/components/HelpPages';
+import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 
 function Settings(props){
 
@@ -14,6 +15,8 @@ function Settings(props){
 
     return(
       <React.Fragment>
+        <StyledHeader variant="h4">Settings</StyledHeader> 
+
         <Box
           sx={{
             margin: 3,
