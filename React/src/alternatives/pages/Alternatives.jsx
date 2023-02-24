@@ -13,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 import HelpPages from '../../shared/components/HelpPages';
 
 import './Alternatives.css';
+import { Typography } from '@mui/material';
 
 function Alternatives() {
 
@@ -174,6 +175,7 @@ function Alternatives() {
         />  
         <AlternativesTable data={subgroupAlternatives.groupAlternatives} product={product}/>
       </Card>}
+      {product === "" && <Typography sx={{mt: 3, mb:3}} variant="h6" align="center">Select a product to see alternatives</Typography>}
       <HelpPages fromPage={1}/>
     </div>
   );
