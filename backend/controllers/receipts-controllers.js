@@ -10,31 +10,33 @@ const HttpError = require('../models/http-error');
 const moment = require('moment');
 var path = require('path');
 
-let DUMMY_RECEIPTS = [
-  {
-    id: 'rcpt1',
-    date: '15/04/2022',
-    time: '11:52:52',
-    store: 'Morissons', //be sure to correct for typo's and match using small caps
-    store_branche: 'Byker',
-    items: [
-      { id: 1, group: 'protein sources', subgroup: 'meat & alternatives', product: 'beef', product_detail: 'beef', footprint_g_100g: 2500, weight_g: 300, price_gbp: 4.2, sourcenote: "from my mind" },
-      { id: 2, group: 'dairy & alternatives', subgroup: 'cheese', product: 'mozzarella', product_detail: 'mozzarella', footprint_g_100g: 1000, weight_g: 100, price_gbp: 1, sourcenote: "from my mind" },
-    ],
-    user: 'u1'
-  }, {
-    id: 'rcpt2',
-    date: '15/04/2022',
-    time: '11:52:52',
-    store: 'Morissons', //be sure to correct for typo's and match using small caps
-    store_branche: 'Byker',
-    items: [
-      { id: 1, group: 'protein sources', subgroup: 'meat & alternatives', product: 'beef', product_detail: 'beef', footprint_g_100g: 2500, weight_g: 300, price_gbp: 4.2, sourcenote: "from my mind" },
-      { id: 2, group: 'dairy & alternatives', subgroup: 'cheese', product: 'mozzarella', product_detail: 'mozzarella', footprint_g_100g: 1000, weight_g: 100, price_gbp: 1, sourcenote: "from my mind" },
-    ],
-    user: 'u1'
-  }
-];
+//NOTE: each receipt that is added is automatically assumed not to be checked off! (is_checked_off: false)
+
+// let DUMMY_RECEIPTS = [
+//   {
+//     id: 'rcpt1',
+//     date: '15/04/2022',
+//     time: '11:52:52',
+//     store: 'Morissons', //be sure to correct for typo's and match using small caps
+//     store_branche: 'Byker',
+//     items: [
+//       { id: 1, group: 'protein sources', subgroup: 'meat & alternatives', product: 'beef', product_detail: 'beef', footprint_g_100g: 2500, weight_g: 300, price_gbp: 4.2, sourcenote: "from my mind" },
+//       { id: 2, group: 'dairy & alternatives', subgroup: 'cheese', product: 'mozzarella', product_detail: 'mozzarella', footprint_g_100g: 1000, weight_g: 100, price_gbp: 1, sourcenote: "from my mind" },
+//     ],
+//     user: 'u1'
+//   }, {
+//     id: 'rcpt2',
+//     date: '15/04/2022',
+//     time: '11:52:52',
+//     store: 'Morissons', //be sure to correct for typo's and match using small caps
+//     store_branche: 'Byker',
+//     items: [
+//       { id: 1, group: 'protein sources', subgroup: 'meat & alternatives', product: 'beef', product_detail: 'beef', footprint_g_100g: 2500, weight_g: 300, price_gbp: 4.2, sourcenote: "from my mind" },
+//       { id: 2, group: 'dairy & alternatives', subgroup: 'cheese', product: 'mozzarella', product_detail: 'mozzarella', footprint_g_100g: 1000, weight_g: 100, price_gbp: 1, sourcenote: "from my mind" },
+//     ],
+//     user: 'u1'
+//   }
+// ];
 
 const getReceiptById = async (req, res, next) => {
   const receiptId = req.params.rcptid;
@@ -68,7 +70,12 @@ const getReceiptByUserId = async (req, res, next) => {
   // send it to Mongo
   let receipts;
   try {
-    receipts = await Receipt.find({ user: userId }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipts'))
+    receipts = await Receipt.find({ 
+      $or: [
+        { user: userId },
+        { is_checked_off: true}
+      ]
+    }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipts'))
   } catch (err) {
     if (err) {
       const error = new HttpError("Fetching places failed, please try again later", 500);
@@ -98,7 +105,7 @@ const createReceipt = async (req, res, next) => {
   // populate the receipt
   const dateRecorded = new Date();
   const newReceipt = new Receipt({
-    ...req.body, date_recorded: dateRecorded
+    ...req.body, date_recorded: dateRecorded, is_checked_off: false
   });
 
   //before we save, test if the user name exists
@@ -150,7 +157,7 @@ const createReceiptMany = async (req, res, next) => {
 
   // populate the receipt
   const dateRecorded = new Date();
-  const newReceiptMany = req.body.map(receipt => new Receipt({ ...receipt, date_recorded: dateRecorded }));
+  const newReceiptMany = req.body.map(receipt => new Receipt({ ...receipt, date_recorded: dateRecorded, is_checked_off: false }));
 
   //before we save, test if the user name exists
 

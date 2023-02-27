@@ -15,6 +15,9 @@ import {aggregateProducts, maxValue} from "../Modules/PrepVizData";
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 import Legend from "../../img/Legend.svg";
 import DateSlider from "../../shared/components/DateSlider";
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { useTheme } from "@mui/material/styles";
+import NoDataMessage from "../../shared/components/NoDataMessage";
 
 import './Basket.css';
 
@@ -25,6 +28,8 @@ function Basket() {
 
   const auth = useContext(AuthContext);
   const nav = useContext(navContext);
+
+  const theme = useTheme();
 
   // const receiptSchema = {
   //   "_id": "627131d609fa9b1ef5cb5399",
@@ -106,7 +111,7 @@ function Basket() {
 
         // setVizData(aggregateProducts(response, viewDate, periodState));
 
-      } catch (err) {}
+      } catch (err) {setReceipts("no receipts")}
     };
     fetchReceipts(); 
   }, [auth,sendRequest])
@@ -150,56 +155,64 @@ function Basket() {
           {/* </Box> */}
         </Grid>
 
-        <Grid item>
-          {/* <Typography variant="overline">{styleDisplayDate()}</Typography> */}
-          <DateSlider 
-            dateArray={dateArray} 
-            dateIndex={dateIndex} 
-            setDateIndex={setDateIndex} 
-            viewDate={viewDate} 
-            setViewDate={setViewDate} 
-            periodState={periodState}/>
-        </Grid>
+        {receipts !== "no receipts" && 
+          <Grid item>
+            {/* <Typography variant="overline">{styleDisplayDate()}</Typography> */}
+            <DateSlider 
+              dateArray={dateArray} 
+              dateIndex={dateIndex} 
+              setDateIndex={setDateIndex} 
+              viewDate={viewDate} 
+              setViewDate={setViewDate} 
+              periodState={periodState}/>
+          </Grid>
+        }
 
-        <Grid item className={(graphState === "WORDS")?"wordCloudBox":""}>
-          {!isLoading && viewDate !== null && <div className="graph">
-            
-            {graphState === "WORDS" ? 
+        {receipts !== "no receipts" && 
+          <Grid item className={(graphState === "WORDS")?"wordCloudBox":""}>
+            {!isLoading && viewDate !== null && <div className="graph">
+              
+              {graphState === "WORDS" ? 
 
-              <Box >
-                {/* <Wordcloud/> */}
-                <WordCloud 
-                data={aggregateProducts(receipts, periodState, viewDate)}
-                // height={window.innerHeight * 0.7} //the component uses a square layout, setting this value does not seem to change anything
-                fontSize={(word) => Math.sqrt(word.value/maxValue(aggregateProducts(receipts, periodState, viewDate))) *100}
-                font="Fredoka"
-                fontWeight="bold"
-                fill={data => data.color}
-                rotate={function() { return ~~(Math.random() * 2) * 90; }}
-                onWordClick={handeProductClick}
-              />
-              </Box>
-               :
+                <Box >
+                  {/* <Wordcloud/> */}
+                  <WordCloud 
+                  data={aggregateProducts(receipts, periodState, viewDate)}
+                  // height={window.innerHeight * 0.7} //the component uses a square layout, setting this value does not seem to change anything
+                  fontSize={(word) => Math.sqrt(word.value/maxValue(aggregateProducts(receipts, periodState, viewDate))) *100}
+                  font="Fredoka"
+                  fontWeight="bold"
+                  fill={data => data.color}
+                  rotate={function() { return ~~(Math.random() * 2) * 90; }}
+                  onWordClick={handeProductClick}
+                />
+                </Box>
+                :
 
-              <BarChart data={aggregateProducts(receipts, periodState, viewDate)} handeProductClick={handeProductClick} />
-            }
+                <BarChart data={aggregateProducts(receipts, periodState, viewDate)} handeProductClick={handeProductClick} />
+              }
 
-          </div>}
-        </Grid>
+            </div>}
+          </Grid>
+        }
 
-        <Grid item textAlign="center" > 
-          <Box sx={{border: 1, borderColor: 'secondary.main', borderRadius: 2, display: 'inline-block', padding: '.5em', mb:'64px'}}>
-            <Typography variant="overline" sx={{color: '#9E9E9E'}}>Legend</Typography>
-            <img src={Legend} alt="legend" className="legend"/>
-          </Box>
-        </Grid>
+        {receipts !== "no receipts" && 
+          <Grid item textAlign="center" > 
+            <Box sx={{border: 1, borderColor: 'secondary.main', borderRadius: 2, display: 'inline-block', padding: '.5em', mb:'64px'}}>
+              <Typography variant="overline" sx={{color: '#9E9E9E'}}>Legend</Typography>
+              <img src={Legend} alt="legend" className="legend"/>
+            </Box>
+          </Grid>
+        }
         
       </Grid>
 
       {/* <HelpButton fromPage = "Basket"/> */}
       <HelpPages fromPage={0}/>
 
-
+      {receipts === "no receipts" && 
+        <NoDataMessage/>
+      }
 
 
     </React.Fragment>

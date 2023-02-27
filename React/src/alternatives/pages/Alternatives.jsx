@@ -10,8 +10,11 @@ import { AuthContext } from '../../shared/context/authContext';
 import {useHttpClient} from '../../shared/hooks/http-hook';
 import AlternativesTable from '../components/AltTable';
 import { useLocation } from 'react-router-dom';
+import HelpPages from '../../shared/components/HelpPages';
+import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 
 import './Alternatives.css';
+import { Typography } from '@mui/material';
 
 function Alternatives() {
 
@@ -123,8 +126,9 @@ function Alternatives() {
   },[state,alternatives,stuctureData])
 
   return (
-    <div>
-      {!isLoading && productHierarchy && <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+    <div style={{paddingBottom: "150px"}}>
+      <StyledHeader variant="h4">Alternatives</StyledHeader> 
+      {!isLoading && productHierarchy && <FormControl variant="standard" sx={{ minWidth: 120 }}>
         <InputLabel id="demo-simple-select-standard-label">Product</InputLabel>
         <Select
           labelId="demo-simple-select-standard-label"
@@ -173,6 +177,8 @@ function Alternatives() {
         />  
         <AlternativesTable data={subgroupAlternatives.groupAlternatives} product={product}/>
       </Card>}
+      {product === "" && <Typography align = "center" sx={{mt: 10, color: "rgba(0, 0, 0, 0.6)"}} variant="h6">Select a product to see alternatives</Typography>}
+      <HelpPages fromPage={1}/>
     </div>
   );
 }

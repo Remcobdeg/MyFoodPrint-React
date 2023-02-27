@@ -15,6 +15,11 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 //import HelpIcon from '@mui/icons-material/Help';
 import Help from '../components/Help'
+import HelpPages from '../../shared/components/HelpPages';
+import NoDataMessage from '../../shared/components/NoDataMessage';
+import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
+
+
 
 import './stats.css';
 
@@ -50,19 +55,21 @@ export default function Stats (props){
               Authorization: 'Bearer ' + auth.token
             }
           )
-          const response = responseData.data.receipts;
+          const response = responseData.data.receipts.filter(receipt => isNaN(new Date(receipt.date)) === false); //only keep actual dates
 
           setReceipts(response);
 
           setPeriod(()=>{
+                console.log("responsedates",response.map(receipt => (receipt.date)));
                 const dates = response.map(receipt => new Date(receipt.date));
                 const lastDate = new Date(Math.max.apply(null,dates));
                 const firstDate = new Date(Math.min.apply(null,dates));
                 const maxDate = lastDate;
                 const minDate = new Date( new Date(maxDate).setDate(maxDate.getDate()-6));
+                console.log("dates",dates,"minDate",minDate,"maxDate",maxDate,"firstDate",firstDate,"lastDate",lastDate)
               return {minDate:minDate,maxDate:maxDate,firstDate:firstDate,lastDate:lastDate}
           })
-        } catch (err) {}
+        } catch (err) {setReceipts("no receipts");}
       };
       fetchReceipts(); 
     }, [auth,sendRequest])
@@ -205,53 +212,62 @@ export default function Stats (props){
 
     return(
         <React.Fragment>
-            <Paper sx={{mx:1, mt:2}} ref={graphPaper}>
-                <Container sx={{m:0}}>
-                    <Typography variant="h4" align="justify">Average Foodprint</Typography> 
-                    <Typography variant="h6" align="justify">gCO<sub>2</sub>e per 100g</Typography>
-                </Container>
-                {Object.keys(receipts[0]).length !== 0 && graphWidth !== "null" &&
-                    
-                        <ChartAv100g data={aggregateForStats(receipts)} period={period} width={graphWidth}/>
-                    
+            <StyledHeader variant="h4">Stats</StyledHeader> 
+            {receipts === "no receipts" ? <NoDataMessage/> :
+            <React.Fragment>
+                <Paper sx={{mx:1, mt:2}} ref={graphPaper}>
+                    <Container sx={{m:0}}>
+                        <Typography variant="h4" align="justify">Average Foodprint</Typography> 
+                        <Typography variant="h6" align="justify">gCO<sub>2</sub>e per 100g</Typography>
+                    </Container>
+                    {Object.keys(receipts[0]).length !== 0 && graphWidth !== "null" &&
+                        
+                            <ChartAv100g data={aggregateForStats(receipts)} period={period} width={graphWidth}/>
+                        
 
-                }
-                {/* <D3ZoomTest /> */}
-                <Container>
-                    <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" >
-                        <IconButton aria-label="back" onClick={backDate} disabled={period.firstDate >= period.minDate}>
-                            <ArrowLeftIcon />
-                        </IconButton>
-                        {/* <span className='dateRange'>{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</span> */}
-                        {/* <Paper textAlign = "center">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Paper> */}
-                        <Typography variant="body2" align="justify">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Typography>
-                        <IconButton aria-label="forward" onClick={forwardDate} disabled={period.lastDate <= period.maxDate}>
-                            <ArrowRightIcon />
-                        </IconButton>
-                    </Stack>
-
-                    {/* <Grid container spacing={1} justifyContent="center" alignItems="center" >
-                        <Grid item xs={1} justifyContent="center">
-                            <IconButton aria-label="back" onClick={backDate}>
+                    }
+                    {/* <D3ZoomTest /> */}
+                    <Container>
+                        <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" >
+                            <IconButton aria-label="back" onClick={backDate} disabled={period.firstDate >= period.minDate}>
                                 <ArrowLeftIcon />
                             </IconButton>
-                        </Grid>
-
-                        <Grid item xs={10} justifyContent="center">
+                            {/* <span className='dateRange'>{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</span> */}
+                            {/* <Paper textAlign = "center">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Paper> */}
                             <Typography variant="body2" align="justify">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Typography>
-                        </Grid>
-                        <Grid item xs={1} justifyContent="center">
-                            <Box justifyContent="center" alignItems="center">
-                                <IconButton aria-label="forward" onClick={forwardDate}>
-                                    <ArrowRightIcon />
-                                </IconButton>
-                            </Box>
+                            <IconButton aria-label="forward" onClick={forwardDate} disabled={period.lastDate <= period.maxDate}>
+                                <ArrowRightIcon />
+                            </IconButton>
+                        </Stack>
 
-                        </Grid>
-                    </Grid> */}
-                </Container>
-            </Paper>
-            <Help/>
+                        {/* <Grid container spacing={1} justifyContent="center" alignItems="center" >
+                            <Grid item xs={1} justifyContent="center">
+                                <IconButton aria-label="back" onClick={backDate}>
+                                    <ArrowLeftIcon />
+                                </IconButton>
+                            </Grid>
+
+                            <Grid item xs={10} justifyContent="center">
+                                <Typography variant="body2" align="justify">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Typography>
+                            </Grid>
+                            <Grid item xs={1} justifyContent="center">
+                                <Box justifyContent="center" alignItems="center">
+                                    <IconButton aria-label="forward" onClick={forwardDate}>
+                                        <ArrowRightIcon />
+                                    </IconButton>
+                                </Box>
+
+                            </Grid>
+                        </Grid> */}
+                    </Container>
+                </Paper> 
+                
+            
+
+                <Help/>
+            </React.Fragment>
+            }
+            <HelpPages fromPage={2}/>
 
             
         </React.Fragment>

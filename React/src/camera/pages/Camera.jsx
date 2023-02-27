@@ -12,6 +12,7 @@ import commonHttp from '../../shared/components/http-common';
 import { useNavigate, Link } from "react-router-dom";
 import DeviceOrientation from 'react-device-orientation';
 import { AuthContext } from '../../shared/context/authContext';
+import Alert from '@mui/material/Alert';
 
 const style = {
     position: 'absolute',
@@ -112,9 +113,19 @@ function Camera(props) {
             {({ absolute, alpha, beta, gamma }) => (
                 <div className='video-container'>
                     <video ref={videoRef}></video>
-                    {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) && <IconButton onClick={takePhoto} className='camera-button'>
-                        <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
-                    </IconButton>}
+                    {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
+                        <IconButton onClick={takePhoto} className='camera-button'>
+                            <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
+                        </IconButton>
+                    
+                        : <div>
+                            {(open === false) &&
+                                <Alert severity="info" sx={{mt: 5}}>To take a picture, hold your phone horizontal</Alert>
+                            }
+                        </div>
+                        
+                    }
+  
                     <IconButton onClick={toggle} className='flash-button'>
                         {
                             on ? <FlashOffIcon sx={{ fontSize: "15vmin" }} color="primary" />
