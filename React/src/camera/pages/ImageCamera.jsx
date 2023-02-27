@@ -27,6 +27,7 @@ const baseURL = process.env.REACT_APP_BACKEND_URL;
 function ImageCamera(props) {
     const [imgFile, setImageFile] = useState(null);
     const [saveOpen, setSaveOpen] = React.useState(true);
+    const [successOpen, setSuccessOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
     const [receiptDate, setReceiptDate] = React.useState("NA");
@@ -56,11 +57,8 @@ function ImageCamera(props) {
             setReceiptDate(response.data);
             if (response.data === 'NA') {
                 setSnackdangerOpen(true);
-            }
+            } 
         });
-        setTimeout(() => {
-            setSaveOpen(false);
-        }, 1000);
     }, []);
 
     const removePhoto = () => {
@@ -91,7 +89,11 @@ function ImageCamera(props) {
                 })
                 .then((response) => {
                     setIsLoading(false);
-                    navigate('/');
+                    setSuccessOpen(true); //function to display message that the data has been saved and will be processed
+                    setTimeout(() => {
+                        setSuccessOpen(false);
+                        navigate('/');
+                    }, 3000);         
                 });
         } catch (err) {
             setError(true);
@@ -101,14 +103,14 @@ function ImageCamera(props) {
 
     return (
         <div className='img-container'>
-            <img src={imgFile} id="img" alt="/image.png"></img>
+            <img src={imgFile} id="img" alt="scanned receipt"></img>
             <div className="camera-button">
                 <Button onClick={removePhoto} sx={{ width: '80vw', marginBottom: '1vh' }} color="error" variant="contained">Retry</Button>
                 {/* <Link to="/camera"><Button sx={{width:'80vw', marginBottom:'1vh'}} color="primary" variant="contained">Next</Button></Link> */}
                 <Button onClick={saveAndExit} sx={{ width: '80vw' }} color="success" variant="contained">Save & Exit</Button>
-                {error && <Alert severity="error">Something went Wrong!!! System could not process the image</Alert>}
+                {error && <Alert severity="error">Something went Wrong. Receipt wasn't saved!</Alert>}
             </div>
-            <Modal
+            {/* <Modal
                 open={saveOpen}
                 onClose={() => { setSaveOpen(false); }}
             >
@@ -118,7 +120,7 @@ function ImageCamera(props) {
                         and saved sucessfully
                     </Typography>
                 </Box>
-            </Modal>
+            </Modal> */}
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={isLoading}
@@ -131,7 +133,20 @@ function ImageCamera(props) {
             >
                 <Box sx={style}>
                     <Typography style={{ color: 'red' }} variant="h6" component="h2">
-                        Unable to fetch Date from the Image!!
+                        Looks like the date of the receipt wasn't visible in the picture. If it's our error, just press save. Otherwise, please try again and capture the whole receipt?
+                    </Typography>
+                </Box>
+            </Modal>
+
+            {/* success message */}
+            <Modal
+                open={successOpen}
+                onClose={() => { setSuccessOpen(false); }}
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Thanks! Your data has been saved and will be processed. It should appear in your dashboard within 24h.
+
                     </Typography>
                 </Box>
             </Modal>

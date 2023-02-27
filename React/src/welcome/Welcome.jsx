@@ -1,11 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import CssBaseline from '@mui/material/CssBaseline';
 import { useNavigate } from 'react-router-dom';
 // import { createTheme, ThemeProvider  } from '@mui/material/styles';
 
@@ -13,18 +11,6 @@ import './welcome.css'
 import logo from '../img/MyFoodPrint.png'
 
 export default function Welcome (props){
-
-    // const theme = createTheme({
-    //     palette: {
-    //       primary: {
-    //         main: "#91C788",
-    //         contrastText: '#fff',
-    //       },
-    //       secondary: {
-    //         main: '#CCD2E3',
-    //       },
-    //     },
-    //   });
 
     const navigate = useNavigate();
 
@@ -59,9 +45,7 @@ export default function Welcome (props){
                     </Grid>
                     <Grid item xs={12}>
                         <Box   display="flex"  justifyContent="center"  alignItems="center" >
-                            <Link href="/auth" underline="always">
-                                {'Already registered? Skip to login'}
-                            </Link>
+                            <Button onClick={() => navigate('/auth')}>Already registered? Skip to login</Button>
                             {/* <Button variant="text">SKIP TO LOGIN</Button> */}
                         </Box>
                     </Grid>
