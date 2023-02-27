@@ -41,6 +41,11 @@
     left: 10% !important;
     transform: translate(-20%,-10%) !important;
   }
+  .hold-horizonal-alert {
+    position: absolute !important;
+    margin-top: 10vh !important;
+
+  }
 
   .video-container canvas {
     /* Make video to at least 100% wide and tall */
