@@ -4,9 +4,10 @@ var resultOCR = {};
 var items = [];
 
 function createResult(objList) {
+    items = [];
     filterObj(objList.SummaryFields, "VENDOR_NAME");
     getResult(objList.LineItemGroups[0]);
-    add(resultOCR, "ITEMS", items);
+    add(resultOCR, "ITEMS", items); //function add(itemList, key, value) {itemList[key] = value;}
     return resultOCR;
 }
 

@@ -42,7 +42,14 @@ const fetchDataFromImage = async (req, res, next) => {
                 return err;
             }
             else {
+                //debug
+                // fs.writeFile(path.resolve(__dirname, "../images/debug" + imageDate + ".json"), JSON.stringify(data), (error) => {
+                //     if (error) {console.log(error)};
+                // });
+                //end debug
+
                 let result = textractOCR.createResult(data.ExpenseDocuments[0]);
+                // console.log(result);
                 await result.ITEMS.forEach(function (entry) {
                     let itemName = "NA", price = 0.00, quantity = 1;
                     Object.values(entry)[0].filter(obj => {
