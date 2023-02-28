@@ -21,7 +21,7 @@ const receiptSchema = new Schema({
     item_footprint_sourcenote: {type: String, required: true},
     item_footprint_sourcenote_detail: {type: String, required: false},
     date_recorded: {type: Date, required: true},
-    is_checked_off: {type: String, required: false},
+    is_checked_off: {type: Boolean, required: true},
     user: {type: mongoose.Types.ObjectId, required: true, ref: 'User'} //makes sure it's a mongoose object id and refers to the User model 
 });
 
