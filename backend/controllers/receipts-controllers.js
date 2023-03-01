@@ -9,6 +9,7 @@ const User = require('../models/user');
 const HttpError = require('../models/http-error');
 const moment = require('moment');
 var path = require('path');
+const e = require('express');
 
 //NOTE: each receipt that is added is automatically assumed not to be checked off! (is_checked_off: false)
 
@@ -88,6 +89,9 @@ const getReceiptByUserId = async (req, res, next) => {
       new HttpError('Could not find receipts for the provided user id.', 404)
     );
   }
+
+  //convert the receipt date string to a date format the 'Date' object can understand
+  receipts.forEach(receipt => {receipt.date = moment(receipt.date, "DD/MM/YYYY").toDate()});
 
   res.json({ receipts: receipts.map(receipt => receipt.toObject({ getters: true })) }); //aligning with the populate approach above, this would become receipts: userWithReceipts.receipts.map(receipt => 
 };
