@@ -13,6 +13,7 @@ backend/.pnp
 /coverage
 React/coverage
 backend/coverage
+misc/.json
 
 # production
 /build

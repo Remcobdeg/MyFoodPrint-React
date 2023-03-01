@@ -72,7 +72,7 @@ const getReceiptByUserId = async (req, res, next) => {
   let receipts;
   try {
     receipts = await Receipt.find({ 
-      $or: [
+      $and: [
         { user: userId },
         { is_checked_off: true}
       ]
