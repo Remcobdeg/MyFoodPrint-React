@@ -120,7 +120,7 @@ function Camera(props) {
                     
                         : <div>
                             {(open === false) &&
-                                <Alert severity="info" className='hold-horizonal-alert'>To take a picture, hold your phone horizontal</Alert>
+                                <Alert severity="info" className='hold-horizonal-alert'>To take a picture, hold your phone level</Alert>
                             }
                         </div>
                         

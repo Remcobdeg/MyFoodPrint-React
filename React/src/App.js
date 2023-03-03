@@ -80,7 +80,7 @@ if (!!token){
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
       <navContext.Provider value={{ currentPage: currentPage, setPage: setPage }}>
       <ThemeProvider theme={theme}>
-      <Container maxWidth="sm" sx={{px: "1em"}} >
+      <Container maxWidth="sm" sx={{px: "1em", pb: "64px"}} >
         <BrowserRouter>
           <main>{routes}</main>
           {!!token && <NavBarBottom />}

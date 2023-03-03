@@ -1,5 +1,6 @@
 .wordCloudBox {
-    padding-bottom: calc(6/7*100%); /* 6:7 aspect ratio, like the viewbox for the wordcloud */
+    padding-bottom: calc(50%);  
+    /* 6:7 aspect ratio, like the viewbox for the wordcloud */
 }
 
 .legend {

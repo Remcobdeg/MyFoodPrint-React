@@ -126,7 +126,7 @@ function Alternatives() {
   },[state,alternatives,stuctureData])
 
   return (
-    <div style={{paddingBottom: "150px"}}>
+    <div style={{paddingBottom: "50px"}}>
       <StyledHeader variant="h4">Alternatives</StyledHeader> 
       {!isLoading && productHierarchy && <FormControl variant="standard" sx={{ minWidth: 120 }}>
         <InputLabel id="demo-simple-select-standard-label">Product</InputLabel>

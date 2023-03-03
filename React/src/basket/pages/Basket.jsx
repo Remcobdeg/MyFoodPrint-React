@@ -169,8 +169,11 @@ function Basket() {
         }
 
         {receipts !== "no receipts" && 
-          <Grid item className={(graphState === "WORDS")?"wordCloudBox":""}>
-            {!isLoading && viewDate !== null && <div className="graph">
+          <Grid item textAlign="center" className={(graphState === "WORDS")?"wordCloudBox":""} >
+            {!isLoading && viewDate !== null && <Box sx={{border: 2, borderColor: 'primary.main', borderRadius: 2, display: "block"}}>
+            
+              <Typography variant="overline">Click an item to view alternatives.</Typography>
+
               
               {graphState === "WORDS" ? 
 
@@ -178,6 +181,7 @@ function Basket() {
                   {/* <Wordcloud/> */}
                   <WordCloud 
                   data={aggregateProducts(receipts, periodState, viewDate)}
+                  width={700}
                   // height={window.innerHeight * 0.7} //the component uses a square layout, setting this value does not seem to change anything
                   fontSize={(word) => Math.sqrt(word.value/maxValue(aggregateProducts(receipts, periodState, viewDate))) *100}
                   font="Fredoka"
@@ -185,6 +189,7 @@ function Basket() {
                   fill={data => data.color}
                   rotate={function() { return ~~(Math.random() * 2) * 90; }}
                   onWordClick={handeProductClick}
+                  padding={1}
                 />
                 </Box>
                 :
@@ -192,16 +197,14 @@ function Basket() {
                 <BarChart data={aggregateProducts(receipts, periodState, viewDate)} handeProductClick={handeProductClick} />
               }
 
-            </div>}
-          </Grid>
-        }
-
-        {receipts !== "no receipts" && 
-          <Grid item textAlign="center" > 
-            <Box sx={{border: 1, borderColor: 'secondary.main', borderRadius: 2, display: 'inline-block', padding: '.5em', mb:'64px'}}>
+            <Box 
+              sx={{display: 'inline-block', padding: '.5em'}} //, border: 1, borderColor: 'secondary.main', borderRadius: 2, mb:'64px'
+              >
               <Typography variant="overline" sx={{color: '#9E9E9E'}}>Legend</Typography>
               <img src={Legend} alt="legend" className="legend"/>
             </Box>
+
+            </Box>}
           </Grid>
         }
         
