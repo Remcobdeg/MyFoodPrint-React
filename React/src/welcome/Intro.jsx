@@ -60,10 +60,10 @@ function Intro(props){
                 direction="column"
                 justifyContent="space-between"
                 alignItems="center"
-                sx={{height: "90%"}}
+                sx={(window.innerHeight>window.innerWidth)&&{height: "calc(85vh)"}}
 
             >
-                <Grid item>
+                <Box sx={{maxHeight: '85vh', overflow: 'auto'}} >
                     {introPage === 0 && 
                         <div>
                             <h1 className="appName">MyFoodPrint</h1>
@@ -136,7 +136,7 @@ function Intro(props){
                                 {/* The wordcloud shows....  Size and color suggest were to focus your efforts.  */}
 
                                 <em>Hint: by replacing large red or orange foods, you can expect most impact. 
-                                Small red or orange foods have a high footprint per 100g, but you didn't buy much of it. Replacing those will have a smaller impact.  
+                                Small red or orange foods have a high footprint per 100g, but you didn't buy much of it.  
                                 Large green products are great choices that you seem to like and buy much of. </em> 
 
                                 {/* These can be great alternatives for the red and orange foods -- if that works for your ) 
@@ -176,11 +176,19 @@ function Intro(props){
                             </p>
                         </div>
                     }
-                </Grid>
+                </Box>
 
                 {/* <Grid item>
                     <p>test</p> */}
-                    <Grid 
+
+                {/* </Grid> */}
+
+
+
+
+            </Grid>
+
+            <Grid 
                             container
                             direction="row"
                             justifyContent="space-between"
@@ -197,12 +205,6 @@ function Intro(props){
                             <Button variant="text" size="small" onClick={() => navigate('/auth')}>skip to login</Button>
                         </Grid>
                     </Grid>
-                {/* </Grid> */}
-
-
-
-
-            </Grid>
 
             <Box>
 

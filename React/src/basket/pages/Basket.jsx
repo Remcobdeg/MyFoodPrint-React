@@ -183,7 +183,7 @@ function Basket() {
                   data={aggregateProducts(receipts, periodState, viewDate)}
                   width={700}
                   // height={window.innerHeight * 0.7} //the component uses a square layout, setting this value does not seem to change anything
-                  fontSize={(word) => Math.sqrt(word.value/maxValue(aggregateProducts(receipts, periodState, viewDate))) *100}
+                  fontSize={(word) => Math.sqrt(word.value/maxValue(aggregateProducts(receipts, periodState, viewDate))) *80}
                   font="Fredoka"
                   fontWeight="bold"
                   fill={data => data.color}

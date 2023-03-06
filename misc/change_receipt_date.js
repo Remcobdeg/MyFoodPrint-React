@@ -1,11 +1,11 @@
 const fs = require('fs');
 
-let receipts = JSON.parse(fs.readFileSync('remcodegrave3receipts.json', 'utf8'));
+let receipts = JSON.parse(fs.readFileSync('receipts_UXtest_processed_all3.json', 'utf8'));
 
 receipts.forEach(receipt => {
-    if(receipt.date === "01/08/2022") {receipt.date = "20/02/2023"}
-    else if(receipt.date === "25/02/2023") {receipt.date = "25/02/2023"}
-    else if(receipt.date === "25/01/2022") {receipt.date = "15/02/2023"}
+    if(receipt.date === "2022-08-01") {receipt.date = "20-02-2023"}
+    else if(receipt.date === "2023-02-25") {receipt.date = "25-02-2023"}
+    else if(receipt.date === "2022-01-25") {receipt.date = "15-02-2023"}
 });
 
 //also change person on receipt
