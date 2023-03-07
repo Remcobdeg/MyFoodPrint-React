@@ -48,7 +48,7 @@ export default function AlternativesTable(props) {
                         <rect width={`${(row.value/maxfoodprint*180)}px`} height="25px" style={{fill: row.color}}/>
                         {/* <text fill="#000000de" font-size="1rem" font-family="Roboto" x="4" y="16">{row.value}</text> */}
                     </svg>
-                    <div style={{position: "absolute", top:"0px", left:"0px", fontWeight:boldRow(row.text)}}>{row.value}</div>
+                    <div style={{position: "absolute", top:"0px", left:"0px", fontWeight:boldRow(row.text)}}>{Math.round(row.value)}</div>
                 </div>
                 </TableCell>
                 <TableCell sx={{color: colorPercentage(row.lower), fontWeight:boldRow(row.text)}} align="right">{`${row.lower}%`}</TableCell>
