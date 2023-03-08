@@ -105,7 +105,7 @@ function Camera(props) {
         getVideo();
         setTimeout(() => {
             handleClose();
-        }, 2000);
+        }, 4000);
     }, [videoRef, streamRef]);
 
     return (

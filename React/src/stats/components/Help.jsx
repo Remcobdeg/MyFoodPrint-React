@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
+import CloseIcon from '@mui/icons-material/Close';
 
 import './Help.css'
 
@@ -22,7 +23,21 @@ export default function Help(props){
                 {console.log(open)}
             </Stack>
             <Dialog open={open} onClose={() => setOpen(prevState => !open)}>
-                <DialogTitle>What is gCO<sub>2</sub>?</DialogTitle>
+                <DialogTitle>
+                    What is gCO<sub>2</sub>?
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => setOpen(prevState => !prevState)}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                        >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         <span className='help'>g = grams</span>

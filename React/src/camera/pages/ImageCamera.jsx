@@ -93,7 +93,7 @@ function ImageCamera(props) {
                     setTimeout(() => {
                         setSuccessOpen(false);
                         navigate('/');
-                    }, 3000);         
+                    }, 4000);         
                 });
         } catch (err) {
             setError(true);
@@ -133,7 +133,7 @@ function ImageCamera(props) {
             >
                 <Box sx={style}>
                     <Typography style={{ color: 'red' }} variant="h6" component="h2">
-                        Looks like the date of the receipt wasn't visible in the picture. If it's our error, just press save. Otherwise, please try again and capture the whole receipt?
+                        Looks like the date of the receipt wasn't visible in the picture. If it's our error, just press save. Otherwise, please try again and capture the whole receipt, including the bottom bit with the date.
                     </Typography>
                 </Box>
             </Modal>

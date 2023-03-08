@@ -18,6 +18,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
 import { Typography } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import "./Intro.css";
 
@@ -168,7 +170,22 @@ function Intro(props){
 
 
                             <Dialog open={open} onClose={() => setOpen(prevState => !open)}>
-                                <DialogTitle>What do the color and size mean?</DialogTitle>
+                                <DialogTitle>
+                                    What do the color and size mean?
+                                    <IconButton
+                                        aria-label="close"
+                                        onClick={() => setOpen(prevState => !prevState)}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 8,
+                                            top: 8,
+                                            color: (theme) => theme.palette.grey[500],
+                                        }}
+                                        >
+                                        <CloseIcon />
+                                    </IconButton>
+                                    
+                                </DialogTitle>
                                 <DialogContent>
                                     <DialogContentText>
 
@@ -248,7 +265,21 @@ function Intro(props){
                             </Typography>
                             
                             <Dialog open={open} onClose={() => setOpen(prevState => !open)}>
-                                <DialogTitle>What is foodprint?</DialogTitle>
+                                <DialogTitle>
+                                    What is foodprint?
+                                    <IconButton
+                                        aria-label="close"
+                                        onClick={() => setOpen(prevState => !prevState)}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 8,
+                                            top: 8,
+                                            color: (theme) => theme.palette.grey[500],
+                                        }}
+                                        >
+                                        <CloseIcon />
+                                    </IconButton>
+                                </DialogTitle>
                                 <DialogContent>
                                     <DialogContentText>
                                         Foodprint is the carbon footprint of food; the environmental impact of the food we eat.
