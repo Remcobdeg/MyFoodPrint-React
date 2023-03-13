@@ -28,6 +28,7 @@ function Alternatives() {
   const [productHierarchy, setProductHierarchy] = useState();
   const [alternatives, setAlternatives] = useState([{}]);
   const [subgroupAlternatives, setSubgroupAlternatives] = useState();
+  const [maxFootprint, setMaxFootprint] = useState(0);
 
   const stuctureData = useCallback((alternatives, product) => {
     //find one item with the same product name to learn the retrieve the subgroup the product belongs to
@@ -103,6 +104,8 @@ function Alternatives() {
         // console.log([...new Set(response.map(alternative => alternative.product))].sort());
         setAlternatives(response);
 
+        setMaxFootprint(Math.max(...response.map(alternative => alternative.footprint_g_100g)));
+
         // if(!!state){
         //   console.log(state === "beef");
         //   setProduct(alternatives.find(alternative => alternative.product === state));
@@ -167,7 +170,7 @@ function Alternatives() {
           titleTypographyProps={{ align: 'center' }}
           sx={{color:"#FFFFFF", backgroundColor: "#91C788", padding:"4px"}}
         />  
-        <AlternativesTable data={subgroupAlternatives.subgroupAlternatives} product={product}/>
+        <AlternativesTable data={subgroupAlternatives.subgroupAlternatives} product={product}  maxFootprint={maxFootprint}/>
       </Card>}
       {!!subgroupAlternatives && <Card sx={{mt: 3, mb:3}}>
         <CardHeader 
@@ -175,7 +178,7 @@ function Alternatives() {
           titleTypographyProps={{ align: 'center' }}
           sx={{color:"#FFFFFF", backgroundColor: "#91C788", padding:"4px"}}
         />  
-        <AlternativesTable data={subgroupAlternatives.groupAlternatives} product={product}/>
+        <AlternativesTable data={subgroupAlternatives.groupAlternatives} product={product} maxFootprint={maxFootprint}/>
       </Card>}
       {product === "" && <Typography align = "center" sx={{mt: 10, color: "rgba(0, 0, 0, 0.6)"}} variant="h6">Select a product to see alternatives</Typography>}
       <HelpPages fromPage={1}/>

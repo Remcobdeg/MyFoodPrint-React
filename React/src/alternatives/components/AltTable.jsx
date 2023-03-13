@@ -10,7 +10,9 @@ import Paper from '@mui/material/Paper';
 
 export default function AlternativesTable(props) {
     const data = props.data; 
-    const maxfoodprint = Math.max(...data.map(item => item.value));
+    // const maxfoodprint = Math.max(...data.map(item => item.value));
+    // const maxfoodprint = props.maxFootprint;
+    const maxfoodprint = 2500;
 
     const colorPercentage = (value) => {
         if(value>0){return("#2e7d32")}
