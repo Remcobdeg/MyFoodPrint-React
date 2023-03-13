@@ -57,6 +57,7 @@ if (!!token){
           <Routes>
             <Route path="/" element={<Basket />} />
             <Route path="alternatives/*" element={<Alternatives />} />
+            <Route path="gettingstarted/" element={<Intro />} />
             <Route path="stats/*" element={<Stats />} />
             <Route path="settings/*" element={<Settings />} />
             <Route path="camera/*" element={<Camera userId={userId} />} />
