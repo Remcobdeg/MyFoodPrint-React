@@ -262,6 +262,8 @@ function Intro(props){
                                 Before you get started, there is some general knowledge about <Box onClick={() => setOpen(true)} color='primary.main' fontWeight='fontWeightMedium' display='inline'>foodprint </Box> 
                                 that is good to know. The information can help you when considering specific items to purchase. 
                                 And it helps you understand why the data in this application is shown in the way that it is. 
+
+                                You can view this information now or revisit it any time by clicking the question mark in the bottom right corner.
                             </Typography>
                             
                             <Dialog open={open} onClose={() => setOpen(prevState => !open)}>
@@ -295,7 +297,7 @@ function Intro(props){
                                 </DialogContent>
                             </Dialog>
 
-                            <Typography variant="overline" className="FAQheader" gutterBottom>
+                            {/* <Typography variant="overline" className="FAQheader" gutterBottom>
                                 1. What determines the footprint of a product?
                             </Typography>
 
@@ -372,7 +374,7 @@ function Intro(props){
 
                                 While have done an effort to provide data that is accurate, cannot guarantee absence of mistakes. 
                                 If you find any, please let us know.
-                            </Typography>
+                            </Typography> */}
 
 
 
@@ -384,7 +386,7 @@ function Intro(props){
 
 
                             <Typography variant="body1" align="center" gutterBottom sx={{my: 2}}>
-                                <strong>Now let's login and go and explore!</strong>
+                                <em>Now let's login and go and explore!</em>
                             </Typography>
                         </div>
                     }
