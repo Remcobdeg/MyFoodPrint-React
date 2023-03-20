@@ -24,6 +24,7 @@ import ImageCamera from './camera/pages/ImageCamera';
 import ImageList from './admin/pages/ImageList';
 import ImageDetails from './admin/pages/ImageDetails';
 import { useAuth } from './shared/hooks/authHook'
+// import { useFindPath } from './shared/hooks/findPath-hook';
 import { createTheme, ThemeProvider  } from '@mui/material/styles';
 
 

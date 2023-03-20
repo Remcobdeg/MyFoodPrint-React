@@ -181,7 +181,7 @@ function Alternatives() {
         <AlternativesTable data={subgroupAlternatives.groupAlternatives} product={product} maxFootprint={maxFootprint}/>
       </Card>}
       {product === "" && <Typography align = "center" sx={{mt: 10, color: "rgba(0, 0, 0, 0.6)"}} variant="h6">Select a product to see alternatives</Typography>}
-      <HelpPages fromPage={1}/>
+      <HelpPages fromPage={"Alternatives"}/>
     </div>
   );
 }

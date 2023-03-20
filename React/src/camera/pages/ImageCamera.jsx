@@ -7,7 +7,10 @@ import commonHttp from '../../shared/components/http-common';
 // import { baseURL } from '../../shared/components/http-common';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import HelpPages from '../../shared/components/HelpPages';
 import { AuthContext } from '../../shared/context/authContext';
+
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -150,6 +153,7 @@ function ImageCamera(props) {
                     </Typography>
                 </Box>
             </Modal>
+            <HelpPages fromPage={"Camera"}/>
         </div>
     );
 }

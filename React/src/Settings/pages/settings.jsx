@@ -34,6 +34,7 @@ function Settings(props){
             
           }}
         >
+        <HelpPages/>
         <Button
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
@@ -49,7 +50,7 @@ function Settings(props){
               Logout
             </Button>
         </Box>
-        <HelpPages fromPage={1}/>
+
       </React.Fragment>
     )
 }

@@ -211,7 +211,7 @@ function Basket() {
       </Grid>
 
       {/* <HelpButton fromPage = "Basket"/> */}
-      <HelpPages fromPage={0}/>
+      <HelpPages fromPage={"Basket"}/>
 
       {receipts === "no receipts" && 
         <NoDataMessage/>

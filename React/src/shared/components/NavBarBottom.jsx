@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { navContext } from '../context/navContext';
 
 export default function SimpleBottomNavigation() {
-  const [currentPage, setPage] = React.useState("Basket");
+  const [currentPage, setPage] = React.useState("basket");
   const navigate = useNavigate();
 
   const nav = useContext(navContext);
@@ -26,11 +26,11 @@ export default function SimpleBottomNavigation() {
             nav.setPage(newPage);
         }}
       >
-        <BottomNavigationAction label="Purchases" value="Basket" icon={<ShoppingBasketIcon />} />
-        <BottomNavigationAction label="Alternatives" value="Alternatives" icon={<AltRouteIcon />} />
-        <BottomNavigationAction label="Add receipt" value="Camera" icon={<AddCircleIcon />} />
-        <BottomNavigationAction label="Stats" value="Stats" icon={<SsidChartIcon />} />
-        <BottomNavigationAction label="Settings" value="Settings" icon={<SettingsIcon />} />
+        <BottomNavigationAction label="Purchases" value="basket" icon={<ShoppingBasketIcon />} />
+        <BottomNavigationAction label="Alternatives" value="alternatives" icon={<AltRouteIcon />} />
+        <BottomNavigationAction label="Add receipt" value="camera" icon={<AddCircleIcon />} />
+        <BottomNavigationAction label="Stats" value="stats" icon={<SsidChartIcon />} />
+        <BottomNavigationAction label="Settings" value="settings" icon={<SettingsIcon />} />
       </BottomNavigation>
     </Box>
   );

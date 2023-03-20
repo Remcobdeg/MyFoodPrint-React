@@ -55,6 +55,7 @@ BootstrapDialogTitle.propTypes = {
 
 export default function HelpPages(props) {
   const [open, setOpen] = React.useState(false);
+  const [fullScreen, setFullScreen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -65,27 +66,38 @@ export default function HelpPages(props) {
 
   return (
     <div>
-      <Fab
-        color="primary"
-        aria-label="help"
-        onClick={handleClickOpen}
-          sx={{
-              position: 'fixed',
-              bottom: 72, // 16px + 56px of BottomNavigation
-              right: 16,
-          }}
-      >
-        <QuestionMarkIcon />
-      </Fab>
+      {props.fromPage ?
+        <Fab
+          color="primary"
+          aria-label="help"
+          size="small" 
+          onClick={handleClickOpen}
+            sx={{
+                position: 'fixed',
+                top: 10, // 16px + 56px of BottomNavigation
+                right: 10,
+            }}
+          > 
+
+          <QuestionMarkIcon />
+        </Fab>:
+        <Button
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={handleClickOpen}
+        >
+          FAQs
+        </Button>
+      }
 
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
-        fullScreen
+        fullScreen={fullScreen}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          <StyledHeader variant="h2">Help</StyledHeader> 
+          <StyledHeader variant="h4">FAQs</StyledHeader> 
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Help {...props}/>

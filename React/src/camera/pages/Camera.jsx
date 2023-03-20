@@ -12,6 +12,7 @@ import commonHttp from '../../shared/components/http-common';
 import { useNavigate, Link } from "react-router-dom";
 import DeviceOrientation from 'react-device-orientation';
 import { AuthContext } from '../../shared/context/authContext';
+import HelpPages from '../../shared/components/HelpPages';
 import Alert from '@mui/material/Alert';
 
 const style = {
@@ -156,6 +157,8 @@ function Camera(props) {
                     >
                         <CircularProgress color="inherit" />
                     </Backdrop>
+                    <HelpPages fromPage={"Camera"}/>
+
                 </div>
             )}
         </DeviceOrientation>

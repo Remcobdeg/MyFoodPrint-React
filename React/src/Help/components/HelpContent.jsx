@@ -130,8 +130,8 @@ const helpText = {
                         "While the above efforts are made to minimize the risk of misclassification, accidental misclassification may happen. Please reach out if you suspect a misclassification."],
                     "links": [{"url":"mailto:myfoodprintuk@gmail.com?subject=Misclassifation", "text": "Contact us"}]
                 },
-                {"topic": "Another questions", 
-                    "text": "Check the general Help pages or contact us.",
+                {"topic": "Another question", 
+                    "text": "Check the Footprint Tips FAQs (scroll up) or contact us.",
                     "links": [{"url":"mailto:myfoodprintuk@gmail.com?subject=Other%20question", "text": "Contact us"}]
                 }
             ]
@@ -179,6 +179,10 @@ const helpText = {
                         // "(2) You click on the alternative product to see the details on the source data of the product.",
                     ],
                 },
+                {"topic": "Another question", 
+                    "text": "Check the Footprint Tips FAQs (scroll up) or contact us.",
+                    "links": [{"url":"mailto:myfoodprintuk@gmail.com?subject=Other%20question", "text": "Contact us"}]
+                }
             ]
         },
         "Add": {
@@ -254,7 +258,11 @@ const helpText = {
                         "4.	You can write us which items you DO want to include and not scan the receipt. Please hold on to the receipt in case we need some additional data to identify and quantify the items correctly.",
                     ],
                     "links": [{"url":"mailto:myfoodprintUK@gmail.com", "text": "Contact us."}],
-                },      
+                },
+                {"topic": "Another question", 
+                    "text": "Check the Footprint Tips FAQs (scroll up) or contact us.",
+                    "links": [{"url":"mailto:myfoodprintuk@gmail.com?subject=Other%20question", "text": "Contact us"}]
+                }    
             ]
         },
         "Stats": {
@@ -296,6 +304,10 @@ const helpText = {
                         "You can press the arrows below the graph, on both sides of the date, to move the view forward or backward in time. ",
                     ],
                 },
+                {"topic": "Another question", 
+                    "text": "Check the Footprint Tips FAQs (scroll up) or contact us.",
+                    "links": [{"url":"mailto:myfoodprintuk@gmail.com?subject=Other%20question", "text": "Contact us"}]
+                }
 
             ]
         },

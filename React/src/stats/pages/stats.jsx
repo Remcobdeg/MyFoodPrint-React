@@ -267,7 +267,7 @@ export default function Stats (props){
                 <Help/>
             </React.Fragment>
             }
-            <HelpPages fromPage={2}/>
+            <HelpPages fromPage={"Stats"}/>
 
             
         </React.Fragment>

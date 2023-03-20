@@ -16,6 +16,25 @@ import "./Help.css";
 
 export default function Help(props) {
 
+    let fromPageIndex = 0;
+    switch(props.fromPage){
+        case "Basket":
+          fromPageIndex = 1
+          break;
+        case "Alternatives":
+            fromPageIndex = 2
+            break;
+        case "Camera":
+            fromPageIndex = 3
+            break;
+        case "Stats":
+            fromPageIndex = 4
+            break;
+        default:
+            fromPageIndex = 0
+          break;
+      }
+
 
     const elementsRef = useRef(Object.keys(HelpPageContent).map(() => React.createRef()));
 
@@ -27,7 +46,13 @@ export default function Help(props) {
 
     // console.log("expanded ", expanded)
 
-    // {!!props.fromPage && elementsRef.current[props.fromPage].current.scrollIntoView()}
+    useEffect(() => {
+        elementsRef.current[fromPageIndex].current.scrollIntoView()
+    }, [])
+
+
+    // test code to scroll to a specific section of the help page
+    console.log(!!props.fromPage)
 
   return (
     <div>
