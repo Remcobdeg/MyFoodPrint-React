@@ -15,6 +15,8 @@ import "./Help.css";
 // NOTE: below some code is commented out. This is an unfinished attempt to make specific help cards expandable/collapsible based on the page that the help is opened from; and to scroll this section into view. The code is not working yet, but I am leaving it in for now in case I may want to come back to it later.
 
 export default function Help(props) {
+
+
     const elementsRef = useRef(Object.keys(HelpPageContent).map(() => React.createRef()));
 
     // const [expanded, setExpanded] = React.useState(['false','false','false','false']) //Object.keys(HelpPageContent).map(() => false));
