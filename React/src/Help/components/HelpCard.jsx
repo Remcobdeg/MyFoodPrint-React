@@ -9,7 +9,7 @@ import HelpCardContent from "./HelpCardContent";
 import "./HelpCard.css";
 
 export const HelpCard = React.forwardRef((props, ref) => {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -41,11 +41,11 @@ export const HelpCard = React.forwardRef((props, ref) => {
                 {expanded ? <ExpandMoreIcon sx={{transform: "rotate(0deg)"}}/> : <ExpandMoreIcon sx={{transform: "rotate(-90deg)"}}/>}
             </Grid>
         </Grid>
-        <Grid container direction="row" className="help-card-content" justifyContent="center" alignItems="center">
+        <Grid container direction="row" className="help-card-content-container" justifyContent="center" alignItems="center">
             <Grid item xs={2}>
             </Grid>
             <Grid item xs={10}>
-                {expanded && props.content.map((item, index) => {return <HelpCardContent key={index} topic={item.topic} text={item.text}/>})}
+                {expanded && props.content.map((item, index) => {return <HelpCardContent key={index} topic={item.topic} text={item.text} textDetail={item.textDetail} links={item.links}/>})}
             </Grid>
         </Grid>
         {/* {expanded && <Typography variant="body1">{props.text}</Typography>} */}

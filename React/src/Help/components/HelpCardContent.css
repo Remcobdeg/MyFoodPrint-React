@@ -1,0 +1,14 @@
+.help-card-content {
+    margin: .8rem .5rem .5rem 0 ;
+    color: #616161 !important;
+}
+
+.help-card-content-expanded {
+    margin: .8rem .5rem .5rem 0 ;
+    color: #616161 !important;
+    border-bottom: 1px dotted #C1C1C1;
+}
+
+.help-content-text {
+    margin: .5rem 0 .5rem 0 !important;
+}
