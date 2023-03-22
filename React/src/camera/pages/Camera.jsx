@@ -1,3 +1,6 @@
+// https://www.webdevdrops.com/en/how-to-access-device-cameras-with-javascript/
+// https://itnext.io/accessing-the-webcam-with-javascript-and-react-33cbe92f49cb
+
 import './Camera.css';
 import React, { useEffect, useRef, useContext } from 'react';
 import CameraIcon from '@mui/icons-material/Camera';
@@ -60,8 +63,9 @@ function Camera(props) {
     const handleClose = () => setOpen(false);
     const handleBackdropClose = () => setBackdropOpen(false);
     const navigate = useNavigate();
-    const getVideo = () => {
-        navigator.mediaDevices
+
+    const getVideo = async () => {
+        await navigator.mediaDevices
             .getUserMedia({
                 video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: {ideal: 'environment'}} //change to user on laptop, environment on phone ; exact: 'environment' or ideal: 'environment'
             })
@@ -108,6 +112,23 @@ function Camera(props) {
             handleClose();
         }, 4000);
     }, [videoRef, streamRef]);
+
+    // componentWillUnmount
+    useEffect(() => {
+        return () => {
+          // Your code you want to run on unmount.
+            console.log('unmounting camera');
+            streamRef.current.getTracks().forEach(track => track.stop());
+            // videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+
+            // navigator.mediaDevices
+            //     .getUserMedia({video: true, audio: false})
+            //     .then(mediaStream => {
+            //         mediaStream.getTracks().forEach(track => track.stop());
+            //     })
+
+        };
+      }, []); 
 
     return (
         <DeviceOrientation>
