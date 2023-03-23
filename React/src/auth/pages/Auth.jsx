@@ -35,7 +35,7 @@ function Auth(props){
             'post',
             {
               name: data.get('userName'),
-              email: data.get('email'),
+              email: data.get('email').toLowerCase(),
               password: data.get('password')
             },
             {
@@ -87,6 +87,7 @@ function Auth(props){
               name="email"
               autoComplete="email"
               autoFocus
+              inputProps={{ style: { textTransform: "lowercase" } }}
             />
             <TextField
               margin="normal"
