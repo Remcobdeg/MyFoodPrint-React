@@ -4,6 +4,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Typography from '@mui/material/Typography';
 import { Grid } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function DateSlider(props) {
 
@@ -46,32 +47,44 @@ export default function DateSlider(props) {
         }
     }
 
+    const backDisabled = props.dateIndex === props.dateArray.length - 1;
+    const forwardDisabled = props.dateIndex === 0;
+
     return (
         <div>
             <Grid container spacing={2}>
                 <Grid item xs={3} textAlign="right" justifyContent="right">
-                    <Fab 
-                    onClick={clickPrevious}
-                    disabled={props.dateIndex === props.dateArray.length - 1}
-                    size="small" 
-                    color="primary" 
-                    aria-label="previous">
-                        <ArrowBackIosIcon/>
-                    </Fab>
+                    <Tooltip title={backDisabled?"No older data available":""}>
+                        <span>
+                            <Fab 
+                            onClick={clickPrevious}
+                            disabled={backDisabled}
+                            size="small" 
+                            color="primary" 
+                            aria-label="previous">
+                                <ArrowBackIosIcon/>
+                            </Fab>
+                        </span>
+                    </Tooltip>
                 </Grid>
                 <Grid item xs={6} textAlign="center" justifyContent="space-between" >
                     <Typography variant="overline">{styleDisplayDate()}</Typography>
                 </Grid>
                 <Grid item xs={3} textAlign="left" justifyContent="left">
-                    <Fab 
-                    onClick={clickNext}
-                    disabled={props.dateIndex === 0}
-                    // variant="extended" 
-                    size="small" 
-                    color="primary" 
-                    aria-label="next">
-                        <ArrowForwardIosIcon/>
-                    </Fab>
+                    <Tooltip title={forwardDisabled?"No newer data available":""}>
+                        <span>
+                            <Fab 
+                            onClick={clickNext}
+                            disabled={forwardDisabled}
+                            // variant="extended" 
+                            size="small" 
+                            color="primary" 
+                            aria-label="next">
+                                <ArrowForwardIosIcon/>
+                            </Fab>
+                        </span>
+                    </Tooltip>
+
                 </Grid>
             </Grid>
         </div>

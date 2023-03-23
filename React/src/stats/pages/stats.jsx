@@ -18,6 +18,8 @@ import Help from '../components/Help'
 import HelpPages from '../../shared/components/HelpPages';
 import NoDataMessage from '../../shared/components/NoDataMessage';
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
+import { Tooltip } from '@mui/material';
+
 
 
 
@@ -229,15 +231,61 @@ export default function Stats (props){
                     {/* <D3ZoomTest /> */}
                     <Container>
                         <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" >
-                            <IconButton aria-label="back" onClick={backDate} disabled={period.firstDate >= period.minDate}>
-                                <ArrowLeftIcon />
-                            </IconButton>
+                            
+                            <Tooltip 
+                                title={period.firstDate >= period.minDate ? "No older data available":""} 
+                                placement="top"
+                                arrow
+                                PopperProps={{
+                                    modifiers: [
+                                        {
+                                            name: "offset",
+                                            options: {
+                                                offset: [0, -10],
+                                            },
+                                        },
+                                    ],
+                                }}
+                                // disableFocusListener
+                                // disableHoverListener
+                                // disableTouchListener
+
+                                >
+                                <span>
+                                    <IconButton aria-label="back" onClick={backDate} disabled={period.firstDate >= period.minDate}>
+                                        <ArrowLeftIcon />
+                                    </IconButton>
+                                </span>
+                            </Tooltip>
                             {/* <span className='dateRange'>{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</span> */}
                             {/* <Paper textAlign = "center">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Paper> */}
                             <Typography variant="body2" align="justify">{period.minDate.toDateString()} -- {period.maxDate.toDateString()}</Typography>
-                            <IconButton aria-label="forward" onClick={forwardDate} disabled={period.lastDate <= period.maxDate}>
-                                <ArrowRightIcon />
-                            </IconButton>
+                            <Tooltip 
+                                title={period.lastDate <= period.maxDate ? "No newer data available":""} 
+                                placement="top"
+                                arrow
+                                PopperProps={{
+                                    modifiers: [
+                                        {
+                                            name: "offset",
+                                            options: {
+                                                offset: [0, -10],
+                                            },
+                                        },
+                                    ],
+                                }}
+                                // disableFocusListener
+                                // disableHoverListener
+                                // disableTouchListener
+
+                                >
+                                <span>
+                                <IconButton aria-label="forward" onClick={forwardDate} disabled={period.lastDate <= period.maxDate}>
+                                    <ArrowRightIcon />
+                                </IconButton>
+                                </span>
+                            </Tooltip>
+
                         </Stack>
 
                         {/* <Grid container spacing={1} justifyContent="center" alignItems="center" >
@@ -264,7 +312,7 @@ export default function Stats (props){
                 
             
 
-                <Help/>
+                {/* <Help/> */}
             </React.Fragment>
             }
             <HelpPages fromPage={"Stats"}/>
