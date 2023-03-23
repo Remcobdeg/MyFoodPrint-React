@@ -39,7 +39,7 @@ export default function AlternativesTable(props) {
           {data.map((row) => (
             <TableRow
               key={row.text}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: row.text===props.product.product&&"#eeeeee"}}
             >
               <TableCell component="th" scope="row" sx={{fontWeight:boldRow(row.text)}}>
                 {row.text}
