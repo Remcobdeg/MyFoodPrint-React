@@ -42,6 +42,15 @@ function Settings(props){
         >
           Replay intro tutorial
         </Button>
+
+        <Button
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          href="mailto:myfoodprintuk@gmail.com"
+        >
+          Contact us
+        </Button>
+        
         <Button
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

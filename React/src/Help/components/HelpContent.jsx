@@ -320,7 +320,7 @@ const helpText = {
                     "text": [
                         "You can contact us by email: ",
                     ],
-                    "links": [{"url":"mailto:myfoodprintUK@gamil.com", "text": "myfoodprintUK@gamil.com"}],
+                    "links": [{"url":"mailto:myfoodprintUK@gmail.com", "text": "myfoodprintUK@gmail.com"}],
                 },
             ]
         }

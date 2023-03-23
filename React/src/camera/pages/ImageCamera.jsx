@@ -9,6 +9,8 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import HelpPages from '../../shared/components/HelpPages';
 import { AuthContext } from '../../shared/context/authContext';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 
 const style = {
@@ -29,7 +31,6 @@ const baseURL = process.env.REACT_APP_BACKEND_URL;
 
 function ImageCamera(props) {
     const [imgFile, setImageFile] = useState(null);
-    const [saveOpen, setSaveOpen] = React.useState(true);
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
@@ -144,9 +145,21 @@ function ImageCamera(props) {
             {/* success message */}
             <Modal
                 open={successOpen}
-                onClose={() => { setSuccessOpen(false); }}
+                onClose={() => setSuccessOpen(false)}
             >
                 <Box sx={style}>
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => setSuccessOpen(false)}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                        >
+                        <CloseIcon />
+                    </IconButton>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Thanks! Your data has been saved and will be processed. It should appear in your dashboard within 24h.
 

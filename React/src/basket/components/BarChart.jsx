@@ -90,6 +90,12 @@ const BarChart = function(props){
         chart.selectAll(".yAxis>.tick>text")
 		    .style("font-size","14px");
 
+        chart.selectAll('.tick')          
+            .on('click', function (d, i) {
+            props.handeProductClick(d,{text: i});
+        })
+
+
         chart.select('.xAxis')
             .append('text')
             .attr('x',  width/2)

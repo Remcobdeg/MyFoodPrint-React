@@ -163,6 +163,18 @@ function Camera(props) {
                         onClose={handleClose}
                     >
                         <Box sx={style}>
+                            <IconButton
+                                aria-label="close"
+                                onClick={() => setOpen(false)}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
+                                >
+                                <CloseIcon />
+                            </IconButton>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 With the WHOLE receipt in view, <br />
                                 Press the <br />
