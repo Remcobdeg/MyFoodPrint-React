@@ -15,14 +15,15 @@ export default function AlternativesTable(props) {
     const maxfoodprint = 2500;
 
     const colorPercentage = (value) => {
-        if(value>0){return("#2e7d32")}
-        else if(value<0){return("#d32f2f")}
+        if(value>0){return("#4CAF50")} //green #2e7d32
+        else if(value<0){return("#FF0000")} //red #d32f2f
         else{return(null)}
     }
 
     const boldRow = (item) => {
+      // this doesn't work because 
         if(item === props.product){return(500)}
-        else{return(null)}
+        else{return(500)}
     }
 
   return (
@@ -30,9 +31,9 @@ export default function AlternativesTable(props) {
       <Table sx={{ minWidth: 350 }} size="small" aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Product</TableCell>
+            <TableCell>product name</TableCell>
             <TableCell align="left">gCO<sub>2</sub>e per 100g</TableCell>
-            <TableCell align="right">Lower</TableCell>
+            <TableCell align="right">lower/ higher</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

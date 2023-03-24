@@ -19,6 +19,7 @@ import HelpPages from '../../shared/components/HelpPages';
 import NoDataMessage from '../../shared/components/NoDataMessage';
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 import { Tooltip } from '@mui/material';
+import colorLegend from '../../img/color_legend_stats.png';
 
 
 
@@ -309,6 +310,17 @@ export default function Stats (props){
                         </Grid> */}
                     </Container>
                 </Paper> 
+
+                 <Container sx={{justifyContent: "center", textAlign: "center", mt: 3, mb: 3}}>
+                    <Typography variant="overline" sx={{color: '#9E9E9E'}}>Legend</Typography>
+                    <img src={colorLegend} alt="legend" className="centerImage"/> 
+                    {/* <Grid container  justifyContent="center" alignItems="flex-start" >
+                        <Grid item xs={6}>
+                             
+                        </Grid>
+
+                    </Grid> */}
+                </Container>
                 
             
 

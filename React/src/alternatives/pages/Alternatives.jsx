@@ -12,9 +12,12 @@ import AlternativesTable from '../components/AltTable';
 import { useLocation } from 'react-router-dom';
 import HelpPages from '../../shared/components/HelpPages';
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
+import colorLegend from '../../img/color_legend.png';
+import lowerLegend from '../../img/lower_higher_legend.png';
+import Container from '@mui/material/Container';
 
 import './Alternatives.css';
-import { Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 function Alternatives() {
 
@@ -139,7 +142,7 @@ function Alternatives() {
     <div style={{paddingBottom: "50px"}}>
       <StyledHeader variant="h4">Alternatives</StyledHeader> 
       {!isLoading && productHierarchy && <FormControl variant="standard" sx={{ minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-standard-label">Product</InputLabel>
+        <InputLabel id="demo-simple-select-standard-label">Selected product</InputLabel>
         <Select
           labelId="demo-simple-select-standard-label"
           id="demo-simple-select-standard"
@@ -187,6 +190,21 @@ function Alternatives() {
         />  
         <AlternativesTable data={subgroupAlternatives.groupAlternatives} product={product} maxFootprint={maxFootprint}/>
       </Card>}
+
+      {!!subgroupAlternatives && <Container sx={{justifyContent: "center", textAlign: "center", mt: 3, mb: 3}}>
+        <Typography variant="overline" sx={{color: '#9E9E9E'}}>Legend</Typography>
+        <Grid container  justifyContent="center" alignItems="flex-start" >
+          <Grid item xs={6}>
+            <img src={colorLegend} alt="legend" className="centerImage"/>  
+          </Grid>
+          <Grid item xs={6}>
+            <img src={lowerLegend} alt="legend" className="centerImage"/>
+          </Grid>
+        </Grid>
+      </Container>}
+
+             
+
       {product === "" && <Typography align = "center" sx={{mt: 10, color: "rgba(0, 0, 0, 0.6)"}} variant="h6">Select a product to see alternatives</Typography>}
       <HelpPages fromPage={"Alternatives"}/>
     </div>
