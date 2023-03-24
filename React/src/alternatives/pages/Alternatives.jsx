@@ -31,11 +31,17 @@ function Alternatives() {
   const [maxFootprint, setMaxFootprint] = useState(0);
 
   const stuctureData = useCallback((alternatives, product) => {
-    //find one item with the same product name to learn the retrieve the subgroup the product belongs to
     const selectedProduct = alternatives.find(alternative => alternative.product === product);
+
+
+
     //get all items in that subgroup
     let subGroup = alternatives.filter(alternative => alternative.subgroup === selectedProduct.subgroup);
-    let group = alternatives.filter(alternative => alternative.group === selectedProduct.group).filter(alternative => !subGroup.includes(alternative));
+    let group = alternatives.filter(alternative => alternative.group === selectedProduct.group);
+    // don't show the products already listed in the subgroup list
+    group = group.filter(alternative => !subGroup.includes(alternative));
+    // but do include the selected product in the group list
+    group = [...group, selectedProduct]
 
     subGroup = stuctureData2(subGroup,selectedProduct);
     group = stuctureData2(group,selectedProduct);
@@ -95,13 +101,14 @@ function Alternatives() {
         )
         let response = responseData.data.alternatives;
         response.forEach(alternative => alternative.product = alternative.product.toLowerCase());
+        response.forEach(alternative => alternative.group = alternative.group.toLowerCase());
+        response.forEach(alternative => alternative.subgroup = alternative.subgroup.toLowerCase());
         response = (response.sort((a,b) => {if(b.product > a.product){return(-1)}else{return(1)};}));
         const productList = [...new Set(response.map(alternative => alternative.product))].sort();
         const subgroupList = [...new Set(response.map(alternative => alternative.subgroup))].sort();
         const groupList = [...new Set(response.map(alternative => alternative.group))].sort();
         const productHierarchy = {productList:productList,subgroupList:subgroupList,groupList:groupList};
         setProductHierarchy(productHierarchy);
-        // console.log([...new Set(response.map(alternative => alternative.product))].sort());
         setAlternatives(response);
 
         setMaxFootprint(Math.max(...response.map(alternative => alternative.footprint_g_100g)));
