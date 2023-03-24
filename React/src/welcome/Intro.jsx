@@ -21,6 +21,7 @@ import { Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
+import Help from '../Help/pages/help';
 import "./Intro.css";
 
 function Intro(props){
@@ -41,6 +42,8 @@ function Intro(props){
 
     const [introPage, setIntroPage] = useState(0);
     const [open, setOpen] = useState(false);
+    const [checkedFAQ, setCheckedFAQ] = useState(false);
+    const [openFAQ, setOpenFAQ] = useState(false);
 
     const buttonNext = () => {
         if(introPage === 4){
@@ -59,6 +62,11 @@ function Intro(props){
         
     }
 
+    const handleFAQClick = () => {
+        setCheckedFAQ(true);
+        setOpenFAQ(true);
+    }
+
     const nextButtonName = ['Tell me how','Next','Next','Next','Login / Sign up']
 
     return(
@@ -71,7 +79,7 @@ function Intro(props){
                 direction="column"
                 justifyContent="space-between"
                 alignItems="center"
-                sx={(window.innerHeight>window.innerWidth)&& introPage < 4 && {height: "calc(85vh)"}}
+                sx={(window.innerHeight>window.innerWidth)&&  {height: "calc(85vh)"}}
 
             >
                 <Box sx={introPage < 4 && {maxHeight: '85vh', overflow: 'auto'}} >
@@ -246,7 +254,7 @@ function Intro(props){
                             </Typography>
                             
                             <Box sx={{display: "flex", justifyContent: 'center', padding: 2}}>
-                                <img className='exampleIcon' src={alternativesImage} alt="Icon of a receipt"/>
+                                <img className='exampleImage' src={alternativesImage} alt="Icon of a receipt"/>
                             </Box>
 
                         </div>
@@ -259,12 +267,15 @@ function Intro(props){
                             </h2>
 
                             <Typography variant="body1" component='div' className="FAQtext">
-                                Before you get started, there is some general knowledge about <Box onClick={() => setOpen(true)} color='primary.main' fontWeight='fontWeightMedium' display='inline'>foodprint </Box> 
-                                that is good to know. The information can help you when considering specific items to purchase. 
-                                And it helps you understand why the data in this application is shown in the way that it is. 
-
-                                You can view this information now or revisit it any time by clicking the question mark in the bottom right corner.
+                                Before you get started, we recommend you check some tips about <Box onClick={() => setOpen(true)} color='primary.main' fontWeight='fontWeightMedium' display='inline'>foodprint </Box> 
+                                in the FAQ. It will help you to make most out of the app. 
+                                <br/>
+                                <br/>
+                                You can revisit the FAQs at any time in the settings menu.
                             </Typography>
+
+                            <Button variant={(checkedFAQ)?"outlined":"contained"} sx={{mx: "auto", my: "2em", display: "block"}} onClick={handleFAQClick}>See Tips & FAQ</Button>
+
                             
                             <Dialog open={open} onClose={() => setOpen(prevState => !open)}>
                                 <DialogTitle>
@@ -297,105 +308,36 @@ function Intro(props){
                                 </DialogContent>
                             </Dialog>
 
-                            {/* <Typography variant="overline" className="FAQheader" gutterBottom>
-                                1. What determines the footprint of a product?
-                            </Typography>
+                            <Dialog open={openFAQ} onClose={() => setOpenFAQ(prevState => !open)}>
+                                <DialogTitle>
+                                    Tips & FAQ
+                                    <IconButton
+                                        aria-label="close"
+                                        onClick={() => setOpenFAQ(prevState => !prevState)}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 8,
+                                            top: 8,
+                                            color: (theme) => theme.palette.grey[500],
+                                        }}
+                                        >
+                                        <CloseIcon />
+                                    </IconButton>
+                                </DialogTitle>
+                                <DialogContent>
+                                    <Help/>
+                                </DialogContent>
+                            </Dialog>
 
-                            <Typography variant="body1">
-                                Research shows, that the footprint of a product mostly comes from the farming, or sourcing, of food (about 81%). 
-                                Some of the factors that that play a large role in this Deforestation, coral-reef damage, fertilizers, hothouses 
-                                (e.g., for local tomatoes in March), and belching animals like cows and sheep burping methane. 
-                                Post-farm processes have a relatively low impact on the foodprint of a product. 
-                                Exemptions are, e.g., products that are airfreighted, like blueberries from Chili in December. 
-                                In contrast, Strawberries from Spain can be considered low footprint, as road transport is relatively efficient and adds 
-                                only a few percent to the footprint. Because production processes may be more efficient, e.g., due to increased sun exposure, 
-                                a distantly sourced product may well have a lower foodprint, than a local version. 
-                                <br/>
+                            {checkedFAQ &&
+                                <Typography variant="body1" align="center" gutterBottom sx={{my: "3em"}}>
+                                    <em>Now let's login and go and explore!</em>
+                                </Typography>
+                            }
 
-                                References: <a href="https://www.science.org/doi/10.1126/science.aba7357" target="_blank" rel="noreferrer" >Clarke et al., Science, 2020</a> and <a href="https://howbadarebananas.com/" target="_blank" rel="noreferrer" >Berners-Lee, How Bad Are Bananas?</a>
-
-                            </Typography>
-
-                            <Typography variant="overline" className="FAQheader" gutterBottom>
-                                2. Why does the app not consider the difference between brands, or versions, of a product?
-
-                            </Typography>
-
-                            <Typography variant="body1">
-                                In short, the information to do so is not readily available. Importantly however, choosing between different products 
-                                is often more impactful than choosing between different versions of the same product. 
-                                Therefore, we make no distinction between different origins or brands of the same product, 
-                                but provide the average footprints of a specific product. 
-
-                                <br/>
-
-                                Exemptions are products that are airfreighted. Airfreight is often used when perishable produce (mostly berries and fresh beans) 
-                                is off-season in the UK, as well as the European countries that provide produce to the UK by truck, like Spain. Another exemption 
-                                is produce grown in hothouses, like British tomatoes grown out-of-season. Where there is an important clear impact that differentiates 
-                                the footprint of one product version to the next, we have aimed to create different versions. In a few cases, we also include different 
-                                versions as an example to show the estimated impact of e.g., transporting a strawberry from Spain.  
-
-                                <br/>
-
-                                References: <a href="https://www.science.org/doi/10.1126/science.aaq0216" target="_blank" rel="noreferrer" >Poore and Nemecek, Science, 2018</a> and <a href="https://howbadarebananas.com/" target="_blank" rel="noreferrer" >Berners-Lee, How Bad Are Bananas?</a>
-
-                            </Typography>
-
-                            <Typography variant="overline" className="FAQheader" gutterBottom>
-                                3. Is is better to buy organic?
-
-                            </Typography>
-
-                            <Typography variant="body1">
-                                Organic choices are not necessarily better from a footprint perspective, as reduced yield can outweigh the benefits from 
-                                cleaner production processes. In general, relating variations in farming processes to the foodprint of a product is a complex 
-                                matter. Just like for organic produce, the impact of a specific farming approach may have a counter-intuitive influence on the 
-                                net foodprint of a product.
- 
-
-                                <br/>
-
-                                References: <a href="https://howbadarebananas.com/" target="_blank" rel="noreferrer" >Berners-Lee, How Bad Are Bananas?</a>
-
-                            </Typography>
-
-                            <Typography variant="overline" className="FAQheader" gutterBottom>
-                                4. What else should I be aware of?
-
-                            </Typography>
-
-                            <Typography variant="body1">
-                                The application provides information on carbon footprint. There are obviously other aspects of environmental sustainability 
-                                that are important that are not represented in carbon footprint. These are water use and biodiversity. Although we can expect 
-                                that high footprint indicates also high water use and detriment to biodiversity, this relationship is not a given. It is  
-                                always good to stay critical and aware of the limitations any data that you are shows.
-
-                                <br/>   
-
-                                While have done an effort to provide data that is accurate, cannot guarantee absence of mistakes. 
-                                If you find any, please let us know.
-                            </Typography> */}
-
-
-
-
-
-
-
-
-
-
-                            <Typography variant="body1" align="center" gutterBottom sx={{my: 2}}>
-                                <em>Now let's login and go and explore!</em>
-                            </Typography>
                         </div>
                     }
                 </Box>
-
-                {/* <Grid item>
-                    <Typography variant="body1" gutterBottom>test</Typography> */}
-
-                {/* </Grid> */}
 
 
 
@@ -410,7 +352,7 @@ function Intro(props){
                             rowSpacing={{xs: 1}}
                     >
                         <Grid item xs={12}>
-                            <Button variant="contained" sx={{width: "100%"}} onClick={buttonNext}>{nextButtonName[introPage]}</Button>
+                            <Button variant={(checkedFAQ | (introPage<4))?"contained":"outlined"} sx={{width: "100%"}} onClick={buttonNext}>{nextButtonName[introPage]}</Button>
                         </Grid>
                         <Grid item>
                             <Button variant="text" size="small" onClick={buttonBack}>back</Button>
