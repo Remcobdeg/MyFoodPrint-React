@@ -52,7 +52,7 @@ function Auth(props){
               "Content-type": "application/json"
             }
           )
-          ReactGA.set({ userId: response.data.userId });
+          ReactGA.set({ user_id: response.data.userId });
           console.log("set userid to:",response.data.userId);
           auth.login(response.data.userId, response.data.token);
         } catch(err){}        
