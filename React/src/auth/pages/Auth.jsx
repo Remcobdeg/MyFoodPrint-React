@@ -15,6 +15,8 @@ import {useHttpClient} from '../../shared/hooks/http-hook';
 import DefaultDialog from '../../shared/components/defaultDialog';
 import DefaultListItem from '../components/DefaultList';
 import { List } from '@mui/material';
+import ReactGA from "react-ga4";
+
 
 import './Auth.css'
 
@@ -50,6 +52,8 @@ function Auth(props){
               "Content-type": "application/json"
             }
           )
+          ReactGA.set({ userId: response.data.userId });
+          console.log("set userid to:",response.data.userId);
           auth.login(response.data.userId, response.data.token);
         } catch(err){}        
     };

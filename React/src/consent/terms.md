@@ -1,62 +1,60 @@
+# Context
+
+The current version of the site is intended for academic research purposes only. This provides special allowences, but also restrictions in the way we can share access to the information in the app/site with you. To safeguard our compliance with these restrictions, we have to restrict access permission to the site/app in various ways.  
+
+# Key Points
+
+**Here are some key points from the terms of use, but please read the full document:**
+* The current version of the site is intended for academic research purposes only. By using the site/app, you acknowledge this fact.
+* Access to the site/app is only allowed by people explicitly invited to access it by the primary researcher, Remco Benthem de Grave, and for limited duration only.
+* You agree to scan only grocery receipts of purchases for you and members of your household that signed up for the study with you. 
+* Any content of the application may not be shared without explicit consent from the primary researcher.
+* You agree to scan only grocery receipts of purchases for you and members of your household that signed up for the study with you. In case of mixed receipts (meaning that they contain purchases for people outside your household), you will communicate to us a which items where not purchased for you household.
+
+
 # Terms of Use
-Please read these terms of use carefully before using the services offered by Open Lab, University of Newcastle Upon Tyne (“Open Lab, Newcastle University”, "Open Lab, University of Newcastle Upon Tyne", “we”, “us”). These terms of use set forth the legally binding terms and conditions for your use of the website and/or apps at [WEBSITE ADDRESS] (the "Service") and the services, features, content, applications or widgets offered by Open Lab, Newcastle University (collectively with the Service, the "Service").
+Please read these terms of use carefully before using the services offered by Open Lab, University of Newcastle Upon Tyne (“Open Lab, Newcastle University”, "Open Lab, University of Newcastle Upon Tyne", “we”, “us”). These terms of use set forth the terms and conditions for your use of the website and/or apps at myfoodprint.openlab.dev (the "Service") and the services, features, content, applications or widgets offered by Open Lab, Newcastle University (collectively with the Service, the "Service").
 
 Please read these Terms of Use carefully before using the Service. If you do not accept these Terms of Use, then you may not use the Service. These Terms of Use are subject to change by us at any time, effective when posted on the Service. Your continued use after such notice will constitute acceptance by you of such changes.
 
 These Terms of Use apply to all users of the Service, including, without limitation, users who are contributors of content, information, and other materials or services on the Service, individual users of the Service, venues that access the Service, and users that have a page on the Service. By using the Service you are agreeing to be bound by these Terms of Use.
 
 ### Use of the Service:
-You may use this Service only subject to these Terms of Use, all applicable laws, rules and regulations and any agreements or terms with third parties to which you are subject. You may not use this Service for commercial purposes, such as to promote a product or service, without our prior written consent. We may impose restrictions on certain features or your access to the Service without notice or liability.
+You may use this Service only subject to these Terms of Use. 
+
+### Context of use:
+The current version of site/app has been developed for academic research purposes only and has no commercial intend. As such, it is subject to the special regulations that apply for academic research in the UK. By using the site/app you acknowledge this fact.
+
+### Who is allowed to use this service:
+Access to the site/app is only allowed by people explicitly invited to access it by the primary researcher, Remco Benthem de Grave. These are people participating in a study that uses the application and who have signed the consent form, or people who have received a written inivitation by the primary researcher to have a look at the application. Unless specified otherwise, permissions to access the site are limited to one month after date of the written invitation.
+
+### Limitations to use:
+You agree not to share access to your account to people outside your household, or to household members who have not signed the research consent form. The application allows you to scan your grocery receipts. 
+
+You agree to scan only receipts of groceries that were made for you, and/or members of your household with whom you signed up for the study. In case of mixed receipts (meaning that they contain purchases for people outside your household), you will communicate to us a which items where not purchased for you household. Also, you agree to scan only receipts of purchases made during the study period, or a week prior to the study period.
+
+### Confidentiality:
+You accept that all information on this site/app is currently confidential. You agree not to copy, distribute, modify or make derivative works of any materials without the prior to our written consent. All rights not granted under these Terms of Use are reserved by us.
+
+We will likely grant you to share information if it is clearly intended to promote environmentally sustainable behaviour, does not compromise our plans for future development of the site/app, and does not concern data that we could not share outside the scope of the specific research project--like some of the footprint data. 
 
 ### Prohibited Use:
 You may not use spiders, robots, data mining techniques or other automated devices or programs to catalog, download or otherwise reproduce, store or distribute content available on the Service. Further, you may not use any such automated means to manipulate the Service or attempt to exceed the limited authorisation and access granted to you under these Terms of Use or disrupt the Service or any other user's use of the Service, including, without limitation, via means of overloading, “flooding”, “mail-bombing” or “crashing” the Service or circumventing security or user authentication measures. You may not frame portions of the Service within another web site or establish links from any other web site to any page of the Service other than the home page. You may not resell use of, or access to, the Service to any third party.
 
-### Content:
-Users may be able to post content in certain areas on the Service, such as in connection with chats, pages, activities and in the comments or discussion sections of the Service. You are solely responsible for any content, photos, artwork, videos, text, graphics, articles and other information you upload, post, display or otherwise provide to the Service (“Content”). You represent and warrant that: (i) you own the Content posted by you on the Service or otherwise have the right to grant the license rights granted in these Terms of Use; (ii) your Content does not violate the privacy rights, publicity rights, intellectual property rights, or any other rights of any person; and (iii) the posting of Content on the Service does not result in a breach of any contract between you and a third party.
-
-We do not guarantee the accuracy, completeness or usefulness of any Content. Furthermore, we do not endorse, nor are we responsible for, the accuracy and reliability of any opinion, advice or statement made on the Service by any third party. We assume no responsibility and no obligation to modify or remove any inappropriate Content, and no responsibility for the conduct of the user submitting any such content.
-
-We reserve the right, in our sole discretion, to reject, refuse to post or remove any Content posted by you. We expressly reserve the right to remove or revoke your registration and/or restrict, suspend, or terminate your access to the Service if we determine, in our sole discretion, that you pose a threat to the Service and/or its users.
-
-After posting your Content to the Service, you continue to retain all ownership rights in such Content, and you continue to have the right to use your Content in any way you choose. By supplying Content to any area of the Service, you automatically grant to us for purposes of maintaining the Service, making Content available, and you represent and warrant that you have the right to grant an irrevocable, transferable, sub-licensable, perpetual, non-exclusive, fully paid up, worldwide license to use, copy, perform, reproduce, display, edit, modify and distribute such information and Content and to prepare derivative works of, or incorporate into other works, such Content. Additionally, we shall be free to use any ideas, concepts, know-how or techniques contained in such Content for any purpose whatsoever, including without limitation, developing, manufacturing and marketing products and services which incorporate such Content, including mobile applications that may be created using the Service.
-
-### Online Behaviour:
-The Service is a space dedicated to helping communities engage in new and creative ways of commissioning mobile applications. You should not post Content to the Service that is inappropriate for or unrelated to this mission. The following is a partial list of the type of Content that is illegal or prohibited to post on or through the Service. Prohibited Content includes, but is not limited to Content that:
-
-1. is patently offensive and promotes racism, bigotry, hatred or physical harm of any kind against any group or individual;
-2. harasses or advocates harassment of another person;
-3. exploits people in a sexual or violent manner;
-4. contains nudity, violence, or offensive subject matter or contains a link to an adult website;
-5. solicits personal information from anyone under the age of 21 years;
-6. provides any telephone numbers, street addresses, last names, URLs or email addresses;
-7. promotes information that you know is false or misleading or promotes illegal activities or conduct that is abusive, threatening, obscene, defamatory or libellous;
-8. promotes an illegal or unauthorised copy of another person's copyrighted work, such as providing pirated computer programs or links to them, providing information to circumvent manufacture-installed copy-protect devices, or providing pirated music or links to pirated music files;
-9. involves the transmission of "junk mail," "chain letters," or unsolicited mass mailing, instant messaging, "spimming," or "spamming";
-10. contains restricted or password only access pages or hidden pages or images (those not linked to or from another accessible page);
-11. furthers or promotes any criminal activity or enterprise or provides instructional information about illegal activities including, but not limited to, making or buying illegal weapons, violating someone's privacy, or providing or creating computer viruses;
-12. solicits passwords from other users or personal identifying information for commercial or unlawful purposes from other users;
-13. involves commercial activities and/or sales without our prior written consent such as contests, sweepstakes, barter, advertising, or pyramid schemes;
-14. or includes a photograph or video footage of another person that you have posted without that person's consent or other third party content including but not limited to music, trademarks, logos, artwork or any other copyrighted, trademarked, or proprietary third party content that you have not secured permission to include on the Site.
-15. If you wish to report any Content or conduct on the Service that you believe is inappropriate, please contact us at openlab-admin@newcastle.ac.uk.
-
-### No Content Monitoring:
-We are under no obligation to screen or monitor Content, but may review Content from time to time at our sole discretion to review compliance with these Terms of Use. We will make all determinations as to what Content is appropriate in our sole discretion. We may include, edit or remove any Content at any time without notice. We may employ automated monitoring devices or techniques to protect our users from mass unsolicited communications (also known as "spam") and/or other types of electronic communications that we deem objectionable. Such devices or techniques are not perfect, and we will not be responsible for any legitimate communication that is blocked, or for any unsolicited communication that is not blocked. Mailboxes may have a limited storage capacity. If you exceed the maximum permitted storage space, we may employ automated devices that delete or block email messages that exceed the limit. We will not be responsible for such deleted or blocked messages.
-
 ### Termination of Access:
 In addition to any right or remedy that may be available to us under these Terms of Use or applicable law, we may suspend, limit or terminate all or a portion of your access to the Service, at any time with or without notice and with or without cause. In addition, we may refer any information on illegal activities, including your identity, to the proper authorities.
+
+We may need to deactivate your account after completion of the user study.
 
 ### Privacy:
 The privacy of your personally identifiable information is very important to us. For more information on what information we collect and how we use such information, please read our Privacy Policy at [PRIVACY POLICY ADDRESS]
 
 ### Links:
-This Service may contain links to other web sites not maintained by us (including without limitation Facebook, Twitter and other social media platforms). We encourage you to be aware when you leave our Service and to read the terms and conditions and privacy statements of each and every web site that you visit. We are not responsible for the practices or the content of such other web sites or services.
+This Service may contain links to other web sites not maintained by us. We encourage you to be aware when you leave our Service and to read the terms and conditions and privacy statements of each and every web site that you visit. We are not responsible for the practices or the content of such other web sites or services.
 
 The existence of a link between this Service and any other website is not and shall not be understood to be an endorsement by us of the owner or proprietor of the linked internet website, nor an endorsement of us by the owner or proprietor of such linked website.
 
 You agree that we shall not be liable to you or anyone else for any type of loss or damages, regardless of whether based on contract, negligence, intentional wrongdoing, or liability without fault for any costs, losses, or damages (whether direct, indirect, compensatory, special, lost profits, liquidated, consequential, or punitive) arising out of or in any way in connection with your access to or use of any such third party site.
-
-### Our Proprietary Rights:
-We or our licensors are the exclusive owners of all copy, software, graphics, designs and all copyrights, trademarks and other intellectual property or proprietary rights contained on or used in connection with the Service. Except as set forth herein, you agree not to copy, distribute, modify or make derivative works of any materials without the prior written consent of the owner of such materials. All rights not granted under these Terms of Use are reserved by us.
 
 ### No Warranties:
 The Service, including all content made available on or accessed through the Service, is provided "as is" and we make no representations or warranties of any kind whatsoever for the content made available through the Service. The Service may contain typographical errors and you agree that we shall not be bound by any such errors.
@@ -100,4 +98,4 @@ NE4 5TG
 **Email**: openlab-admin@newcastle.ac.uk  
 
 ### Effective Date:
-May 25, 2018
+April 25, 2023

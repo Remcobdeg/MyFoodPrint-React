@@ -26,11 +26,17 @@ import ImageDetails from './admin/pages/ImageDetails';
 import { useAuth } from './shared/hooks/authHook'
 // import { useFindPath } from './shared/hooks/findPath-hook';
 import { createTheme, ThemeProvider  } from '@mui/material/styles';
+import ReactGA from "react-ga4";
 
-
-
-
-
+// set up google analytics
+const GA4trackingId = process.env.GA_TRACKING_ID; // Replace with your Google Analytics tracking ID
+console.log(GA4trackingId);
+ReactGA.initialize("G-PD6X0YP04V", {
+  debug: true,
+  gaOptions: {
+    siteSpeedSampleRate: 100,
+  }
+});
 
 function App() {
   const { token, login, logout, userId } = useAuth();
