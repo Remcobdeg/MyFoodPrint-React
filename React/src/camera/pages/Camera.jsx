@@ -17,6 +17,7 @@ import DeviceOrientation from 'react-device-orientation';
 import { AuthContext } from '../../shared/context/authContext';
 import HelpPages from '../../shared/components/HelpPages';
 import Alert from '@mui/material/Alert';
+import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 
 const style = {
     position: 'absolute',
@@ -60,7 +61,11 @@ function Camera(props) {
     const [backdropOpen, setBackdropOpen] = React.useState(false);
     // const [cameraDirection, setCameraDirection]
     const auth = useContext(AuthContext);
-    const handleClose = () => setOpen(false);
+    const handleClose = (event) => {
+        event.stopPropagation();
+        trackEvent('Camera', 'Close camera instruction');
+        setOpen(false)
+    };
     const handleBackdropClose = () => setBackdropOpen(false);
     const navigate = useNavigate();
 
@@ -77,7 +82,9 @@ function Camera(props) {
             })
     }
 
-    const takePhoto = () => {
+    const takePhoto = (event) => {
+        event.stopPropagation();
+        trackEvent('Camera', 'Take Photo');
         setBackdropOpen(true);
         const width = 1080;
         const height = 1920;
@@ -102,6 +109,7 @@ function Camera(props) {
                 navigate('/camera/image', { state: response.data }); //later retrieved by using useLocation()
             });
         } catch (err) {
+            trackEvent('Camera', 'Error in uploading picture', err);
             alert(err)
         }
     }
@@ -155,7 +163,15 @@ function Camera(props) {
                         }
                     </IconButton>
                     <IconButton className='gallery-button'>
-                        <Link to="/"><CloseIcon sx={{ fontSize: "15vmin" }} color="primary" className='' /></Link>
+                        <Link 
+                        to="/"
+                        onClick={(event) => {
+                            event.stopPropagation(); 
+                            trackEvent('Camera', 'Exit camera click');
+                        }}
+                        >
+                            <CloseIcon sx={{ fontSize: "15vmin" }} color="primary" className='' />
+                        </Link>
                     </IconButton>
                     <canvas ref={photoRef}></canvas>
                     <Modal
@@ -165,7 +181,7 @@ function Camera(props) {
                         <Box sx={style}>
                             <IconButton
                                 aria-label="close"
-                                onClick={() => setOpen(false)}
+                                onClick={handleClose}
                                 sx={{
                                     position: 'absolute',
                                     right: 8,

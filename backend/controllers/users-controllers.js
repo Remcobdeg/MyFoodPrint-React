@@ -98,9 +98,10 @@ const signup = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password, termsAgreed } = req.body;
 
-  if (!termsAgreed) {
-    return next(new HttpError('Please agree to the terms and conditions', 422));
-  }
+  // changed to only require this when signing up
+  // if (!termsAgreed) {
+  //   return next(new HttpError('Please agree to the terms and conditions', 422));
+  // }
 
   let identifiedUser
   try {

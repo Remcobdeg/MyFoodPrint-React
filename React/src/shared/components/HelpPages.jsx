@@ -13,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Help from '../../Help/pages/help';
 import { StyledHeader } from '../MuiStyledComponents/MuiStyledComponents';
+import { trackEvent } from '../modules/googleAnalyticsModules';
 
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -57,10 +58,14 @@ export default function HelpPages(props) {
   const [open, setOpen] = React.useState(false);
   const [fullScreen, setFullScreen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (event) => {
+    event.stopPropagation();
+    trackEvent("Help", "Open Help Dialog");
     setOpen(true);
   };
-  const handleClose = () => {
+  const handleClose = (event) => {
+    event.stopPropagation();
+    trackEvent("Help", "Close Help Dialog");
     setOpen(false);
   };
 
@@ -98,6 +103,7 @@ export default function HelpPages(props) {
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           <StyledHeader variant="h4">FAQs</StyledHeader> 
+          {/* FAQs */}
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Help {...props}/>

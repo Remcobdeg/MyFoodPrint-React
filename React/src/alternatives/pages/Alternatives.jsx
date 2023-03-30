@@ -15,6 +15,7 @@ import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponen
 import colorLegend from '../../img/color_legend.png';
 import lowerLegend from '../../img/lower_higher_legend.png';
 import Container from '@mui/material/Container';
+import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 
 import './Alternatives.css';
 import { Box, Grid, Typography } from '@mui/material';
@@ -81,6 +82,8 @@ function Alternatives() {
   }
 
   const handleChange = (event) => {
+    event.stopPropagation();
+    trackEvent("Alternatives", "Select alternative product from dropdown", event.target.value);
     setProduct(alternatives.find(alternative => alternative.product === event.target.value));
     setProductName(event.target.value);
     setSubgroupAlternatives(() => {
@@ -122,7 +125,9 @@ function Alternatives() {
         //   console.log(product);
         //   setProductName(state);
         // }
-      } catch (err) {}
+      } catch (err) {
+        trackEvent("Alternatives", "Error fetching alternatives", err);
+      }
     };
     fetchProducts(); 
   }, [auth.token,sendRequest,state])

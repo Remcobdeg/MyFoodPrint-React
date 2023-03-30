@@ -11,6 +11,7 @@ import HelpPages from '../../shared/components/HelpPages';
 import { AuthContext } from '../../shared/context/authContext';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 
 
 const style = {
@@ -60,12 +61,17 @@ function ImageCamera(props) {
             setIsLoading(false);
             setReceiptDate(response.data);
             if (response.data === 'NA') {
+                trackEvent("Camera", "No date identified on receipt");
                 setSnackdangerOpen(true);
             } 
         });
     }, []);
 
-    const removePhoto = () => {
+    const removePhoto = (event) => {
+
+        event.stopPropagation();
+        trackEvent("Camera", "Remove Photo");
+
         commonHttp.delete('/receipts/deleteImage/' + state, {
             headers: {
                 Authorization: 'Bearer ' + auth.token
@@ -79,6 +85,7 @@ function ImageCamera(props) {
 
     async function saveAndExit(event) {
         event.preventDefault();
+        trackEvent("Camera", "Save and Exit");
         setIsLoading(true);
         try {
             commonHttp.post('/ocr/fetchDataFromImage',
@@ -100,6 +107,7 @@ function ImageCamera(props) {
                     }, 4000);         
                 });
         } catch (err) {
+            trackEvent("Camera", "Error Saving Receipt", err);
             setError(true);
             setIsLoading(false);
         }
@@ -145,12 +153,20 @@ function ImageCamera(props) {
             {/* success message */}
             <Modal
                 open={successOpen}
-                onClose={() => setSuccessOpen(false)}
+                onClose={(event) => {
+                    event.stopPropagation();
+                    trackEvent("Camera", "Close Success Message");
+                    setSuccessOpen(false);
+                }}
             >
                 <Box sx={style}>
                     <IconButton
                         aria-label="close"
-                        onClick={() => setSuccessOpen(false)}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            trackEvent("Camera", "Close Success Message");
+                            setSuccessOpen(false);
+                        }}
                         sx={{
                             position: 'absolute',
                             right: 8,

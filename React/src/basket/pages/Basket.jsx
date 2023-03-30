@@ -15,9 +15,10 @@ import {aggregateProducts, maxValue} from "../Modules/PrepVizData";
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 import Legend from "../../img/Legend.svg";
 import DateSlider from "../../shared/components/DateSlider";
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import { useTheme } from "@mui/material/styles";
+// import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+// import { useTheme } from "@mui/material/styles";
 import NoDataMessage from "../../shared/components/NoDataMessage";
+import { trackEvent } from "../../shared/modules/googleAnalyticsModules";
 
 import './Basket.css';
 
@@ -29,7 +30,7 @@ function Basket() {
   const auth = useContext(AuthContext);
   const nav = useContext(navContext);
 
-  const theme = useTheme();
+  // const theme = useTheme();
 
   // const receiptSchema = {
   //   "_id": "627131d609fa9b1ef5cb5399",
@@ -51,7 +52,7 @@ function Basket() {
   //   "id": "627131d609fa9b1ef5cb5399"
   // }
 
-  const { isLoading, error, sendRequest } = useHttpClient();
+  const { isLoading, sendRequest } = useHttpClient(); //error, 
   const [graphState, setGraphState] = useState('WORDS');
   const [periodState, setPeriodState] = useState('month');
   const [dateArray, setDateArray] = useState([]);
@@ -111,25 +112,32 @@ function Basket() {
 
         // setVizData(aggregateProducts(response, viewDate, periodState));
 
-      } catch (err) {setReceipts("no receipts")}
+      } catch (err) {
+        setReceipts("no receipts");
+        trackEvent("Basket", "fetch Receipts", "error");
+      }
     };
     fetchReceipts(); 
   }, [auth,sendRequest])
 
-  // useEffect(() => {
-
 
   const handleChange = (event, newGraphState) => {
+    event.stopPropagation();
     if(newGraphState !== null){setGraphState(newGraphState)}; //don't allow selected button to be unselected, aka enforce value set
+    trackEvent("Basket", "click Graph Toggle", "to " + newGraphState);
   };
 
   const handlePeriodChange = (event, newPeriodState) => {
+    event.stopPropagation();
     if(newPeriodState !== null){setPeriodState(newPeriodState)}; //don't allow selected button to be unselected, aka enforce value set
     updateDateArray(receipts, newPeriodState);
+    trackEvent("Basket", "click Period Toggle", "to " + newPeriodState);
   };
 
   const handeProductClick = (event, d) => {
+    event.stopPropagation();
     nav.setPage("Alternatives");
+    trackEvent("Basket", "click Product", d.text);
     navigate('/Alternatives', {state: d.text.toLowerCase()})
   };
 

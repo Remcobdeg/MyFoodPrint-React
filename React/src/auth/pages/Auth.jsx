@@ -16,6 +16,8 @@ import DefaultDialog from '../../shared/components/defaultDialog';
 import DefaultListItem from '../components/DefaultList';
 import { List } from '@mui/material';
 import ReactGA from "react-ga4";
+import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
+
 
 
 import './Auth.css'
@@ -30,7 +32,7 @@ function Auth(props){
 
     function toSignup(event){
       event.preventDefault();
-      console.log("signup button clicked")
+      trackEvent("auth", "click", "signup button clicked");
       setIsSignup(prevState => !prevState);
     }
 
@@ -53,9 +55,11 @@ function Auth(props){
             }
           )
           ReactGA.set({ user_id: response.data.userId });
-          console.log("set userid to:",response.data.userId);
+          trackEvent("auth", "success", "login/signup success", isSignup ? "signup" : "login");
           auth.login(response.data.userId, response.data.token);
-        } catch(err){}        
+        } catch(err){
+          trackEvent("auth", "error", "login/signup failed", err);
+        }        
     };
 
     //go back button
@@ -63,6 +67,7 @@ function Auth(props){
 
     const clickBack = (event) => {
       event.preventDefault();
+      trackEvent("auth", "click", "back button clicked");
       navigate(-1);
     }
 
@@ -113,23 +118,37 @@ function Auth(props){
             />
             {error && <Alert severity="error">{`${error}`}</Alert>}
 
-            <FormControlLabel 
+            {isSignup && <FormControlLabel 
               control={
                 <Checkbox 
                   checked={termsAgreed} 
-                  onChange={(event) => setTermsAgreed(event.target.checked)} 
-                  />} 
+                  onChange={(event) => {
+                    event.stopPropagation(); 
+                    setTermsAgreed(event.target.checked); 
+                    trackEvent("auth", "click", "terms agreed", event.target.checked)
+                  }} 
+                />} 
               label={
                 <Typography> 
-                  I agree to the <Link onClick={(e) => {e.preventDefault(); setOpen(true);}}>Terms of Service</Link>
+                  I agree to the 
+                  <Link 
+                    onClick={(e) => {
+                      e.preventDefault(); 
+                      setOpen(true); 
+                      trackEvent("auth", "click", "terms of service link clicked")
+                    }}
+                  >
+                    Terms of Service
+                  </Link>
                 </Typography>
-            }/>
+              }/>
+            }
 
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              disabled={!termsAgreed}
+              disabled={isSignup && !termsAgreed}
               sx={{ mt: 3, mb: 2 }}
             >
               {isSignup ? `Sign Up` : `Sign In`}

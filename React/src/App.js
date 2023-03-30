@@ -27,21 +27,55 @@ import { useAuth } from './shared/hooks/authHook'
 // import { useFindPath } from './shared/hooks/findPath-hook';
 import { createTheme, ThemeProvider  } from '@mui/material/styles';
 import ReactGA from "react-ga4";
+import { useTrackClicks, useTrackExit } from './shared/modules/googleAnalyticsModules';
 
-// set up google analytics
-const GA4trackingId = process.env.GA_TRACKING_ID; // Replace with your Google Analytics tracking ID
-console.log(GA4trackingId);
-ReactGA.initialize("G-PD6X0YP04V", {
-  debug: true,
-  gaOptions: {
-    siteSpeedSampleRate: 100,
-  }
-});
+
+// ReactGA.initialize('G-PD6X0YP04V', {
+//   debug: true,
+//   gaOptions: {
+//     siteSpeedSampleRate: 100,
+//   }
+// });
+
+ReactGA.initialize(
+  [
+    {
+      trackingId: 'G-PD6X0YP04V',
+      gaOptions: {
+        name: 'tracker1',
+        siteSpeedSampleRate: 100
+      }
+    },
+    {
+      trackingId: 'GT-KV6RF3X',
+      gaOptions: { 
+        name: 'tracker2',
+        siteSpeedSampleRate: 100 
+      }
+    }
+  ],
+  { debug: true, alwaysSendToDefaultTracker: false }
+);
 
 function App() {
   const { token, login, logout, userId } = useAuth();
 
   const [currentPage, setPage] = React.useState("Basket");
+
+  // for google analytics
+  // track clicks
+  useTrackClicks();
+  // track exit from tab
+  useTrackExit();
+  // add userId even if logged in because of token
+  if (token) {
+    ReactGA.set({ userId: userId });
+    console.log("userId added");
+  };
+
+  // testing process.env -- not working; check!
+  const GA4trackingId = process.env.GA_TRACKING_ID; // Replace with your Google Analytics tracking ID
+  console.log(GA4trackingId);
 
 
   // change color scheme for whole application with theme and theme provider

@@ -5,6 +5,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Typography from '@mui/material/Typography';
 import { Grid } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
+import { trackEvent } from "../modules/googleAnalyticsModules";
 
 export default function DateSlider(props) {
 
@@ -27,7 +28,8 @@ export default function DateSlider(props) {
         return displayDate;
       }
 
-    const clickPrevious = () => {
+    const clickPrevious = (e) => {
+        e.stopPropagation();
         if (props.dateIndex < props.dateArray.length - 1){
             props.setDateIndex(props.dateIndex + 1);
             props.setViewDate(props.dateArray[props.dateIndex + 1]);
@@ -35,9 +37,11 @@ export default function DateSlider(props) {
             props.setDateIndex(0);
             props.setViewDate(props.dateArray[0]);
         }
+        trackEvent("Basket", "click previous date", "date slider");
     }
 
-    const clickNext = () => {
+    const clickNext = (e) => {
+        e.stopPropagation();
         if (props.dateIndex > 0){
             props.setDateIndex(props.dateIndex - 1);
             props.setViewDate(props.dateArray[props.dateIndex - 1]);
@@ -45,6 +49,7 @@ export default function DateSlider(props) {
             props.setDateIndex(props.dateArray.length - 1);
             props.setViewDate(props.dateArray[props.dateArray.length - 1]);
         }
+        trackEvent("Basket", "click next date", "date slider");
     }
 
     const backDisabled = props.dateIndex === props.dateArray.length - 1;

@@ -5,6 +5,7 @@ import { AuthContext } from '../../shared/context/authContext';
 import HelpPages from '../../shared/components/HelpPages';
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 import { useNavigate } from 'react-router-dom';
+import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 
 function Settings(props){
 
@@ -12,11 +13,15 @@ function Settings(props){
 
     const navigate = useNavigate();
 
-    function handlePressLogout(){
-        auth.logout(); 
+    function handlePressLogout(event){
+      event.stopPropagation();
+      trackEvent("settings", "click", "logout button clicked");
+      auth.logout(); 
     }
 
-    function handlePressReplayTutorial(){
+    function handlePressReplayTutorial(event){
+        event.stopPropagation();
+        trackEvent("settings", "click", "replay tutorial button clicked");
         navigate('/gettingstarted');
     }
 
@@ -47,6 +52,11 @@ function Settings(props){
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
           href="mailto:myfoodprintuk@gmail.com"
+          onClick={(event) => {
+            event.stopPropagation();
+            trackEvent("settings", "click", "contact us button clicked");
+            // window.location.href = "mailto:
+          }}
         >
           Contact us
         </Button>

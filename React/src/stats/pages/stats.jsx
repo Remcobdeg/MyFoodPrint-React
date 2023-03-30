@@ -20,6 +20,7 @@ import NoDataMessage from '../../shared/components/NoDataMessage';
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
 import { Tooltip } from '@mui/material';
 import colorLegend from '../../img/color_legend_stats.png';
+import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 
 
 
@@ -72,7 +73,10 @@ export default function Stats (props){
                 console.log("dates",dates,"minDate",minDate,"maxDate",maxDate,"firstDate",firstDate,"lastDate",lastDate)
               return {minDate:minDate,maxDate:maxDate,firstDate:firstDate,lastDate:lastDate}
           })
-        } catch (err) {setReceipts("no receipts");}
+        } catch (err) {
+            trackEvent("stats.jsx", "no receipts retrieved", err.message);
+            setReceipts("no receipts");
+        }
       };
       fetchReceipts(); 
     }, [auth,sendRequest])
@@ -247,12 +251,19 @@ export default function Stats (props){
                                         },
                                     ],
                                 }}
+                                
                                 // disableFocusListener
                                 // disableHoverListener
                                 // disableTouchListener
 
                                 >
-                                <span>
+                                <span
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        trackEvent("Stats","click",period.firstDate >= period.minDate ? "Click disabled back date button":"back date button");
+                                        }
+                                    }
+                                >
                                     <IconButton aria-label="back" onClick={backDate} disabled={period.firstDate >= period.minDate}>
                                         <ArrowLeftIcon />
                                     </IconButton>
@@ -280,7 +291,13 @@ export default function Stats (props){
                                 // disableTouchListener
 
                                 >
-                                <span>
+                                <span
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        trackEvent("Stats","click",period.lastDate <= period.maxDate ? "Click disabled forward date button":"forward date button")}
+                                    }
+                                >
+                                    
                                 <IconButton aria-label="forward" onClick={forwardDate} disabled={period.lastDate <= period.maxDate}>
                                     <ArrowRightIcon />
                                 </IconButton>
