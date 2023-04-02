@@ -130,7 +130,7 @@ function Auth(props){
                 />} 
               label={
                 <Typography> 
-                  I agree to the 
+                  {/* I agree to the 
                   <Link 
                     onClick={(e) => {
                       e.preventDefault(); 
@@ -139,7 +139,8 @@ function Auth(props){
                     }}
                   >
                     Terms of Service
-                  </Link>
+                  </Link> */}
+                  I have signed the consent form
                 </Typography>
               }/>
             }

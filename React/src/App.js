@@ -21,6 +21,7 @@ import { AuthContext } from './shared/context/authContext';
 import { navContext } from './shared/context/navContext';
 import Camera from './camera/pages/Camera';
 import ImageCamera from './camera/pages/ImageCamera';
+import AdminPanel from './admin/pages/Admin';
 import ImageList from './admin/pages/ImageList';
 import ImageDetails from './admin/pages/ImageDetails';
 import { useAuth } from './shared/hooks/authHook'
