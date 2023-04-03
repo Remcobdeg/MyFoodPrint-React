@@ -63,18 +63,23 @@ function ImageCamera(props) {
 
         setIsLoading(true);
 
-        commonHttp.get('/ocr/getDateFromImage/' + state, {
-            headers: {
-                Authorization: 'Bearer ' + auth.token
-            }
-        }).then((response) => {
+        try {
+            commonHttp.get('/ocr/getDateFromImage/' + state, {
+                headers: {
+                    Authorization: 'Bearer ' + auth.token
+                }
+            }).then((response) => {
+                setIsLoading(false);
+                setReceiptDate(response.data);
+                if (response.data === 'NA') {
+                    trackEvent("Camera", "No date identified on receipt");
+                    setSnackdangerOpen(true);
+                } 
+            });
+        } catch (err) {
             setIsLoading(false);
-            setReceiptDate(response.data);
-            if (response.data === 'NA') {
-                trackEvent("Camera", "No date identified on receipt");
-                setSnackdangerOpen(true);
-            } 
-        });
+            setError(true);
+        }
 
     }, []);
 
