@@ -29,6 +29,8 @@ backend/coverage
 .env
 .vscode
 
+# backend/images
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

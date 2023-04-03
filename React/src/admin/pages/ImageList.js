@@ -67,8 +67,10 @@ export default function ImageList() {
                     Authorization: 'Bearer ' + userData.token
                 }
             }).then((response) => {
-                setImageList(response.data);
-                setArrayList(response.data);
+                let listData = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                console.log(listData);
+                setImageList(listData);
+                setArrayList(listData);
             });
         } catch (error) {
             console.log(error);
