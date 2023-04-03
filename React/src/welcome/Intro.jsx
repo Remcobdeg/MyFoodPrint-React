@@ -91,8 +91,7 @@ function Intro(props){
                                 Our diets make up a large proportion an average person’s carbon footprint (about 30%). 
                                 The choices we make in the grocery store play a big role in this. 
                                 Rethinking some of our choices can have a profound impact on our individual (or family) footprint. 
-                                [See 
-                                    <a 
+                                [For example, <a
                                     href="https://www.science.org/doi/10.1126/science.aba7357" 
                                     target="_blank" 
                                     rel="noreferrer" 
@@ -102,7 +101,7 @@ function Intro(props){
                                         // window.open('https://www.science.org/doi/10.1126/science.aba7357')
                                     }}
                                     >
-                                        Clarke et al., Science, 2020
+                                         Clarke et al., Science, 2020
                                     </a>].
                             </Typography>
 

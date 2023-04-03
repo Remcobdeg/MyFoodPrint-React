@@ -329,6 +329,25 @@ const deleteImageByName = async (req, res, next) => {
 };
 
 const fetchImageList = async (req, res, next) => {
+
+  // allow only if the logged in user is admin
+  let user;
+  try {
+    user = await User.findById(req.userData.userId);
+  } catch (err) {
+    const error = new HttpError('Could not access data of logged-in user, please try again', 500);
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError('Could not find user for provided id', 404);
+    return next(error);
+  }
+
+  if (!user.is_admin) {
+    return next(new HttpError('You are not authorized to access this page', 401));
+  }
+
   const testFolder = './images';
   let responseData = [];
   try {
@@ -340,17 +359,17 @@ const fetchImageList = async (req, res, next) => {
         if (file.replace(".jpg", "").split("-").length > 3) {
           isChecked = true;
         }
-        let identifiedUser, userName = "NA";
-        try {
-          identifiedUser = await User.findById(userID);
-          userName = identifiedUser.name;
-        } catch (err) {
-          return next(new HttpError('Could not retrieve user data, try again later', 500));
-        }
+        let identifiedUser, userName = userID;
+        // try {
+        //   identifiedUser = await User.findById(userID);
+        //   userName = identifiedUser.name;
+        // } catch (err) {
+        //   return next(new HttpError('Could not retrieve user data, try again later', 500));
+        // }
         let data = {
           fileName: file,
           userName: userName,
-          date: moment(new Date(parseInt(takenDate))).format("DD/MM/YYYY"),
+          date: moment(new Date(parseInt(takenDate))).format(), //moment(new Date(parseInt(takenDate))).format("YYYY-MM-DD HH:mm:ss"),
           isChecked: isChecked
         };
         responseData.push(data);

@@ -37,9 +37,13 @@ function ImageCamera(props) {
     const [error, setError] = React.useState(false);
     const [receiptDate, setReceiptDate] = React.useState("NA");
     const [snackdangerOpen, setSnackdangerOpen] = React.useState(false); //refers to no data collected
+
     const { state } = useLocation();
+
     const auth = useContext(AuthContext);
+    
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchImage = async () => {
             const res = await fetch(baseURL + '/receipts/fetchImage/' + state, {

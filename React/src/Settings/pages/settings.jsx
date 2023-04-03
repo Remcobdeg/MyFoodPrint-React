@@ -25,6 +25,15 @@ function Settings(props){
         navigate('/gettingstarted');
     }
 
+    function handlePressAdmin(event){
+        event.stopPropagation();
+        trackEvent("settings", "click", "admin button clicked");
+        props.setContainerSize("false");
+        navigate('/admin');
+    }
+
+    // const isAdmin = true; //auth.isAdmin;
+
 
     return(
       <React.Fragment>
@@ -60,7 +69,23 @@ function Settings(props){
         >
           Contact us
         </Button>
+
+        {!!props.isAdmin && <Button
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={handlePressAdmin}
+        >
+          Admin
+        </Button>}
         
+        {!!props.isAdmin && <Button
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={(event) => {props.setContainerSize("sm")}}
+        >
+          Reset container size
+        </Button>}
+
         <Button
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

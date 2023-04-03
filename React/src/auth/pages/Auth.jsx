@@ -56,7 +56,7 @@ function Auth(props){
           )
           ReactGA.set({ user_id: response.data.userId });
           trackEvent("auth", "success", "login/signup success", isSignup ? "signup" : "login");
-          auth.login(response.data.userId, response.data.token);
+          auth.login(response.data.userId, response.data.token, response.data.isAdmin);
         } catch(err){
           trackEvent("auth", "error", "login/signup failed", err);
         }        
