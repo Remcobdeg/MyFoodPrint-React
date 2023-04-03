@@ -58,9 +58,10 @@ ReactGA.initialize(
 );
 
 function App() {
-  const { token, login, logout, userId } = useAuth();
+  const { token, login, logout, userId, isAdmin } = useAuth();
 
   const [currentPage, setPage] = React.useState("Basket");
+  const [containerSize, setContainerSize] = React.useState("sm");
 
   // for google analytics
   // track clicks
@@ -92,6 +93,8 @@ function App() {
   });
 
 let routes;
+// console.log("url: " + window.location.pathname);
+console.log("isAdmin: " + isAdmin);
 
 if (!!token){
   routes = (
@@ -100,11 +103,11 @@ if (!!token){
             <Route path="alternatives/*" element={<Alternatives />} />
             <Route path="gettingstarted/" element={<Intro />} />
             <Route path="stats/*" element={<Stats />} />
-            <Route path="settings/*" element={<Settings />} />
+            <Route path="settings/*" element={<Settings setContainerSize={setContainerSize} isAdmin={isAdmin}/>} />
             <Route path="camera/*" element={<Camera userId={userId} />} />
             <Route path="camera/image/*" element={<ImageCamera userId={userId} />} />
-            {<Route path="admin/*" element={<ImageList />} />}
-            {<Route path="admin/imageDetails/*" element={<ImageDetails />} />}
+            {!!isAdmin && <Route path="admin/*" element={<ImageList />} />}
+            {!!isAdmin && <Route path="admin/imageDetails/*" element={<ImageDetails />} />}
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
   )} else {
@@ -122,7 +125,7 @@ if (!!token){
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
       <navContext.Provider value={{ currentPage: currentPage, setPage: setPage }}>
       <ThemeProvider theme={theme}>
-      <Container maxWidth="sm" sx={!!token?{px: "1em", pb: "64px"}:{px: "1em"}} >
+      <Container maxWidth={containerSize} sx={!!token?{px: "1em", pb: "64px"}:{px: "1em"}} >
         <BrowserRouter>
           <main>{routes}</main>
           {!!token && <NavBarBottom />}
