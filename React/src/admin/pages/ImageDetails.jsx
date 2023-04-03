@@ -61,7 +61,7 @@ function ImageDetails(props) {
                 <Typography className='headerTypo' variant='h2'>MyFoodPrint</Typography>
             </Grid>
             <Grid item xs={6} className='image-container'>
-                <img classname='imageCont' src={imgFile} id="img" alt="/image.png"></img>
+                <img className='imageCont' src={imgFile} id="img" alt=""></img>
             </Grid>
             <Grid item xs={6} >
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 0, mr: 2 }}>

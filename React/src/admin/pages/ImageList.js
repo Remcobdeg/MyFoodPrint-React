@@ -54,12 +54,14 @@ export default function ImageList() {
         else if (sortBy === 3)
             setArrayList(imageList.filter(({ isChecked }) => isChecked === false));
     };
+
     const goToDetails = (fileName) => {
         navigate('/admin/imageDetails', { state: fileName });
     };
+
     React.useEffect(() => {
         let userData = JSON.parse(localStorage.getItem('userData'));
-        const fetchImage = async () => {
+        const fetchImage = async () => { try {
             commonHttp.get('/receipts/fetch/ImageList', {
                 headers: {
                     Authorization: 'Bearer ' + userData.token
@@ -68,11 +70,15 @@ export default function ImageList() {
                 setImageList(response.data);
                 setArrayList(response.data);
             });
+        } catch (error) {
+            console.log(error);
         }
+    }
 
         fetchImage()
             .catch(console.error);
     }, []);
+
     return (
         <div>
             <Grid container className="grid-container">
