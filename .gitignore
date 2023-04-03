@@ -30,7 +30,7 @@ backend/coverage
 .vscode
 
 # don't sync receipt images to github
-backend/images
+backend/images/*
 
 npm-debug.log*
 yarn-debug.log*

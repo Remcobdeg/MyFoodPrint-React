@@ -45,7 +45,8 @@ function ImageCamera(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchImage = async () => {
+
+        const fetchImage = async () => { try {
             const res = await fetch(baseURL + '/receipts/fetchImage/' + state, {
                 headers: {
                     Authorization: 'Bearer ' + auth.token
@@ -54,9 +55,14 @@ function ImageCamera(props) {
             const imageBlob = await res.blob();
             const imageObjectURL = URL.createObjectURL(imageBlob);
             setImageFile(imageObjectURL);
-        }
+        } catch (err) {
+            setError(true);
+        }};
+
         fetchImage();
+
         setIsLoading(true);
+
         commonHttp.get('/ocr/getDateFromImage/' + state, {
             headers: {
                 Authorization: 'Bearer ' + auth.token
@@ -69,6 +75,7 @@ function ImageCamera(props) {
                 setSnackdangerOpen(true);
             } 
         });
+
     }, []);
 
     const removePhoto = (event) => {
