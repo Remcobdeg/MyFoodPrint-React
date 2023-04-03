@@ -138,8 +138,8 @@ function ImageDetails(props) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {receiptDetails !== null && receiptDetails.map((receipt) => (
-                                    <TableRow sx={{ borderTop: '1px solid grey' }}>
+                                {receiptDetails !== null && receiptDetails.map((receipt, index) => (
+                                    <TableRow key={index} sx={{ borderTop: '1px solid grey' }}>
                                         <TableCell sx={{ width: '10%' }}>
                                             <TextField
                                                 margin="normal"
