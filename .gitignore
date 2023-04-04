@@ -31,6 +31,8 @@ backend/coverage
 
 # don't sync receipt images to github
 backend/images/*
+# exception to the rule
+!backend/images/.gitkeep 
 
 npm-debug.log*
 yarn-debug.log*

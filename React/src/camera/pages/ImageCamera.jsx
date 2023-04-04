@@ -57,6 +57,7 @@ function ImageCamera(props) {
             setImageFile(imageObjectURL);
         } catch (err) {
             setError(true);
+            setIsLoading(false);
         }};
 
         fetchImage();
