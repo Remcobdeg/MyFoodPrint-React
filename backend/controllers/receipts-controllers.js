@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { v4: uuid } = require('uuid');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
@@ -8,6 +9,7 @@ const Receipt = require('../models/receipt');
 const User = require('../models/user');
 const HttpError = require('../models/http-error');
 const moment = require('moment');
+const remoteFileStoreControllers = require('../controllers/file-uploader-s3');
 var path = require('path');
 const e = require('express');
 
@@ -298,39 +300,6 @@ const deleteReceipt = async (req, res, next) => {
   res.status(200).json({ message: 'Deleted receipt.' });
 };
 
-const fetchImageByName = async (req, res, next) => {
-
-  console.log("fetchImageByName called");
-
-  const imageName = req.params.imageName;
-  try {
-    await res.status(200).sendFile(path.resolve('images/' + imageName));
-  } catch (err) {
-    console.log(err);
-    const error = new HttpError(
-      'Something went wrong, could not return receipt.',
-      500
-    );
-    return next(error);
-  }
-};
-
-const deleteImageByName = async (req, res, next) => {
-  const imageName = req.params.imageName;
-  var path = require('path');
-  try {
-    fs.unlinkSync(path.resolve('images/' + imageName));
-    return res.end("success");
-  } catch (err) {
-    console.log(err);
-    const error = new HttpError(
-      'Something went wrong, could not delete receipt.',
-      500
-    );
-    return next(error);
-  }
-};
-
 const fetchImageList = async (req, res, next) => {
 
   // allow only if the logged in user is admin
@@ -351,42 +320,33 @@ const fetchImageList = async (req, res, next) => {
     return next(new HttpError('You are not authorized to access this page', 401));
   }
 
-  const testFolder = './images';
-  let responseData = [];
-  try {
-    fs.readdir(testFolder, async (err, files) => {
-      for await (const file of files) {
-        const userID = file.replace(".jpg", "").split("-")[1];
-        let takenDate = file.replace(".jpg", "").split("-")[2];
-        let isChecked = false;
-        if (file.replace(".jpg", "").split("-").length > 3) {
-          isChecked = true;
-        }
-        let identifiedUser, userName = userID;
-        // try {
-        //   identifiedUser = await User.findById(userID);
-        //   userName = identifiedUser.name;
-        // } catch (err) {
-        //   return next(new HttpError('Could not retrieve user data, try again later', 500));
-        // }
-        let data = {
-          fileName: file,
-          userName: userName,
-          date: moment(new Date(parseInt(takenDate))).format(), //moment(new Date(parseInt(takenDate))).format("YYYY-MM-DD HH:mm:ss"),
-          isChecked: isChecked
-        };
-        responseData.push(data);
-      }
-      return res.end(JSON.stringify(responseData));
-    });
+  try {  
+    // retrieve the list of images from the remote storage
+    const files = await remoteFileStoreControllers.listBucketContent();
+
+    let responseData = [];
+
+    for (const file of files.Contents) {
+      const userID = file.Key.replace(".jpg", "").split("-")[1];
+      let takenDate = file.Key.replace(".jpg", "").split("-")[2];
+      let isChecked = false;
+
+      let data = {
+        fileName: file.Key.replace(process.env.DOSPACE_FOLDER, ""),
+        userName: userID,
+        date: moment(new Date(parseInt(takenDate))).format(), //moment(new Date(parseInt(takenDate))).format("YYYY-MM-DD HH:mm:ss"),
+        isChecked: isChecked
+      };
+      responseData.push(data);
+    }
+
+    return res.end(JSON.stringify(responseData)); // res.json({ files: files });
+
   } catch (err) {
-    console.log(err);
-    const error = new HttpError(
-      'Something went wrong, could not delete receipt.',
-      500
-    );
+    const error = new HttpError('Could not fetch image list, please try again', 500);
     return next(error);
   }
+
 };
 
 const fetchDetailsByImage = async (req, res, next) => {
@@ -413,7 +373,5 @@ exports.createReceipt = createReceipt;
 exports.updateReceipt = updateReceipt;
 exports.deleteReceipt = deleteReceipt;
 exports.createReceiptMany = createReceiptMany;
-exports.fetchImageByName = fetchImageByName;
-exports.deleteImageByName = deleteImageByName;
 exports.fetchImageList = fetchImageList;
 exports.fetchDetailsByImage = fetchDetailsByImage;

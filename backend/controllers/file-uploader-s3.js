@@ -10,6 +10,7 @@ const ENDPOINT = process.env.DOSPACE_ENDPOINT;
 const ACCESS_KEY = process.env.DOSPACE_ACCESS_KEY;
 const ACCESS_SECRET = process.env.DOSPACE_ACCESS_SECRET;
 const BUCKET_NAME = process.env.DOSPACE_BUCKET_NAME;
+const FOLDER = process.env.DOSPACE_FOLDER;
 
 aws.config.update({
     accessKeyId: ACCESS_KEY,
@@ -32,16 +33,20 @@ const upload = multer({
       },
       key: function (req, file, cb) {
         console.log(file);
-        cb(null, 'image-' + req.params.userId + "-" + Date.now() + '.jpg');
+        cb(null, FOLDER + 'image-' + req.params.userId + "-" + Date.now() + '.jpg');
       }
     })
   })
 
-  const download_in_backend = async (req, res, next) => {
+  const download_in_backend = async (imageName, res, next) => {
+
+    const newImageName = FOLDER+imageName;
+
+    console.log("newImageName downloadBE: " + newImageName);
 
     const params = {
         Bucket: BUCKET_NAME,
-        Key: req.params.imageName
+        Key: newImageName//req.params.imageName
     };
 
     // await new Promise((resolve, reject) => {
@@ -60,8 +65,10 @@ const upload = multer({
 
   const download = async function(req, res, next) {
 
+    const imageName = req.params.imageName;
+
     try {
-        const file = await download_in_backend(req, res, next);
+        const file = await download_in_backend(imageName, res, next);
         res.status(200).send(file.Body);
     } catch (error) {
         console.log(error);
@@ -86,7 +93,44 @@ const upload = multer({
     // }
   };
 
+  const listBucketContent = async function() {
+
+    const params = {
+        Bucket: BUCKET_NAME,
+        Prefix: FOLDER
+    };
+
+    try {
+        const response = await s3.listObjectsV2(params).promise() // await the promise
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Could not list bucket content', 500));
+    }
+  }
+
+  const deleteFile = async function(req, res, next) {
+
+    const imageName = FOLDER+req.params.imageName;
+
+    const params = {
+        Bucket: BUCKET_NAME,
+        Key: imageName
+    };
+
+    try {
+        const response = await s3.deleteObject(params).promise() // await the promise
+        console.log(response);
+        res.status(200).end("success");
+    } catch (error) {
+        console.log('Could not delete file from DO bucket: ',error);
+        return next(new HttpError('Could not delete file', 500));
+    }
+  };
 
   exports.upload = upload;
   exports.download_in_backend = download_in_backend;
   exports.download = download;
+  exports.deleteFile = deleteFile;
+  exports.listBucketContent = listBucketContent;

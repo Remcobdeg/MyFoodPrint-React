@@ -1,9 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const { check } = require('express-validator');
 const checkAuth = require('../middleware/check-auth');
 
 const receiptsControllers = require('../controllers/receipts-controllers');
 const remoteFileStoreControllers = require('../controllers/file-uploader-s3');
+
+const FOLDER = process.env.DOSPACE_FOLDER;
 
 const router = express.Router();
 
@@ -50,7 +53,10 @@ router.post('/uploadImage/:userId', async function (req, res) { //, next) {
     }
     console.log('File uploaded successfully.');
     console.log("response: "+req.file);
-    return res.send(req.file.key);
+    console.log("response: "+req.file.key);
+    console.log("response: "+req.file.key.replace(FOLDER, ""));
+
+    return res.send(req.file.key.replace(FOLDER, ""));
     // return res.json({ imageUrl: req.file.location });
 
   });
@@ -94,10 +100,10 @@ router.patch(
 
 router.delete('/:rcptid', receiptsControllers.deleteReceipt);
 
-router.get('/fetchImage/:imageName', remoteFileStoreControllers.download); //receiptsControllers.fetchImageByName);
+router.get('/fetchImage/:imageName', remoteFileStoreControllers.download); 
 
 
-router.delete('/deleteImage/:imageName', receiptsControllers.deleteImageByName);
+router.delete('/deleteImage/:imageName', remoteFileStoreControllers.deleteFile); 
 
 router.get('/fetch/ImageList', receiptsControllers.fetchImageList);
 

@@ -22,6 +22,9 @@ const awsScanFunctions = require('../aws/awsScanFunctions');
 // const textract = new AWS.Textract();
 
 const fetchDataFromImage = async (req, res, next) => {
+
+    console.log("fetchDataFromImage called");
+
     // conducts a AWS call for OCR and stores the data in a receipt item
     let receipt;
     const imageName = req.body.name;
@@ -35,66 +38,95 @@ const fetchDataFromImage = async (req, res, next) => {
     const imageUser = imageName.replace(".jpg", "").split("-")[1];
 
     //get file from digital ocean storage
-
-    var datafs = fs.readFileSync(path.resolve(__dirname, "../images/" + imageName));
-    var detectParam = {
-        Document: {
-            Bytes: Buffer.from(datafs),
-        }
-    }
     try {
-        textract.analyzeExpense(detectParam, async (err, data) => {
-            if (err) {
-                console.log(err);
-                return err;
-            }
-            else {
-                let result = textractOCR.createResult(data.ExpenseDocuments[0]);
-                await result.ITEMS.forEach(function (entry) {
-                    let itemName = "NA", price = 0.00, quantity = 1;
-                    Object.values(entry)[0].filter(obj => {
-                        if ('NAME' in obj)
-                            itemName = obj['NAME'];
-                        if ('QUANTITY' in obj) {
-                            quantity = obj['QUANTITY'].replace(/[^\d.-]/g, '');
-                        }
-                        if ('PRICE' in obj) {
-                            price = obj['PRICE'].replace(',', '.');
-                            price = price.replace(/[^\d.-]/g, '');
-                        }
-                    });
-                    receipt = new Receipt({
-                        date: dateReceipt,
-                        time: timeReceipt,
-                        store: ((result.VENDOR_NAME === "" || result.VENDOR_NAME === undefined) ? "NA" : result.VENDOR_NAME),
-                        store_branche: "NA",
-                        item_group: "NA",
-                        item_subgroup: "NA",
-                        item_receipt_desc: itemName,
-                        item_product: "NA",
-                        item_product_detail: "NA",
-                        item_footprint_g_100g: 0,
-                        item_kcal_100g: 0,
-                        item_weight_g: 0,
-                        item_unit_price_gbp: ((price === "") ? 0 : price),
-                        item_units: quantity,
-                        item_footprint_sourcenote: "NA",
-                        date_recorded: new Date(parseInt(imageDate)),
-                        is_checked_off: false,
-                        user: imageUser
-                    });
-                    receipt.save();
-                });
-                return res.end("success");
-            }
+        const file = await remoteFileStoreControllers.download_in_backend(imageName, res, next);
+
+        console.log("file: " + (file));
+
+        AWS.config.update({
+            accessKeyId: process.env.AWSACCESSKEYID,
+            secretAccessKey: process.env.AWSSECRETACCESSKEY,
+            region: process.env.AWSREGION
         });
-    } catch (err) {
-        console.log(err);
-        const error = new HttpError(
-            'Something went wrong, could not perform OCR analysis.',
-            500
-        );
-        return next(error);
+
+        const textract = new AWS.Textract();
+
+
+        // var detectParam = {
+        //     Document: {
+        //         Bytes: Buffer.from(file.Body), //file.Body, 'binary'
+        //     }
+        // }
+        
+        const detectParams = {
+            Document: {
+                Bytes: Buffer.from(file.Body),
+            }
+        }
+
+        try {
+            textract.analyzeExpense(detectParams, async (err, data) => {
+                if (err) {
+                    console.log("Something went wrong, could not retrieve textract data from AWS: ",err);
+                    const error = new HttpError(
+                        'Something went wrong, could not retrieve textract data from AWS.',
+                        500
+                    );
+                    return next(error);
+                }
+                else {
+                    let result = textractOCR.createResult(data.ExpenseDocuments[0]);
+                    await result.ITEMS.forEach(function (entry) {
+                        let itemName = "NA", price = 0.00, quantity = 1;
+                        Object.values(entry)[0].filter(obj => {
+                            if ('NAME' in obj)
+                                itemName = obj['NAME'];
+                            if ('QUANTITY' in obj) {
+                                quantity = obj['QUANTITY'].replace(/[^\d.-]/g, '');
+                            }
+                            if ('PRICE' in obj) {
+                                price = obj['PRICE'].replace(',', '.');
+                                price = price.replace(/[^\d.-]/g, '');
+                            }
+                        });
+                        receipt = new Receipt({
+                            date: dateReceipt,
+                            time: timeReceipt,
+                            store: ((result.VENDOR_NAME === "" || result.VENDOR_NAME === undefined) ? "NA" : result.VENDOR_NAME),
+                            store_branche: "NA",
+                            item_group: "NA",
+                            item_subgroup: "NA",
+                            item_receipt_desc: itemName,
+                            item_product: "NA",
+                            item_product_detail: "NA",
+                            item_footprint_g_100g: 0,
+                            item_kcal_100g: 0,
+                            item_weight_g: 0,
+                            item_unit_price_gbp: ((price === "") ? 0 : price),
+                            item_units: quantity,
+                            item_footprint_sourcenote: "NA",
+                            date_recorded: new Date(parseInt(imageDate)),
+                            is_checked_off: false,
+                            user: imageUser
+                        });
+                        receipt.save();
+                    });
+                    return res.end("success");
+                }
+            });
+
+        } catch (err) {
+            console.log(err);
+            const error = new HttpError(
+                'Something went wrong, could not perform OCR analysis.',
+                500
+            );
+            return next(error);
+        }
+
+    } catch (error) {
+        console.log(error);
+        return next(new HttpError('Could not access file for text analysis', 500));
     }
 };
 
@@ -104,10 +136,17 @@ const getDateFromImage = async (req, res, next) => {
 
     //get file from digital ocean storage
     try {
-        const file = await remoteFileStoreControllers.download_in_backend(req, res, next);
+        const file = await remoteFileStoreControllers.download_in_backend(imageName, res, next);
 
-        console.log("in getDateFromImage");
-        console.log(file);
+        // sending to AWS for text analysis
+
+        AWS.config.update({
+            accessKeyId: process.env.AWSACCESSKEYID,
+            secretAccessKey: process.env.AWSSECRETACCESSKEY,
+            region: process.env.AWSREGION
+        });
+
+        const textract = new AWS.Textract();
 
         const detectParams = {
             Document: {
@@ -117,18 +156,43 @@ const getDateFromImage = async (req, res, next) => {
         }
 
         try {
-            const dateReceipt = await awsScanFunctions.scanForDate(detectParams, res, next);
-            console.log("got receipt date: ",dateReceipt);
-            return res.end(dateReceipt);
-
+            textract.analyzeDocument(detectParams, async (err, data) => {
+                if (err) {
+                    console.log("Something went wrong, could not retrieve textract data from AWS: ",err);
+                    const error = new HttpError(
+                        'Something went wrong, could not retrieve textract data from AWS.',
+                        500
+                    );
+                    return next(error);
+                }
+                else {
+                    let dateReceipt = await textractOCR.getDate(data);
+                    console.log("got receipt date: ",dateReceipt);
+                    return res.end(dateReceipt);
+                }
+            });
         } catch (err) {
             console.log(err);
             const error = new HttpError(
-                'Something went wrong, could not fetch date from receipt.',
+                'Something went wrong, could not delete receipt.',
                 500
             );
             return next(error);
         }
+
+        // try {
+        //     const dateReceipt = await awsScanFunctions.scanForDate(detectParams, res, next);
+        //     console.log("got receipt date: ",dateReceipt);
+        //     return res.end(dateReceipt);
+
+        // } catch (err) {
+        //     console.log(err);
+        //     const error = new HttpError(
+        //         'Something went wrong, could not fetch date from receipt.',
+        //         500
+        //     );
+        //     return next(error);
+        // }
 
     } catch (error) {
         console.log(error);
