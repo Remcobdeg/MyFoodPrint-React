@@ -1,40 +1,34 @@
 require('dotenv').config();
-const { v4: uuid } = require('uuid');
-const { validationResult, Result } = require('express-validator');
-const mongoose = require('mongoose');
-const async_ = require('async');
+
 const fs = require('fs');
-const textractOCR = require('../aws/textractOCR');
+const textractOCR = require('./textractOCR');
 const HttpError = require('../models/http-error');
 const AWS = require("aws-sdk")
-// const config = require("../aws/config");
 const path = require("path");
 const Receipt = require('../models/receipt');
-const remoteFileStoreControllers = require('../controllers/file-uploader-s3');
-const awsScanFunctions = require('../aws/awsScanFunctions');
 
 
-// AWS.config.update({
-//     accessKeyId: process.env.AWSACCESSKEYID,
-//     secretAccessKey: process.env.AWSSECRETACCESSKEY,
-//     region: process.env.AWSREGION
-// });
-// const textract = new AWS.Textract();
+AWS.config.update({
+    accessKeyId: process.env.AWSACCESSKEYID,
+    secretAccessKey: process.env.AWSSECRETACCESSKEY,
+    region: process.env.AWSREGION
+});
 
-const fetchDataFromImage = async (req, res, next) => {
-    // conducts a AWS call for OCR and stores the data in a receipt item
-    let receipt;
-    const imageName = req.body.name;
-    let dateReceipt = req.body.date;
-    let timeReceipt = "NA";
-    if(req.body.date.includes(" && ")) {
-        dateReceipt = req.body.date.split(" && ")[0];
-        timeReceipt = req.body.date.split(" && ")[1];
-    }
-    const imageDate = imageName.replace(".jpg", "").split("-")[2];
-    const imageUser = imageName.replace(".jpg", "").split("-")[1];
+const textract = new AWS.Textract();
 
-    //get file from digital ocean storage
+const performOCR2 = async (req, res, next) => {
+    
+    // // conducts a AWS call for OCR and stores the data in a receipt item
+    // let receipt;
+    // const imageName = req.body.name;
+    // let dateReceipt = req.body.date;
+    // let timeReceipt = "NA";
+    // if(req.body.date.includes(" && ")) {
+    //     dateReceipt = req.body.date.split(" && ")[0];
+    //     timeReceipt = req.body.date.split(" && ")[1];
+    // }
+    // const imageDate = imageName.replace(".jpg", "").split("-")[2];
+    // const imageUser = imageName.replace(".jpg", "").split("-")[1];
 
     var datafs = fs.readFileSync(path.resolve(__dirname, "../images/" + imageName));
     var detectParam = {
@@ -98,43 +92,33 @@ const fetchDataFromImage = async (req, res, next) => {
     }
 };
 
-const getDateFromImage = async (req, res, next) => {
+const scanForDate = async (detectParams, res, next) => {
 
-    const imageName = req.params.imageName;
-
-    //get file from digital ocean storage
     try {
-        const file = await remoteFileStoreControllers.download_in_backend(req, res, next);
-
-        console.log("in getDateFromImage");
-        console.log(file);
-
-        const detectParams = {
-            Document: {
-                Bytes: Buffer.from(file.Body),
-            },
-            FeatureTypes: ["FORMS"]
-        }
-
-        try {
-            const dateReceipt = await awsScanFunctions.scanForDate(detectParams, res, next);
-            console.log("got receipt date: ",dateReceipt);
-            return res.end(dateReceipt);
-
-        } catch (err) {
-            console.log(err);
-            const error = new HttpError(
-                'Something went wrong, could not fetch date from receipt.',
-                500
-            );
-            return next(error);
-        }
-
-    } catch (error) {
-        console.log(error);
-        return next(new HttpError('Could not access file for text analysis', 500));
+        textract.analyzeDocument(detectParams, async (err, data) => {
+            if (err) {
+                console.log(err);
+                const error = new HttpError(
+                    'Something went wrong, could not connect to AWS for Textract.',
+                    500
+                );
+                return next(err);
+            }
+            else {
+                console.log("data: " + JSON.stringify(data));
+                let dateReceipt = await textractOCR.getDate(data);
+                return dateReceipt;
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        const error = new HttpError(
+            'Something went wrong, could not fetch date from receipt.',
+            500
+        );
+        return next(error);
     }
-
+    
 };
-exports.fetchDataFromImage = fetchDataFromImage;
-exports.getDateFromImage = getDateFromImage;
+
+exports.scanForDate = scanForDate;

@@ -3,34 +3,60 @@ const { check } = require('express-validator');
 const checkAuth = require('../middleware/check-auth');
 
 const receiptsControllers = require('../controllers/receipts-controllers');
+const remoteFileStoreControllers = require('../controllers/file-uploader-s3');
 
 const router = express.Router();
-const multer = require('multer');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, 'image-' + req.params.userId + "-" + Date.now() + '.jpg');
-  }
-})
+// // --- code to save image in local storage ---
+// const multer = require('multer');
 
-const imageUpload = multer({ storage: storage });
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'images');
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, 'image-' + req.params.userId + "-" + Date.now() + '.jpg');
+//   }
+// })
+
+// const imageUpload = multer({ storage: storage });
 
 router.get('/:rcptid', receiptsControllers.getReceiptById);
 
-router.post(
-  '/uploadImage/:userId', async (req, res) => {
-    var uploadPost = imageUpload.single('imageFile');
-    uploadPost(req, res, function (err) {
-      if (err) {
-        return res.end("error uploading file");
-      }
-      return res.send(req.file.filename);
-    });
-  }
-);
+// router.post(
+//   '/uploadImage/:userId', async (req, res) => {
+//     var uploadPost = imageUpload.single('imageFile');
+//     uploadPost(req, res, function (err) {
+//       if (err) {
+//         return res.end("error uploading file");
+//       }
+//       return res.send(req.file.filename);
+//     });
+//   }
+// );
+
+// ---- END code to save image in local storage ----
+
+// ---- code to save image in Digital Ocean Bucket ----
+
+router.post('/uploadImage/:userId', async function (req, res) { //, next) {
+  
+  const singleUpload = remoteFileStoreControllers.upload.single('imageFile');
+  
+  singleUpload(req, res, function (err) {
+    if (err) {
+      console.log("s3 upload error "+err);
+      return res.end("s3 file upload error");
+    }
+    console.log('File uploaded successfully.');
+    console.log("response: "+req.file);
+    return res.send(req.file.key);
+    // return res.json({ imageUrl: req.file.location });
+
+  });
+});
+
+// ---- END code to save image in local storage ----
 
 router.use(checkAuth); //checks if there's a token and adds userId to req from decomposed token
 
@@ -68,7 +94,8 @@ router.patch(
 
 router.delete('/:rcptid', receiptsControllers.deleteReceipt);
 
-router.get('/fetchImage/:imageName', receiptsControllers.fetchImageByName);
+router.get('/fetchImage/:imageName', remoteFileStoreControllers.download); //receiptsControllers.fetchImageByName);
+
 
 router.delete('/deleteImage/:imageName', receiptsControllers.deleteImageByName);
 

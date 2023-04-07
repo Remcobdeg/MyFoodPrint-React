@@ -299,13 +299,16 @@ const deleteReceipt = async (req, res, next) => {
 };
 
 const fetchImageByName = async (req, res, next) => {
+
+  console.log("fetchImageByName called");
+
   const imageName = req.params.imageName;
   try {
     await res.status(200).sendFile(path.resolve('images/' + imageName));
   } catch (err) {
     console.log(err);
     const error = new HttpError(
-      'Something went wrong, could not delete receipt.',
+      'Something went wrong, could not return receipt.',
       500
     );
     return next(error);
