@@ -86,6 +86,14 @@ function Settings(props){
           Reset container size
         </Button>}
 
+        {!!props.isAdmin && <Button
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={(event) => {navigate('/testcam');}}
+        >
+          Test camera
+        </Button>}
+
         <Button
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

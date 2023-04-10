@@ -29,6 +29,9 @@ import { createTheme, ThemeProvider  } from '@mui/material/styles';
 import ReactGA from "react-ga4";
 import { useTrackClicks, useTrackExit } from './shared/modules/googleAnalyticsModules';
 
+//for test
+import TestCam from './camera/pages/TestCam';
+
 
 // ReactGA.initialize('G-PD6X0YP04V', {
 //   debug: true,
@@ -108,6 +111,7 @@ if (!!token){
             <Route path="camera/image/*" element={<ImageCamera userId={userId} />} />
             {!!isAdmin && <Route path="admin/*" element={<ImageList />} />}
             {!!isAdmin && <Route path="admin/imageDetails/*" element={<ImageDetails />} />}
+            <Route path='testcam' element={<TestCam />} />
             <Route path='*' element={<Navigate to='/' />} />
           </Routes>
   )} else {
