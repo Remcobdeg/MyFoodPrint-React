@@ -18,6 +18,14 @@ import { AuthContext } from '../../shared/context/authContext';
 import HelpPages from '../../shared/components/HelpPages';
 import Alert from '@mui/material/Alert';
 import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
+import { useUserMedia } from '../../shared/hooks/useUserMedia';
+
+const CAPTURE_OPTIONS = {
+    audio: false,
+    video: { facingMode: "environment" },
+    width: { ideal: 1920 }, 
+    height: { ideal: 1080 }
+};
 
 const style = {
     position: 'absolute',
@@ -53,7 +61,10 @@ function dataURItoFile(dataURI) {
 }
 
 function Camera(props) {
-    const videoRef = useRef(null);
+
+
+    const videoRef = useRef();
+    const mediaStream = useUserMedia(CAPTURE_OPTIONS);
     const photoRef = useRef(null);
     const streamRef = useRef(null);
     const [on, toggle] = useTorchLight(streamRef.current);
@@ -69,17 +80,26 @@ function Camera(props) {
     const handleBackdropClose = () => setBackdropOpen(false);
     const navigate = useNavigate();
 
-    const getVideo = async () => {
-        await navigator.mediaDevices
-            .getUserMedia({
-                video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: {ideal: 'environment'}} //change to user on laptop, environment on phone ; exact: 'environment' or ideal: 'environment'
-            })
-            .then(stream => {
-                let video = videoRef.current;
-                video.srcObject = stream;
-                streamRef.current = stream;
-                video.play();
-            })
+    // const getVideo = async () => {
+    //     await navigator.mediaDevices
+    //         .getUserMedia({
+    //             video: { width: { ideal: 1920 }, height: { ideal: 1080 }, facingMode: {ideal: 'environment'}} //change to user on laptop, environment on phone ; exact: 'environment' or ideal: 'environment'
+    //         })
+    //         .then(stream => {
+    //             let video = videoRef.current;
+    //             video.srcObject = stream;
+    //             streamRef.current = stream;
+    //             video.play();
+    //         })
+    // }
+
+    if (mediaStream && videoRef.current && !videoRef.current.srcObject) {
+        videoRef.current.srcObject = mediaStream;
+        streamRef.current = mediaStream;
+      }
+    
+    function handleCanPlay() {
+        videoRef.current.play();
     }
 
     const takePhoto = (event) => {
@@ -115,34 +135,34 @@ function Camera(props) {
     }
 
     useEffect(() => {
-        getVideo();
+        // getVideo();
         setTimeout(() => {
             handleClose();
         }, 4000);
     }, [videoRef, streamRef]);
 
-    // componentWillUnmount
-    useEffect(() => {
-        return () => {
-          // Your code you want to run on unmount.
-            console.log('unmounting camera');
-            streamRef.current.getTracks().forEach(track => track.stop());
-            // videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+    // // componentWillUnmount
+    // useEffect(() => {
+    //     return () => {
+    //       // Your code you want to run on unmount.
+    //         console.log('unmounting camera');
+    //         streamRef.current.getTracks().forEach(track => track.stop());
+    //         // videoRef.current.srcObject.getTracks().forEach(track => track.stop());
 
-            // navigator.mediaDevices
-            //     .getUserMedia({video: true, audio: false})
-            //     .then(mediaStream => {
-            //         mediaStream.getTracks().forEach(track => track.stop());
-            //     })
+    //         // navigator.mediaDevices
+    //         //     .getUserMedia({video: true, audio: false})
+    //         //     .then(mediaStream => {
+    //         //         mediaStream.getTracks().forEach(track => track.stop());
+    //         //     })
 
-        };
-      }, []); 
+    //     };
+    //   }, []); 
 
     return (
         <DeviceOrientation>
             {({ absolute, alpha, beta, gamma }) => (
                 <div className='video-container'>
-                    <video ref={videoRef}></video>
+                    <video ref={videoRef} onCanPlay={handleCanPlay} autoPlay playsInline muted></video>
                     {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
                         <IconButton onClick={takePhoto} className='camera-button'>
                             <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />

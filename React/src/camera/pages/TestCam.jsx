@@ -4,6 +4,8 @@ import { useUserMedia } from '../../shared/hooks/useUserMedia';
 const CAPTURE_OPTIONS = {
     audio: false,
     video: { facingMode: "environment" },
+    width: { ideal: 1920 }, 
+    height: { ideal: 1080 }
 };
 
 function Camera() {
