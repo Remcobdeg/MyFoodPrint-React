@@ -23,8 +23,8 @@ import { useUserMedia } from '../../shared/hooks/useUserMedia';
 const CAPTURE_OPTIONS = {
     audio: false,
     video: { facingMode: "environment" },
-    width: { ideal: 1920 }, 
-    height: { ideal: 1080 }
+    width: { ideal: 1080 }, 
+    height: { ideal: 1920 }
 };
 
 const style = {
@@ -134,12 +134,12 @@ function Camera(props) {
         }
     }
 
-    useEffect(() => {
-        // getVideo();
-        setTimeout(() => {
-            handleClose();
-        }, 4000);
-    }, [videoRef, streamRef]);
+    // useEffect(() => {
+    //     // getVideo();
+    //     setTimeout((event) => {
+    //         handleClose(event);
+    //     }, 4000);
+    // }, [videoRef, streamRef]);
 
     // // componentWillUnmount
     // useEffect(() => {
@@ -162,7 +162,7 @@ function Camera(props) {
         <DeviceOrientation>
             {({ absolute, alpha, beta, gamma }) => (
                 <div className='video-container'>
-                    <video ref={videoRef} onCanPlay={handleCanPlay} autoPlay playsInline muted></video>
+                    <video ref={videoRef} onCanPlay={handleCanPlay} autoPlay muted></video>
                     {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
                         <IconButton onClick={takePhoto} className='camera-button'>
                             <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
