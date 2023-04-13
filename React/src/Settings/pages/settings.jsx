@@ -95,16 +95,16 @@ function Settings(props){
         </Button>}
 
         <Button
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handlePressLogout}
-            >
-              Logout
-            </Button>
-        </Box>
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          onClick={handlePressLogout}
+        >
+          Logout
+        </Button>
+      </Box>
 
-      </React.Fragment>
-    )
+    </React.Fragment>
+  )
 }
 
 export default Settings; 
