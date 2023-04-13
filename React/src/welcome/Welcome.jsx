@@ -58,7 +58,7 @@ export default function Welcome (props){
         // <ThemeProvider theme={theme}>
 
 
-            <Container maxWidth="sm" >
+            <Container maxWidth="sm" sx={{px: "1em"}} >
                 {/* <CssBaseline/> */}
                 <Grid container spacing = {1}>
                     <Grid item xs={12}>

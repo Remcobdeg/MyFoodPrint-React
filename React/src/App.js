@@ -96,7 +96,7 @@ function App() {
   });
 
 let routes;
-// console.log("url: " + window.location.pathname);
+console.log("url: " + window.location.pathname);
 console.log("isAdmin: " + isAdmin);
 
 if (!!token){
@@ -129,12 +129,13 @@ if (!!token){
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
       <navContext.Provider value={{ currentPage: currentPage, setPage: setPage }}>
       <ThemeProvider theme={theme}>
-      <Container maxWidth={containerSize} sx={!!token?{px: "1em", pb: "64px"}:{px: "1em"}} >
+      {/* <Container maxWidth={containerSize} sx={!!token?{px: "1em", pb: "64px"}:{px: "1em"}} > */}
         <BrowserRouter>
           <main>{routes}</main>
           {!!token && <NavBarBottom />}
+          {/* (window.location.pathname !== "/camera") && (window.location.pathname !== "/camera/image") &&   */}
         </BrowserRouter>
-      </Container>
+      {/* </Container> */}
       </ThemeProvider>
       </navContext.Provider>
     </AuthContext.Provider>

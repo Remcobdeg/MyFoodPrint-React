@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { Container } from '@mui/material';
 import { AuthContext } from '../../shared/context/authContext';
 import HelpPages from '../../shared/components/HelpPages';
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
@@ -36,7 +37,7 @@ function Settings(props){
 
 
     return(
-      <React.Fragment>
+      <Container maxWidth="sm" sx={{px: "1em", pb: "64px"}} >
         <StyledHeader variant="h4">Settings</StyledHeader> 
 
         <Box
@@ -103,7 +104,7 @@ function Settings(props){
             </Button>
         </Box>
 
-      </React.Fragment>
+      </Container>
     )
 }
 

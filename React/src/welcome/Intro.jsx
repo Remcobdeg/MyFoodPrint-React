@@ -67,7 +67,7 @@ function Intro(props){
     const nextButtonName = ['Tell me how','Next','Next','Next','Login / Sign up']
 
     return(
-        <Container maxWidth = "sm" sx={{height: "100vh"}} ref = { parentRef } >
+        <Container maxWidth = "sm" sx={{height: "100vh", px: "1em"}} ref = { parentRef } >
 
             
 
