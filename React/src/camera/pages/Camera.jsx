@@ -8,7 +8,7 @@ import FlashOnIcon from '@mui/icons-material/FlashOn';
 import FlashOffIcon from '@mui/icons-material/FlashOff';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTorchLight } from '@blackbox-vision/use-torch-light';
-import { Modal, IconButton, Box, Typography } from '@mui/material';
+import { Modal, IconButton, Box, Typography, Container } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import commonHttp from '../../shared/components/http-common';
@@ -159,6 +159,7 @@ function Camera(props) {
     //   }, []); 
 
     return (
+        <Container maxWidth="sm">
         <DeviceOrientation>
             {({ absolute, alpha, beta, gamma }) => (
                 <div className='video-container'>
@@ -231,6 +232,7 @@ function Camera(props) {
                 </div>
             )}
         </DeviceOrientation>
+        </Container>
     );
 }
 
