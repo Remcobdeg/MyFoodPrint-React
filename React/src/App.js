@@ -19,7 +19,7 @@ import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import { AuthContext } from './shared/context/authContext';
 import { navContext } from './shared/context/navContext';
-import Camera from './camera/pages/Camera_b394bec'; // for testing
+import Camera from './camera/pages/Camera_92e25dd'; // for testing
 import ImageCamera from './camera/pages/ImageCamera';
 import ImageList from './admin/pages/ImageList';
 import ImageDetails from './admin/pages/ImageDetails';
