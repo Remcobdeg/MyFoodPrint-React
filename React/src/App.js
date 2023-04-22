@@ -6,7 +6,6 @@ import {
   Navigate,
   // Link,
 } from 'react-router-dom';
-import { Container } from '@mui/material';
 
 import './App.css';
 import Basket from './basket/pages/Basket';
@@ -19,7 +18,7 @@ import NavBarBottom from './shared/components/NavBarBottom';
 import Auth from './auth/pages/Auth';
 import { AuthContext } from './shared/context/authContext';
 import { navContext } from './shared/context/navContext';
-import Camera from './camera/pages/Camera';
+import Camera from './camera/pages/Camera'; // for testing
 import ImageCamera from './camera/pages/ImageCamera';
 import ImageList from './admin/pages/ImageList';
 import ImageDetails from './admin/pages/ImageDetails';
@@ -64,7 +63,6 @@ function App() {
   const { token, login, logout, userId, isAdmin } = useAuth();
 
   const [currentPage, setPage] = React.useState("Basket");
-  const [containerSize, setContainerSize] = React.useState("sm");
 
   // for google analytics
   // track clicks
@@ -97,7 +95,7 @@ function App() {
 
 let routes;
 // console.log("url: " + window.location.pathname);
-console.log("isAdmin: " + isAdmin);
+// console.log("isAdmin: " + isAdmin);
 
 if (!!token){
   routes = (
@@ -106,7 +104,7 @@ if (!!token){
             <Route path="alternatives/*" element={<Alternatives />} />
             <Route path="gettingstarted/" element={<Intro />} />
             <Route path="stats/*" element={<Stats />} />
-            <Route path="settings/*" element={<Settings setContainerSize={setContainerSize} isAdmin={isAdmin}/>} />
+            <Route path="settings/*" element={<Settings isAdmin={isAdmin}/>} />
             <Route path="camera/*" element={<Camera userId={userId} />} />
             <Route path="camera/image/*" element={<ImageCamera userId={userId} />} />
             {!!isAdmin && <Route path="admin/*" element={<ImageList />} />}
@@ -129,12 +127,13 @@ if (!!token){
     <AuthContext.Provider value={{ isLoggedIn: !!token, userId: userId, token: token, login: login, logout: logout }}>
       <navContext.Provider value={{ currentPage: currentPage, setPage: setPage }}>
       <ThemeProvider theme={theme}>
-      <Container maxWidth={containerSize} sx={!!token?{px: "1em", pb: "64px"}:{px: "1em"}} >
+      {/* <Container maxWidth={containerSize} sx={!!token?{px: "1em", pb: "64px"}:{px: "1em"}} > */}
         <BrowserRouter>
           <main>{routes}</main>
           {!!token && <NavBarBottom />}
+          {/* (window.location.pathname !== "/camera") && (window.location.pathname !== "/camera/image") &&   */}
         </BrowserRouter>
-      </Container>
+      {/* </Container> */}
       </ThemeProvider>
       </navContext.Provider>
     </AuthContext.Provider>

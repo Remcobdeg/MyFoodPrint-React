@@ -3,7 +3,7 @@ import GraphToggle from "../components/graphToggle";
 import PeriodToggle from "../components/periodToggle";
 import WordCloud from "react-d3-cloud";
 import BarChart from "../components/BarChart";
-import { Typography } from "@mui/material";
+import { Typography, Container } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box'
 import { AuthContext } from '../../shared/context/authContext';
@@ -142,7 +142,7 @@ function Basket() {
   };
 
   return (
-    <React.Fragment >
+    <Container maxWidth="sm" sx={{px: "1em", pb: "64px"}} >
       <StyledHeader variant="h4">Your purchases</StyledHeader> 
       <Grid 
         container
@@ -226,7 +226,7 @@ function Basket() {
       }
 
 
-    </React.Fragment>
+    </Container>
   );
 }
 

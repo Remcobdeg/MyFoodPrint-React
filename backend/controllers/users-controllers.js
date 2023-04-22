@@ -18,7 +18,7 @@ const getUsers = async (req, res, next) => {
     return next(new HttpError('Could not retrieve users, try again later',500));
   }
 
-  console.log(users);
+  // console.log(users);
 
   res.json( users.map(u => u.toObject({getters: true})));
 };

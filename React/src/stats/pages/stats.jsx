@@ -218,7 +218,7 @@ export default function Stats (props){
 
 
     return(
-        <React.Fragment>
+        <Container maxWidth="sm" sx={{px: "1em", pb: "64px"}}>
             <StyledHeader variant="h4">Stats</StyledHeader> 
             {receipts === "no receipts" ? <NoDataMessage/> :
             <React.Fragment>
@@ -347,7 +347,7 @@ export default function Stats (props){
             <HelpPages fromPage={"Stats"}/>
 
             
-        </React.Fragment>
+        </Container>
     )
 
 }

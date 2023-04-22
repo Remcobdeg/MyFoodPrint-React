@@ -10,7 +10,7 @@ import CameraIcon from '@mui/icons-material/Camera';
 // import FlashOffIcon from '@mui/icons-material/FlashOff';
 import CloseIcon from '@mui/icons-material/Close';
 // import { useTorchLight } from '@blackbox-vision/use-torch-light';
-import { Modal, IconButton, Box, Button, Typography } from '@mui/material';
+import { Modal, IconButton, Box, Button, Typography, Container } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import commonHttp from '../../shared/components/http-common';
@@ -21,15 +21,10 @@ import HelpPages from '../../shared/components/HelpPages';
 import Alert from '@mui/material/Alert';
 import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 import { useUserMedia } from '../../shared/hooks/useUserMedia';
-import { useCameraRatio } from '../../shared/hooks/useCameraRatio';
-import { useOffsets } from '../../shared/hooks/useOffsets';
-import Measure from 'react-measure';
 
 const CAPTURE_OPTIONS = {
     audio: false,
     video: { facingMode: "environment" },
-    // width: { ideal: 1920 }, 
-    // height: { ideal: 1080 }
 };
 
 const instructionModalStyle = {
@@ -72,7 +67,7 @@ function Camera(props) {
     const navigate = useNavigate();
 
     const videoRef = useRef();
-    const photoRef = useRef(null);
+    const canvasRef = useRef(null);
     // const streamRef = useRef(null);
 
     const mediaStream = useUserMedia(CAPTURE_OPTIONS);
@@ -80,15 +75,7 @@ function Camera(props) {
     // const [on, toggle] = useTorchLight(streamRef.current);
     const [open, setOpen] = useState(true);
     const [backdropOpen, setBackdropOpen] = useState(false);
-    const [container, setContainer] = useState({ width: 0 });
-    const [aspectRatio, calculateRatio] = useCameraRatio(9/16); // default portrait ratio
-    const offsets = useOffsets(
-        videoRef.current && videoRef.current.videoWidth,
-        videoRef.current && videoRef.current.videoHeight,
-        container.width,
-        container.height
-      );
-
+    const [imageBlob, setImageBlob] = useState(null);
 
     const handleClose = (event) => {
         event.stopPropagation();
@@ -102,45 +89,69 @@ function Camera(props) {
         videoRef.current.srcObject = mediaStream;
         // streamRef.current = mediaStream;
       }
-
-    function handleResize(contentRect) {
-        console.log("resizing")
-        console.log("contentRect = ",contentRect)
-        console.log("videoHeight = ",videoRef.current.videoHeight, " and videoWidth = ",videoRef.current.videoWidth)
-        console.log("contentRect.bounds.height = ",contentRect.bounds.height, " and contentRect.bounds.width = ",contentRect.bounds.width)
-        console.log("aspectRatio = ",aspectRatio)
-        console.log("Math.round(contentRect.bounds.height * aspectRatio) = ",Math.round(contentRect.bounds.height * aspectRatio))
-
-        setContainer({
-            width: Math.round(contentRect.bounds.height * aspectRatio)
-        });
-    }
     
     function handleCanPlay() {
-        console.log("can play")
-        console.log("videoHeight = ",videoRef.current.videoHeight, " and videoWidth = ",videoRef.current.videoWidth)
-        calculateRatio(videoRef.current.videoHeight, videoRef.current.videoWidth);
         videoRef.current.play();
     }
 
     const takePhoto = (event) => {
 
+        // for GA
         event.stopPropagation();
         trackEvent('Camera', 'Take Photo');
 
-        setBackdropOpen(true);
+        // setBackdropOpen(true); // show the loading spinner
 
         let video = videoRef.current;
-        let photo = photoRef.current;
+        let canvas = canvasRef.current;
 
-        const width = 1080;
-        const height = 1920;
-        photo.width = width;
-        photo.height = height;
+        // to capture an image, we draw the video on the canvas (which is invisible), using the drawImage method. 
+        // because the viewed video height and width are different from the actual video height and width, we need to calculate the offsets and the width and height of the cropped video. We prepare the values here. 
+        const viewWidth = video.clientWidth; //the (scaled) view width of the video stream as it appears on the screen
+        const viewHeight = video.clientHeight; //the scaled height as it appears on the screen
+        const viewRatio = viewWidth/viewHeight; //the ratio of the scaled video
+        const videoHeight = video.videoHeight; //the height of the video that is captured by the camera
+        const videoWidth = video.videoWidth; //the height of the video that is captured by the camera
+        const videoRatio = videoWidth/videoHeight; //the ratio of the video that is captured by the camera
+        //we need to calculate the width and height of the cropped video, and  offsets of the cropped video
+        let croppedVideoWidth;
+        let croppedVideoHeight;
+        let offsetX;
+        let offsetY;
+        if (videoRatio > viewRatio) { //if the video is wider than the view
+            croppedVideoWidth = Math.round(videoHeight*viewRatio);
+            croppedVideoHeight = videoHeight;
+            offsetX = Math.round((videoWidth - croppedVideoWidth)/2);
+            offsetY = 0;
+        } else { //if the video is taller than the view
+            croppedVideoWidth = videoWidth;
+            croppedVideoHeight = Math.round(videoWidth/viewRatio);
+            offsetX = 0;
+            offsetY = Math.round((videoHeight - croppedVideoHeight)/2);
+        }
 
-        let ctx = photo.getContext('2d');
-        ctx.drawImage(video, 0, 0, width, height);
-        let dataURL = photoRef.current.toDataURL('image/jpeg');
+        // we need to set the width and height of the canvas to the width and height of the scaled video
+        canvas.width = viewWidth;
+        canvas.height = viewHeight;
+
+        let context = canvas.getContext('2d');
+        context.drawImage( // this function 
+            video, //the unscaled video stream --> we have to scale it to the client width and height
+            offsetX, //source x
+            offsetY, //source y
+            croppedVideoWidth, //source width (cropped)
+            croppedVideoHeight, //source height (cropped)
+            0, 
+            0, 
+            viewWidth, 
+            viewHeight
+            ); //
+
+        setImageBlob(true);
+        // canvasRef.current.toBlob(blob => setImageBlob(blob), "image/jpeg", 1);
+
+        // prepare the image blob to be uploaded
+        let dataURL = canvasRef.current.toDataURL('image/jpeg');
         let imageFile = dataURItoFile(dataURL);
         let fd = new FormData();
         fd.append("imageFile", imageFile);
@@ -161,30 +172,31 @@ function Camera(props) {
         }
     }
 
+
     return (
-        
+        <Container maxWidth="sm" sx={{padding: 0}}>
         <DeviceOrientation>
             {({ absolute, alpha, beta, gamma }) => (
-                <div>
+                <div>                
+                    {!imageBlob && (
+                        <video 
+                            ref={videoRef} 
+                            onCanPlay={handleCanPlay} 
+                            autoPlay 
+                            playsInline 
+                            muted
+                            style={{
+                                //this scales the video stream to the full height/width of the screen
+                                //but doesn't actually change size of the video stream object in videoRef!
+                                //the aspect ratio is maintained
+                                height: window.innerHeight, 
+                                width: window.innerWidth , 
+                                objectFit: "cover", 
+                                position: "absolute"}}
+                        />
+                    )}
 
-                    <Measure bounds onResize={handleResize}>
-                        {({ measureRef }) => (
-                        
-                            <div ref={measureRef} style={{ width: `${container.width}px`, overflow: "hidden"}} > 
-                                {/*  className='video-container'*/}
-
-                                <video 
-                                    ref={videoRef} 
-                                    onCanPlay={handleCanPlay} 
-                                    autoPlay 
-                                    playsInline 
-                                    muted
-                                    style={{ top: `-${offsets.y}px`, left: `-${offsets.x}px`, position: "absolute" }}                                    
-                                />
-
-                            </div>
-                        )}
-                    </Measure>
+                    <canvas ref={canvasRef}></canvas>
                                 
                     {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
                         <IconButton onClick={takePhoto} className='camera-button'>
@@ -217,8 +229,6 @@ function Camera(props) {
                             <CloseIcon sx={{ fontSize: "15vmin" }} color="primary" className='' />
                         </Link>
                     </IconButton>
-
-                    <canvas ref={photoRef}></canvas>
 
                     {/* instruction modal */}
                     <Modal
@@ -268,7 +278,7 @@ function Camera(props) {
                 </div>
             )}
         </DeviceOrientation>
-
+        </Container>
     );
 }
 

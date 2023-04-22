@@ -9,12 +9,10 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import HelpPages from '../../shared/components/HelpPages';
 import { AuthContext } from '../../shared/context/authContext';
-import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
 import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 
 
-const style = {
+const popupStyle = {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -36,13 +34,20 @@ function ImageCamera(props) {
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
     const [receiptDate, setReceiptDate] = React.useState("NA");
-    const [snackdangerOpen, setSnackdangerOpen] = React.useState(false); //refers to no data collected
+    const [warningOpen, setWarningOpen] = React.useState(false); //refers to no data collected
 
     const { state } = useLocation();
 
     const auth = useContext(AuthContext);
     
     const navigate = useNavigate();
+
+    const handleClose = (event) => {
+        event.stopPropagation();
+        trackEvent("Camera", "Close Success Message");
+        setSuccessOpen(false);
+    }
+
 
     useEffect(() => {
 
@@ -74,7 +79,7 @@ function ImageCamera(props) {
                 setReceiptDate(response.data);
                 if (response.data === 'NA') {
                     trackEvent("Camera", "No date identified on receipt");
-                    setSnackdangerOpen(true);
+                    setWarningOpen(true);
                 } 
             });
         } catch (err) {
@@ -82,7 +87,8 @@ function ImageCamera(props) {
             setError(true);
         }
 
-    }, []);
+    }, [auth.token, state]);
+
 
     const removePhoto = (event) => {
 
@@ -100,10 +106,15 @@ function ImageCamera(props) {
         });
     }
 
+
     async function saveAndExit(event) {
+
+        // GA event
         event.preventDefault();
         trackEvent("Camera", "Save and Exit");
-        setIsLoading(true);
+
+        setIsLoading(true); //display loading icon
+
         try {
             commonHttp.post('/ocr/fetchDataFromImage',
                 {
@@ -121,7 +132,7 @@ function ImageCamera(props) {
                     setTimeout(() => {
                         setSuccessOpen(false);
                         navigate('/');
-                    }, 4000);         
+                    }, 8000);         
                 });
         } catch (err) {
             trackEvent("Camera", "Error Saving Receipt", err);
@@ -130,37 +141,31 @@ function ImageCamera(props) {
         }
     };
 
+
     return (
         <div className='img-container'>
+
             <img src={imgFile} id="img" alt="scanned receipt"></img>
+
             <div className="camera-button">
                 <Button onClick={removePhoto} sx={{ width: '80vw', marginBottom: '1vh' }} color="error" variant="contained">Retry</Button>
                 {/* <Link to="/camera"><Button sx={{width:'80vw', marginBottom:'1vh'}} color="primary" variant="contained">Next</Button></Link> */}
                 <Button onClick={saveAndExit} sx={{ width: '80vw' }} color="success" variant="contained">Save & Exit</Button>
                 {error && <Alert severity="error">Something went Wrong. Receipt wasn't saved!</Alert>}
             </div>
-            {/* <Modal
-                open={saveOpen}
-                onClose={() => { setSaveOpen(false); }}
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Image has been captured <br />
-                        and saved sucessfully
-                    </Typography>
-                </Box>
-            </Modal> */}
+
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={isLoading}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+
             <Modal
-                open={snackdangerOpen}
-                onClose={() => { setSnackdangerOpen(false); }}
+                open={warningOpen}
+                onClose={() => { setWarningOpen(false); }}
             >
-                <Box sx={style}>
+                <Box sx={popupStyle}>
                     <Typography style={{ color: 'red' }} variant="h6" component="h2">
                         Looks like the date of the receipt wasn't visible in the picture. If it's our error, just press save. Otherwise, please try again and capture the whole receipt, including the bottom bit with the date.
                     </Typography>
@@ -170,36 +175,20 @@ function ImageCamera(props) {
             {/* success message */}
             <Modal
                 open={successOpen}
-                onClose={(event) => {
-                    event.stopPropagation();
-                    trackEvent("Camera", "Close Success Message");
-                    setSuccessOpen(false);
-                }}
+                onClose={handleClose}
             >
-                <Box sx={style}>
-                    <IconButton
-                        aria-label="close"
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            trackEvent("Camera", "Close Success Message");
-                            setSuccessOpen(false);
-                        }}
-                        sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
-                            color: (theme) => theme.palette.grey[500],
-                        }}
-                        >
-                        <CloseIcon />
-                    </IconButton>
+                <Box sx={popupStyle}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Thanks! Your data has been saved and will be processed. It should appear in your dashboard within 24h.
-
                     </Typography>
+                    <Button onClick={handleClose} variant="contained" sx={{ my: 2 }}>
+                        Got it!
+                    </Button>
                 </Box>
             </Modal>
+
             <HelpPages fromPage={"Camera"}/>
+
         </div>
     );
 }

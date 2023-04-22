@@ -144,7 +144,7 @@ function Alternatives() {
   },[state,alternatives,stuctureData])
 
   return (
-    <div style={{paddingBottom: "50px"}}>
+    <Container maxWidth="sm" sx={{px: "1em", pb: "64px"}} >
       <StyledHeader variant="h4">Alternatives</StyledHeader> 
       {!isLoading && productHierarchy && <FormControl variant="standard" sx={{ minWidth: 120 }}>
         <InputLabel id="demo-simple-select-standard-label">Selected product</InputLabel>
@@ -212,7 +212,7 @@ function Alternatives() {
 
       {product === "" && <Typography align = "center" sx={{mt: 10, color: "rgba(0, 0, 0, 0.6)"}} variant="h6">Select a product to see alternatives</Typography>}
       <HelpPages fromPage={"Alternatives"}/>
-    </div>
+    </Container>
   );
 }
 

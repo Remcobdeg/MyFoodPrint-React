@@ -41,8 +41,6 @@ const fetchDataFromImage = async (req, res, next) => {
     try {
         const file = await remoteFileStoreControllers.download_in_backend(imageName, res, next);
 
-        console.log("file: " + (file));
-
         AWS.config.update({
             accessKeyId: process.env.AWSACCESSKEYID,
             secretAccessKey: process.env.AWSSECRETACCESSKEY,
@@ -50,13 +48,6 @@ const fetchDataFromImage = async (req, res, next) => {
         });
 
         const textract = new AWS.Textract();
-
-
-        // var detectParam = {
-        //     Document: {
-        //         Bytes: Buffer.from(file.Body), //file.Body, 'binary'
-        //     }
-        // }
         
         const detectParams = {
             Document: {
@@ -167,7 +158,6 @@ const getDateFromImage = async (req, res, next) => {
                 }
                 else {
                     let dateReceipt = await textractOCR.getDate(data);
-                    console.log("got receipt date: ",dateReceipt);
                     return res.end(dateReceipt);
                 }
             });
@@ -179,20 +169,6 @@ const getDateFromImage = async (req, res, next) => {
             );
             return next(error);
         }
-
-        // try {
-        //     const dateReceipt = await awsScanFunctions.scanForDate(detectParams, res, next);
-        //     console.log("got receipt date: ",dateReceipt);
-        //     return res.end(dateReceipt);
-
-        // } catch (err) {
-        //     console.log(err);
-        //     const error = new HttpError(
-        //         'Something went wrong, could not fetch date from receipt.',
-        //         500
-        //     );
-        //     return next(error);
-        // }
 
     } catch (error) {
         console.log(error);

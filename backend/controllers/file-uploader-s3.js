@@ -32,7 +32,6 @@ const upload = multer({
         cb(null, {fieldName: 'Receipt'}); file.fieldname
       },
       key: function (req, file, cb) {
-        console.log(file);
         cb(null, FOLDER + 'image-' + req.params.userId + "-" + Date.now() + '.jpg');
       }
     })
@@ -41,8 +40,6 @@ const upload = multer({
   const download_in_backend = async (imageName, res, next) => {
 
     const newImageName = FOLDER+imageName;
-
-    console.log("newImageName downloadBE: " + newImageName);
 
     const params = {
         Bucket: BUCKET_NAME,
@@ -75,22 +72,6 @@ const upload = multer({
         return next(new HttpError('Could not download file', 500));
     }
 
-    // const params = {
-    //     Bucket: BUCKET_NAME,
-    //     Key: req.params.imageName
-    // };
-
-    // console.log(params.Bucket, params.Key);
-
-    // try {
-    //     const response = await s3.getObject(params).promise() // await the promise
-    //     // console.log(response);
-    //     const fileContent = response.Body.toString('utf-8');
-    //     res.status(200).send(response.Body);
-    // } catch (error) {
-    //     console.log(error);
-    //     return next(new HttpError('Could not download file', 500));
-    // }
   };
 
   const listBucketContent = async function() {

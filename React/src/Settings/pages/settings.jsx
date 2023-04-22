@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { Container } from '@mui/material';
 import { AuthContext } from '../../shared/context/authContext';
 import HelpPages from '../../shared/components/HelpPages';
 import { StyledHeader } from '../../shared/MuiStyledComponents/MuiStyledComponents';
@@ -28,7 +29,6 @@ function Settings(props){
     function handlePressAdmin(event){
         event.stopPropagation();
         trackEvent("settings", "click", "admin button clicked");
-        props.setContainerSize("false");
         navigate('/admin');
     }
 
@@ -36,7 +36,7 @@ function Settings(props){
 
 
     return(
-      <React.Fragment>
+      <Container maxWidth="sm" sx={{px: "1em", pb: "64px"}} >
         <StyledHeader variant="h4">Settings</StyledHeader> 
 
         <Box
@@ -77,14 +77,6 @@ function Settings(props){
         >
           Admin
         </Button>}
-        
-        {!!props.isAdmin && <Button
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={(event) => {props.setContainerSize("sm")}}
-        >
-          Reset container size
-        </Button>}
 
         {!!props.isAdmin && <Button
           variant="contained"
@@ -103,8 +95,8 @@ function Settings(props){
         </Button>
       </Box>
 
-    </React.Fragment>
-  )
+      </Container>
+    )
 }
 
 export default Settings; 
