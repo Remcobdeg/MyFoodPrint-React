@@ -153,14 +153,14 @@ function Camera(props) {
             viewHeight * resUpscale
             ); //
 
-        // setImageBlob(true);
-        canvasRef.current.toBlob(blob => setImageBlob(blob), "image/jpeg", 1); //1 = full quality
-
         // prepare the image blob to be uploaded
         let dataURL = canvasRef.current.toDataURL('image/jpeg',1); //1 = full quality
         let imageFile = dataURItoFile(dataURL);
         let fd = new FormData();
         fd.append("imageFile", imageFile);
+
+        // show the image on the screen
+        canvasRef.current.toBlob(blob => setImageBlob(blob), "image/jpeg", 1); //1 = full quality
 
         try {
             commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {
@@ -202,9 +202,14 @@ function Camera(props) {
                         />
                     )}
 
-                    <canvas ref={canvasRef}></canvas>
+                    {!imageBlob && (    
+                        <canvas ref={canvasRef}></canvas>
+                    )}
 
-                    <img src={imageBlob} id="img" alt="scanned receipt"></img>
+                    {imageBlob && (    
+                        <img src={imageBlob} id="img" alt=""></img>
+                    )}
+                    
                                 
                     {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
                         <IconButton onClick={takePhoto} className='camera-button'>
