@@ -139,7 +139,7 @@ function Camera(props) {
         }
         const canvasWidth = viewWidth * resUpscale;
         const canvasHeight = viewHeight * resUpscale;
-        console.log('canvasWidth: ' + canvasWidth, 'canvasHeight: ' + canvasHeight);
+        alert('canvasWidth: ' + Math.round(canvasWidth) + ' canvasHeight: ' + canvasHeight + ' viewWidth: ' + viewWidth + ' viewHeight: ' + viewHeight + ' videoWidth: ' + videoWidth + ' videoHeight: ' + videoHeight);
 
         // we need to set the width and height of the canvas to the width and height of the scaled video
         canvas.width = canvasWidth; //viewWidth;
