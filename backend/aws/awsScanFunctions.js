@@ -44,7 +44,7 @@ const performOCR2 = async (req, res, next) => {
             }
             else {
                 let result = textractOCR.createResult(data.ExpenseDocuments[0]);
-                await result.ITEMS.forEach(function (entry) {
+                await result.ITEMS.forEach(async function (entry) {
                     let itemName = "NA", price = 0.00, quantity = 1;
                     Object.values(entry)[0].filter(obj => {
                         if ('NAME' in obj)
@@ -57,7 +57,7 @@ const performOCR2 = async (req, res, next) => {
                             price = price.replace(/[^\d.-]/g, '');
                         }
                     });
-                    receipt = new Receipt({
+                    let receipt = new Receipt({
                         date: dateReceipt,
                         time: timeReceipt,
                         store: ((result.VENDOR_NAME === "" || result.VENDOR_NAME === undefined) ? "NA" : result.VENDOR_NAME),
@@ -77,7 +77,16 @@ const performOCR2 = async (req, res, next) => {
                         is_checked_off: false,
                         user: imageUser
                     });
-                    receipt.save();
+                    try {
+                        await receipt.save();
+                    } catch (err) {
+                        console.log(err);
+                        const error = new HttpError(
+                            'Something went wrong, could not save receipt.',
+                            500
+                        );
+                        return next(error);
+                    }
                 });
                 return res.end("success");
             }

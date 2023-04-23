@@ -119,19 +119,22 @@ function Camera(props) {
         let offsetX;
         let offsetY;
         let resUpscale; //scale to fixed width/height 1920 for saving to server
+        let resUpscaleTest; //scale to fixed width/height 1920 for saving to server
+        ; //scale to fixed width/height 1920 for saving to server
         if (videoRatio > viewRatio) { //if the video is wider than the view
             croppedVideoWidth = Math.round(videoHeight*viewRatio);
             croppedVideoHeight = videoHeight;
             offsetX = Math.round((videoWidth - croppedVideoWidth)/2);
-            offsetY = 0;
-            resUpscale = 1;//1920 / croppedVideoWidth;
+            offsetY = 0;            
         } else { //if the video is taller than the view
             croppedVideoWidth = videoWidth;
             croppedVideoHeight = Math.round(videoWidth/viewRatio);
             offsetX = 0;
             offsetY = Math.round((videoHeight - croppedVideoHeight)/2);
-            resUpscale = 1;//1920 / croppedVideoHeight;
         }
+
+        // apply an upscale to the canvas to make the picture look better
+        resUpscale = 1920 / Math.max(viewWidth, viewHeight);
 
         // we need to set the width and height of the canvas to the width and height of the scaled video
         canvas.width = viewWidth * resUpscale;
