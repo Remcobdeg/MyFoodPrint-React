@@ -118,21 +118,24 @@ function Camera(props) {
         let croppedVideoHeight;
         let offsetX;
         let offsetY;
+        let resUpscale; //scale to fixed width/height 1920 for saving to server
         if (videoRatio > viewRatio) { //if the video is wider than the view
             croppedVideoWidth = Math.round(videoHeight*viewRatio);
             croppedVideoHeight = videoHeight;
             offsetX = Math.round((videoWidth - croppedVideoWidth)/2);
             offsetY = 0;
+            resUpscale = 1;//1920 / croppedVideoWidth;
         } else { //if the video is taller than the view
             croppedVideoWidth = videoWidth;
             croppedVideoHeight = Math.round(videoWidth/viewRatio);
             offsetX = 0;
             offsetY = Math.round((videoHeight - croppedVideoHeight)/2);
+            resUpscale = 1;//1920 / croppedVideoHeight;
         }
 
         // we need to set the width and height of the canvas to the width and height of the scaled video
-        canvas.width = viewWidth;
-        canvas.height = viewHeight;
+        canvas.width = viewWidth * resUpscale;
+        canvas.height = viewHeight * resUpscale;
 
         let context = canvas.getContext('2d');
         context.drawImage( // this function 
@@ -143,15 +146,15 @@ function Camera(props) {
             croppedVideoHeight, //source height (cropped)
             0, 
             0, 
-            viewWidth, 
-            viewHeight
+            viewWidth * resUpscale, 
+            viewHeight * resUpscale
             ); //
 
-        setImageBlob(true);
-        // canvasRef.current.toBlob(blob => setImageBlob(blob), "image/jpeg", 1);
+        // setImageBlob(true);
+        canvasRef.current.toBlob(blob => setImageBlob(blob), "image/jpeg", 1); //1 = full quality
 
         // prepare the image blob to be uploaded
-        let dataURL = canvasRef.current.toDataURL('image/jpeg');
+        let dataURL = canvasRef.current.toDataURL('image/jpeg',1); //1 = full quality
         let imageFile = dataURItoFile(dataURL);
         let fd = new FormData();
         fd.append("imageFile", imageFile);
@@ -197,6 +200,8 @@ function Camera(props) {
                     )}
 
                     <canvas ref={canvasRef}></canvas>
+
+                    <img src={imageBlob} id="img" alt="scanned receipt"></img>
                                 
                     {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
                         <IconButton onClick={takePhoto} className='camera-button'>

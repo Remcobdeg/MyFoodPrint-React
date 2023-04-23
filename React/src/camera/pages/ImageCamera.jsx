@@ -46,6 +46,7 @@ function ImageCamera(props) {
         event.stopPropagation();
         trackEvent("Camera", "Close Success Message");
         setSuccessOpen(false);
+        navigate('/');
     }
 
 
