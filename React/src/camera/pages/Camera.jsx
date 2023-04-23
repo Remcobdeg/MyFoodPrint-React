@@ -118,8 +118,6 @@ function Camera(props) {
         let croppedVideoHeight;
         let offsetX;
         let offsetY;
-        let resUpscale; //scale to fixed width/height 1920 for saving to server
-        let resUpscaleTest; //scale to fixed width/height 1920 for saving to server
         ; //scale to fixed width/height 1920 for saving to server
         if (videoRatio > viewRatio) { //if the video is wider than the view
             croppedVideoWidth = Math.round(videoHeight*viewRatio);
@@ -134,11 +132,18 @@ function Camera(props) {
         }
 
         // apply an upscale to the canvas to make the picture look better
-        resUpscale = 1920 / Math.max(viewWidth, viewHeight);
+        let resUpscale = 1;
+        const maxViewDimension = Math.max(viewWidth, viewHeight);
+        if (maxViewDimension < (1920 * 2) ) {
+            resUpscale = (1920 * 2) / Math.max(viewWidth, viewHeight);
+        }
+        const canvasWidth = viewWidth * resUpscale;
+        const canvasHeight = viewHeight * resUpscale;
+        console.log('canvasWidth: ' + canvasWidth, 'canvasHeight: ' + canvasHeight);
 
         // we need to set the width and height of the canvas to the width and height of the scaled video
-        canvas.width = viewWidth * resUpscale;
-        canvas.height = viewHeight * resUpscale;
+        canvas.width = canvasWidth; //viewWidth;
+        canvas.height = canvasHeight; // viewHeight;
 
         let context = canvas.getContext('2d');
         context.drawImage( // this function 
@@ -149,8 +154,8 @@ function Camera(props) {
             croppedVideoHeight, //source height (cropped)
             0, 
             0, 
-            viewWidth * resUpscale, 
-            viewHeight * resUpscale
+            canvasWidth, 
+            canvasHeight
             ); //
 
         // prepare the image blob to be uploaded
