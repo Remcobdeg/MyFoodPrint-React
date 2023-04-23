@@ -78,6 +78,7 @@ function Camera(props) {
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
     const [localImage, setLocalImage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const handleClose = (event) => {
         event.stopPropagation();
@@ -141,7 +142,7 @@ function Camera(props) {
         }
         const canvasWidth = viewWidth * resUpscale;
         const canvasHeight = viewHeight * resUpscale;
-        alert('canvasWidth: ' + Math.round(canvasWidth) + ' canvasHeight: ' + canvasHeight + ' viewWidth: ' + viewWidth + ' viewHeight: ' + viewHeight + ' videoWidth: ' + videoWidth + ' videoHeight: ' + videoHeight);
+        // setErrorMessage('canvasWidth: ' + Math.round(canvasWidth) + ' canvasHeight: ' + canvasHeight + ' viewWidth: ' + viewWidth + ' viewHeight: ' + viewHeight + ' videoWidth: ' + videoWidth + ' videoHeight: ' + videoHeight);
 
         // we need to set the width and height of the canvas to the width and height of the scaled video
         canvas.width = canvasWidth; //viewWidth;
@@ -173,6 +174,9 @@ function Camera(props) {
     // const uploadLocalImage = () => {
 
     const uploadImage = (imageFile) => {
+
+        setBackdropOpen(true); // show the loading spinner
+
         let fd = new FormData();
         fd.append("imageFile", imageFile);
 
@@ -188,7 +192,7 @@ function Camera(props) {
             });
         } catch (err) {
             trackEvent('Camera', 'Error in uploading picture', err);
-            alert(err)
+            setErrorMessage(err)
         }
     }
 
@@ -241,6 +245,10 @@ function Camera(props) {
                             </div>
                             
                         }
+
+                        {errorMessage && (
+                            <Alert severity="error" className='error-alert'>{errorMessage}</Alert>
+                        )}
 
                         {/* <IconButton onClick={toggle} className='flash-button'>
                             {

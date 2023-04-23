@@ -46,6 +46,11 @@
     margin-top: 10vh !important;
 
   }
+  .error-alert {
+    position: absolute !important;
+    margin-top: 20vh !important;
+
+  }
 
   .video-container canvas {
     /* Make video to at least 100% wide and tall */

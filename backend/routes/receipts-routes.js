@@ -6,6 +6,8 @@ const checkAuth = require('../middleware/check-auth');
 const receiptsControllers = require('../controllers/receipts-controllers');
 const remoteFileStoreControllers = require('../controllers/file-uploader-s3');
 
+const HttpError = require('../models/http-error');
+
 const FOLDER = process.env.DOSPACE_FOLDER;
 
 const router = express.Router();
@@ -45,6 +47,17 @@ router.get('/:rcptid', receiptsControllers.getReceiptById);
 router.post('/uploadImage/:userId', async function (req, res) { //, next) {
   
   const singleUpload = remoteFileStoreControllers.upload.single('imageFile');
+
+  // try{
+  //   singleUpload(req, res);
+  // } catch (err) {
+  //     const error = new HttpError('Could not upload image, please try again.', 500);
+  //   console.log("s3 upload error "+err);
+
+  //   return next(error);
+  // }
+
+  // return res.send(req.file.key.replace(FOLDER, ""));
   
   singleUpload(req, res, function (err) {
     if (err) {

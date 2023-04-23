@@ -6,19 +6,18 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import FolderIcon from '@mui/icons-material/Folder';
+import { Backdrop } from '@mui/material';
 
 
-export default function UploadDialog({localImage, setLocalImage, setBackdropOpen, uploadImage}) {
+export default function UploadDialog({localImage, setLocalImage, uploadImage}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
-        setBackdropOpen(true);
     };
 
     const handleClose = (e) => {
         setOpen(false);
-        setBackdropOpen(false);
 
         if(e.target.innerText.toUpperCase() === "UPLOAD"){
             
@@ -40,37 +39,42 @@ export default function UploadDialog({localImage, setLocalImage, setBackdropOpen
                 color="primary" 
                 onClick={handleClickOpen} 
             />
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Upload image</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Select a picture to upload
-                    </DialogContentText>
-                    
-                    <form>
-                        <input 
-                            accept="image/*" 
-                            type="file" 
-                            onChange={(e) => setLocalImage(e.target.files[0])}
-                        />
-                    </form>
+            <Backdrop 
+                open={open} 
+            >
 
-                    {localImage &&                    
-                        <img
-                            src={URL.createObjectURL(localImage)}
-                            alt="upload"
-                            style={{
-                                width: "40%",
-                                height: "auto",
-                            }}
-                        />
-                    }
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button disabled={!localImage} onClick={handleClose}>Upload</Button>
-                </DialogActions>
-            </Dialog>
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Upload image</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Select a picture to upload
+                        </DialogContentText>
+                        
+                        <form>
+                            <input 
+                                accept="image/*" 
+                                type="file" 
+                                onChange={(e) => setLocalImage(e.target.files[0])}
+                            />
+                        </form>
+
+                        {localImage &&                    
+                            <img
+                                src={URL.createObjectURL(localImage)}
+                                alt="upload"
+                                style={{
+                                    width: "40%",
+                                    height: "auto",
+                                }}
+                            />
+                        }
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button disabled={!localImage} onClick={handleClose}>Upload</Button>
+                    </DialogActions>
+                </Dialog>
+            </Backdrop>
         </div>
     );
 }
