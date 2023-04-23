@@ -9,22 +9,22 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { Backdrop } from '@mui/material';
 
 
-export default function UploadDialog({localImage, setLocalImage, uploadImage}) {
+export default function UploadDialog({localImage, setLocalImage, uploadImage, setErrorMessage}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = (e) => {
+    const handleCancel = (e) => {
         setOpen(false);
+        setErrorMessage("cancelled");
+    };
 
-        if(e.target.innerText.toUpperCase() === "UPLOAD"){
-            
-            console.log("uploading")
-            uploadImage(localImage);
-        }
-
+    const handleSave = () => {
+        setOpen(false);
+        setErrorMessage("uploading");
+        uploadImage(localImage);
     };
 
     return (
@@ -43,7 +43,7 @@ export default function UploadDialog({localImage, setLocalImage, uploadImage}) {
                 open={open} 
             >
 
-                <Dialog open={open} onClose={handleClose}>
+                <Dialog open={open} onClose={handleCancel}>
                     <DialogTitle>Upload image</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -70,8 +70,8 @@ export default function UploadDialog({localImage, setLocalImage, uploadImage}) {
                         }
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button disabled={!localImage} onClick={handleClose}>Upload</Button>
+                        <Button onClick={handleCancel}>Cancel</Button>
+                        <Button disabled={!localImage} onClick={handleSave}>Upload</Button>
                     </DialogActions>
                 </Dialog>
             </Backdrop>

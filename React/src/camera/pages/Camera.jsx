@@ -78,7 +78,7 @@ function Camera(props) {
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
     const [localImage, setLocalImage] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState("test error message");
 
     const handleClose = (event) => {
         event.stopPropagation();
@@ -233,7 +233,7 @@ function Camera(props) {
                         )}
                         
                                     
-                        {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
+                        {(beta < 10 && beta > -10 && gamma > -10 && gamma > -10) ? 
                             <IconButton onClick={takePhoto} className='camera-button'>
                                 <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
                             </IconButton>
@@ -275,6 +275,7 @@ function Camera(props) {
                             setLocalImage={setLocalImage}
                             setBackdropOpen={setBackdropOpen}
                             uploadImage={uploadImage}
+                            setErrorMessage={setErrorMessage}
                         />
 
 
