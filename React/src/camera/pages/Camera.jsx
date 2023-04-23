@@ -78,7 +78,7 @@ function Camera(props) {
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
     const [localImage, setLocalImage] = useState(null);
-    const [errorMessage, setErrorMessage] = useState("test error message");
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const handleClose = (event) => {
         event.stopPropagation();
@@ -275,7 +275,6 @@ function Camera(props) {
                             setLocalImage={setLocalImage}
                             setBackdropOpen={setBackdropOpen}
                             uploadImage={uploadImage}
-                            setErrorMessage={setErrorMessage}
                         />
 
 

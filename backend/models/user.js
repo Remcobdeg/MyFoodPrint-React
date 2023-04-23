@@ -10,7 +10,8 @@ const userSchema = new Schema({
     password: { type: String, required: true, minlength: 8 },
     termsAgreed: { type: Boolean, required: true, default: false },
     is_admin: { type: Boolean, required: true, default: false  },
-    receipts: [{type: mongoose.Types.ObjectId, required: true, ref: 'Receipt'}] //ref referes to the model. Important the name is correct
+    linked_accounts: [{ type: String, required: false }],
+    receipts: [{type: mongoose.Types.ObjectId, required: false, ref: 'Receipt'}] //ref referes to the model. Important the name is correct
 
 });
 

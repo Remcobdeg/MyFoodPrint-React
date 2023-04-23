@@ -69,13 +69,32 @@ const getReceiptById = async (req, res, next) => {
 const getReceiptByUserId = async (req, res, next) => {
   const userId = req.userData.userId;//req.params.uid;
 
+  let user;
+  try {
+    user = await User.findById(req.userData.userId);
+  } catch (err) {
+    const error = new HttpError('Creating receipt failed, please try again', 500);
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError('Could not find user for provided id', 404);
+    return next(error);
+  }
+
+  const linked_accounts = user.linked_accounts;
+  // console.log("linked_accounts: ", linked_accounts);
+  // console.log("userId: ", userId);
+
 
   // send it to Mongo
   let receipts;
   try {
     receipts = await Receipt.find({ 
       $and: [
-        { user: userId },
+        {$or: [
+          { user: { $in: [...linked_accounts, userId] } },
+        ]},
         { is_checked_off: true}
       ]
     }); //can alternativily use the reference technique again (as used for creating and deleting below. --> userWithReceipts = await User.findById(userId).populate('receipts'))

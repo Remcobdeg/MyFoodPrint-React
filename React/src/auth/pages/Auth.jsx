@@ -163,7 +163,7 @@ function Auth(props){
               </Grid>
               <Grid item>
                 <Link component="button" variant="body2" onClick={toSignup}>
-                  Signup
+                  {isSignup ? `Sign In`: `Sign Up`}
                 </Link>
               </Grid>
             </Grid>

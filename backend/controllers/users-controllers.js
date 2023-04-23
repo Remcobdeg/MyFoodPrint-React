@@ -92,7 +92,7 @@ const signup = async (req, res, next) => {
     return next(new HttpError('Could not create user, try again later',500))
   }
 
-  res.status(201).json({userId: createdUser.id, email: createdUser.email, token: token, isAdmin: identifiedUser.is_admin});
+  res.status(201).json({userId: createdUser.id, email: createdUser.email, token: token, isAdmin: false});
 };
 
 const login = async (req, res, next) => {
