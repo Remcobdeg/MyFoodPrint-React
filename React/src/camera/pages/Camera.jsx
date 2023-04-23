@@ -21,6 +21,7 @@ import HelpPages from '../../shared/components/HelpPages';
 import Alert from '@mui/material/Alert';
 import { trackEvent } from '../../shared/modules/googleAnalyticsModules';
 import { useUserMedia } from '../../shared/hooks/useUserMedia';
+import UploadDialog from '../components/UploadDialog';
 
 const CAPTURE_OPTIONS = {
     audio: false,
@@ -76,6 +77,7 @@ function Camera(props) {
     const [open, setOpen] = useState(true);
     const [backdropOpen, setBackdropOpen] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
+    const [localImage, setLocalImage] = useState(null);
 
     const handleClose = (event) => {
         event.stopPropagation();
@@ -100,7 +102,7 @@ function Camera(props) {
         event.stopPropagation();
         trackEvent('Camera', 'Take Photo');
 
-        // setBackdropOpen(true); // show the loading spinner
+        setBackdropOpen(true); // show the loading spinner
 
         let video = videoRef.current;
         let canvas = canvasRef.current;
@@ -161,11 +163,18 @@ function Camera(props) {
         // prepare the image blob to be uploaded
         let dataURL = canvasRef.current.toDataURL('image/jpeg',1); //1 = full quality
         let imageFile = dataURItoFile(dataURL);
-        let fd = new FormData();
-        fd.append("imageFile", imageFile);
 
         // show the image on the screen
         canvasRef.current.toBlob(blob => setImageBlob(blob), "image/jpeg", 1); //1 = full quality
+
+        uploadImage(imageFile); //upload the image to the server
+    }
+
+    // const uploadLocalImage = () => {
+
+    const uploadImage = (imageFile) => {
+        let fd = new FormData();
+        fd.append("imageFile", imageFile);
 
         try {
             commonHttp.post('/receipts/uploadImage/' + props.userId, fd, {
@@ -184,118 +193,131 @@ function Camera(props) {
     }
 
 
+
+
+
+
     return (
         <Container maxWidth="sm" sx={{padding: 0}}>
-        <DeviceOrientation>
-            {({ absolute, alpha, beta, gamma }) => (
-                <div>                
-                    {!imageBlob && (
-                        <video 
-                            ref={videoRef} 
-                            onCanPlay={handleCanPlay} 
-                            autoPlay 
-                            playsInline 
-                            muted
-                            style={{
-                                //this scales the video stream to the full height/width of the screen
-                                //but doesn't actually change size of the video stream object in videoRef!
-                                //the aspect ratio is maintained
-                                height: window.innerHeight, 
-                                width: window.innerWidth , 
-                                objectFit: "cover", 
-                                position: "absolute"}}
-                        />
-                    )}
+            <DeviceOrientation>
+                {({ absolute, alpha, beta, gamma }) => (
+                    <div>                
+                        {!imageBlob && (
+                            <video 
+                                ref={videoRef} 
+                                onCanPlay={handleCanPlay} 
+                                autoPlay 
+                                playsInline 
+                                muted
+                                style={{
+                                    //this scales the video stream to the full height/width of the screen
+                                    //but doesn't actually change size of the video stream object in videoRef!
+                                    //the aspect ratio is maintained
+                                    height: window.innerHeight, 
+                                    width: window.innerWidth , 
+                                    objectFit: "cover", 
+                                    position: "absolute"}}
+                            />
+                        )}
 
-                    {!imageBlob && (    
-                        <canvas ref={canvasRef}></canvas>
-                    )}
+                        {!imageBlob && (    
+                            <canvas ref={canvasRef}></canvas>
+                        )}
 
-                    {imageBlob && (    
-                        <img src={imageBlob} id="img" alt=""></img>
-                    )}
-                    
-                                
-                    {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
-                        <IconButton onClick={takePhoto} className='camera-button'>
-                            <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
-                        </IconButton>
-                    
-                        : <div>
-                            {(open === false) &&
-                                <Alert severity="info" className='hold-horizonal-alert'>To take a picture, hold your phone level</Alert>
-                            }
-                        </div>
+                        {imageBlob && (    
+                            <img src={imageBlob} id="img" alt=""></img>
+                        )}
                         
-                    }
-
-                    {/* <IconButton onClick={toggle} className='flash-button'>
-                        {
-                            on ? <FlashOffIcon sx={{ fontSize: "15vmin" }} color="primary" />
-                                : <FlashOnIcon sx={{ fontSize: "15vmin" }} color="primary" />
-                        }
-                    </IconButton> */}
-
-                    <IconButton className='gallery-button'>
-                        <Link 
-                        to="/"
-                        onClick={(event) => {
-                            event.stopPropagation(); 
-                            trackEvent('Camera', 'Exit camera click');
-                        }}
-                        >
-                            <CloseIcon sx={{ fontSize: "15vmin" }} color="primary" className='' />
-                        </Link>
-                    </IconButton>
-
-                    {/* instruction modal */}
-                    <Modal
-                        open={open}
-                        onClose={handleClose}
-                    >
-                        <Box sx={instructionModalStyle}>
-                            
-                            <IconButton
-                                aria-label="close"
-                                onClick={handleClose}
-                                sx={{
-                                    position: 'absolute',
-                                    right: 8,
-                                    top: 8,
-                                    color: (theme) => theme.palette.grey[500],
-                                }}
-                                >
-                                <CloseIcon />
+                                    
+                        {(beta < 4 && beta > -4 && gamma > -4 && gamma > -4) ? 
+                            <IconButton onClick={takePhoto} className='camera-button'>
+                                <CameraIcon sx={{ fontSize: "20vmin" }} color="primary" />
                             </IconButton>
+                        
+                            : <div>
+                                {(open === false) &&
+                                    <Alert severity="info" className='hold-horizonal-alert'>To take a picture, hold your phone level</Alert>
+                                }
+                            </div>
+                            
+                        }
 
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                With the WHOLE receipt in view, <br />
-                                Press the <br />
-                                <CameraIcon sx={{ fontSize: "13vmin" }} color="primary" /> <br />
-                                button below
-                            </Typography>
+                        {/* <IconButton onClick={toggle} className='flash-button'>
+                            {
+                                on ? <FlashOffIcon sx={{ fontSize: "15vmin" }} color="primary" />
+                                    : <FlashOnIcon sx={{ fontSize: "15vmin" }} color="primary" />
+                            }
+                        </IconButton> */}
 
-                            <Button onClick={handleClose} variant="contained" sx={{ my: 2 }}>
-                                Got it!
-                            </Button>
-
-                        </Box>
-                    </Modal>
-
-                    <Backdrop
-                        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                        open={backdropOpen}
-                        onClick={handleBackdropClose}
-                    >
-                        <CircularProgress color="inherit" />
-                    </Backdrop>
-
-                    <HelpPages fromPage={"Camera"}/>
+                        <IconButton className='gallery-button'>
+                            <Link 
+                            to="/"
+                            onClick={(event) => {
+                                event.stopPropagation(); 
+                                trackEvent('Camera', 'Exit camera click');
+                            }}
+                            >
+                                <CloseIcon sx={{ fontSize: "15vmin" }} color="primary" className='' />
+                            </Link>
+                        </IconButton>
 
 
-                </div>
-            )}
-        </DeviceOrientation>
+                        <UploadDialog 
+                            localImage={localImage}
+                            setLocalImage={setLocalImage}
+                            setBackdropOpen={setBackdropOpen}
+                            uploadImage={uploadImage}
+                        />
+
+
+                        {/* instruction modal */}
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <Box sx={instructionModalStyle}>
+                                
+                                <IconButton
+                                    aria-label="close"
+                                    onClick={handleClose}
+                                    sx={{
+                                        position: 'absolute',
+                                        right: 8,
+                                        top: 8,
+                                        color: (theme) => theme.palette.grey[500],
+                                    }}
+                                    >
+                                    <CloseIcon />
+                                </IconButton>
+
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    With the WHOLE receipt in view, <br />
+                                    Press the <br />
+                                    <CameraIcon sx={{ fontSize: "13vmin" }} color="primary" /> <br />
+                                    button below
+                                </Typography>
+
+                                <Button onClick={handleClose} variant="contained" sx={{ my: 2 }}>
+                                    Got it!
+                                </Button>
+
+                            </Box>
+                        </Modal>
+
+                        <Backdrop
+                            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                            open={backdropOpen}
+                            onClick={handleBackdropClose}
+                        >
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
+
+                        <HelpPages fromPage={"Camera"}/>
+
+
+                    </div>
+                )}
+            </DeviceOrientation>
         </Container>
     );
 }
