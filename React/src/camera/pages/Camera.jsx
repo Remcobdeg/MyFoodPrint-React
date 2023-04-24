@@ -137,8 +137,8 @@ function Camera(props) {
         // apply an upscale to the canvas to make the picture look better
         let resUpscale = 1;
         const maxViewDimension = Math.max(viewWidth, viewHeight);
-        if (maxViewDimension < (1920 * 2) ) {
-            resUpscale = (1920 * 2) / Math.max(viewWidth, viewHeight);
+        if (maxViewDimension < (1920) ) {
+            resUpscale = (1920) / Math.max(viewWidth, viewHeight);
         }
         const canvasWidth = viewWidth * resUpscale;
         const canvasHeight = viewHeight * resUpscale;
