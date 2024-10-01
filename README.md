@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# Source code for the prototype application MyFoodprint
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+MyFoodprint is an application that helps individuals or households find opportunities to reduce the carbon footprint of their diet (their 'foodprint'). 
 
-## Available Scripts
+The application allows users to scan (and track) their grocery receipts and receive visualizations showing how their choices (ie, the product that they buy) contribute to their foodprint. They can then click on the items in the visualization to explore alternative options.
 
-In the project directory, you can run:
+An example of what this looks like: [Uncommented demo on Youtube](https://www.youtube.com/watch?v=gFLJKhROnqA&ab_channel=RemcodeGrave)
 
-### `npm start`
+See also the poster of a 3-week field study with the application, presented at the 5th Global Food Security conference in Leuven 2024
+![Poster of the evaluation of the 3-week field study of the application 'MyFoodprint'.](readme_content/PosterA0FoodSecurity.svg "MyFoodprint Fieldstudy Evaluation") 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Quick start to running the code
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Create a file `backend/.env` and `react/.env` 
+2. Create a MongoDB database and add the following information to `backend/.env`:
+    + `MONGO_USER=xxx`
+    + `MONGO_PASSWORD=xxx`
+    + `PRIVATE_KEY=xxx`
+    + `CLUSTER_NAME=xxx`
+    + `DATABASE_NAME=xxx`
+3. Also define the port to which the backend will serve in `backend/.env`
+    + `PORT=5050` (or use any different port)
+4. Configure this same port in react/.env
+    + `REACT_APP_BACKEND_URL=http://localhost:5050/api`
+5. (Optional) Create an API key for AWS Textract [https://aws.amazon.com/textract/](https://aws.amazon.com/textract/) and add the following information to `backend/.env`:
+    + `MONGO_USER=xxx`
+    + `MONGO_PASSWORD=xxx`
+    + `AWSACCESSKEYID=xxx`
+    + `AWSSECRETACCESSKEY=xxx`
+    + `AWSREGION=xxx`
+6. (Optional) Configure a cloud bucket for storing image files and add the following information to `backend/.env`:
+    + `DOSPACE_ACCESS_KEY=xxx`
+    + `DOSPACE_ACCESS_SECRET=xxx`
+    + `DOSPACE_ENDPOINT=xxx`
+    + `DOSPACE_BUCKET_NAME=xxx`
+    + `DOSPACE_FOLDER=xxx`
+7. (Optional) Configure a Google Analytics tracking ID and add the following information to `backend/.env`:
+    + `GA_TRACKING_ID=xxx`
+8. Fire up the front and backend:
+    + Open a shell terminal at `./React` and execute `npm start`
+    + Open a shell terminal at `./backend` and execute `npm start`
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Steps 1-4 allow you to fire up the application on a local host (Step 8)** . However, the receipt scanning will not yet work. To make this work, you will have to create an API key for AWS Textract (Step 5) and configure a cloud bucket for storing image files (Step 6)(I used Digital Ocean spaces). Also, you may want to configure a Google Analytics tracking ID (Step 7).
 
-### `npm run build`
+## Notes
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The application is built as a MERN (MongoDB Express React.js Node.js) stack + some PWA (Progressive Web App) features + D3.js visualizations.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+In the current version, the mapping of extracted receipt fields on products and their footprint is not yet automated! Eg, manual adjustments to the DB entries (or semi-automated, using separate scripts) are needed to make the data available for the visualizations. 
