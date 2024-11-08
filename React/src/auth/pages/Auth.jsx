@@ -104,7 +104,7 @@ function Auth(props){
               name="email"
               autoComplete="email"
               autoFocus
-              inputProps={{ style: { textTransform: "lowercase" } }}
+              // inputProps={{ style: { textTransform: "lowercase" } }}
             />
             <TextField
               margin="normal"
