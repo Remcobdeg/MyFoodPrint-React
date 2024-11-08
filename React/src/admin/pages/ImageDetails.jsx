@@ -23,6 +23,7 @@ function ImageDetails(props) {
     useEffect(() => {
         let userData = JSON.parse(localStorage.getItem('userData'));
         setIsLoading(true);
+
         const fetchImage = async () => {
             const res = await fetch(baseURL + '/receipts/fetchImage/' + state, {
                 headers: {
@@ -35,6 +36,7 @@ function ImageDetails(props) {
             setIsLoading(false);
         }
         fetchImage();
+
         commonHttp.get('/receipts/fetchDetailsByImage/' + state, {
             headers: {
                 Authorization: 'Bearer ' + userData.token
@@ -44,7 +46,7 @@ function ImageDetails(props) {
             if (response.data !== null && response.data.length > 0) {
                 setStoreName(response.data[0].store);
                 setBranchName(response.data[0].store_branche);
-                setReceiptDate(response.data[0].data);
+                setReceiptDate(response.data[0].date);
                 setReceiptTime(response.data[0].time);
             }
         });
@@ -54,16 +56,18 @@ function ImageDetails(props) {
     };
     return (
         <Grid container>
+
             <Grid item xs={1} >
                 <img className="photo" src="/android-chrome-512x512.png" alt=""></img>
             </Grid>
             <Grid item xs={11} >
                 <Typography className='headerTypo' variant='h2'>MyFoodPrint</Typography>
             </Grid>
-            <Grid item xs={6} className='image-container'>
+
+            <Grid item xs="auto" className='image-container'>
                 <img className='imageCont' src={imgFile} id="img" alt=""></img>
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs  >
                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 0, mr: 2 }}>
                     <Grid container spacing={1}>
                         <Grid item xs={3}>
@@ -73,6 +77,8 @@ function ImageDetails(props) {
                                 fullWidth
                                 id="storeName"
                                 label="Store Name"
+                                defaultValue="Store Name"
+                                InputLabelProps={{ shrink: true }}
                                 value={storeName}
                                 onChange={(event) => setStoreName(event.target.value)}
                                 name="storeName"
@@ -83,12 +89,12 @@ function ImageDetails(props) {
                         <Grid item xs={3}>
                             <TextField
                                 margin="normal"
-                                required
                                 fullWidth
                                 id="branchName"
                                 label="Branch Name"
                                 name="branchName"
                                 value={branchName}
+                                InputLabelProps={{ shrink: true }}
                                 onChange={(event) => setBranchName(event.target.value)}
                                 autoComplete="branchName"
                                 autoFocus
@@ -103,6 +109,7 @@ function ImageDetails(props) {
                                 label="Receipt Date"
                                 name="receiptDate"
                                 value={receiptDate}
+                                InputLabelProps={{ shrink: true }}
                                 onChange={(event) => setReceiptDate(event.target.value)}
                                 autoComplete="receiptDate"
                                 autoFocus
@@ -117,6 +124,7 @@ function ImageDetails(props) {
                                 label="Receipt Time"
                                 name="receiptTime"
                                 value={receiptTime}
+                                InputLabelProps={{ shrink: true }}
                                 onChange={(event) => setReceiptTime(event.target.value)}
                                 autoComplete="receiptTime"
                                 autoFocus
@@ -148,7 +156,8 @@ function ImageDetails(props) {
                                                 id="quantity"
                                                 label="Quantity"
                                                 name="quantity"
-                                                value={receipt.quantity}
+                                                value={receipt.item_units}
+                                                InputLabelProps={{ shrink: true }}
                                                 onChange={(event) => receipt.quantity = event.target.value}
                                                 autoComplete="quantity"
                                                 autoFocus
